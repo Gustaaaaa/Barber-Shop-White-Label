@@ -12,7 +12,7 @@
         :root {
             /* Variáveis Dinâmicas */
             --accent-color: #d4af37; 
-            --accent-rgb: 212, 175, 55; /* Calculado via JS para transparências */
+            --accent-rgb: 212, 175, 55; 
             
             --bg-dark: #121212;
             --card-bg: #1e1e1e;
@@ -45,6 +45,7 @@
             display: flex;
             flex-direction: column;
             position: relative;
+            overflow: hidden; 
         }
 
         @media (min-width: 451px) {
@@ -54,8 +55,20 @@
                 border-radius: 20px;
                 box-shadow: 0 0 50px rgba(0,0,0,0.7);
                 border: 1px solid #333;
-                overflow: hidden;
             }
+        }
+
+        /* --- SCROLLBAR INVISIVEL GLOBAL --- */
+        .settings-content::-webkit-scrollbar, 
+        .main-content::-webkit-scrollbar,
+        .time-grid::-webkit-scrollbar,
+        .barber-row::-webkit-scrollbar,
+        .stats-scroll-container::-webkit-scrollbar,
+        .admin-list-container::-webkit-scrollbar { 
+            display: none; 
+        }
+        .settings-content, .main-content, .time-grid, .barber-row, .stats-scroll-container, .admin-list-container {
+            scrollbar-width: none; 
         }
 
         /* --- HEADER PUBLICO --- */
@@ -94,48 +107,24 @@
 
         /* --- LOGO BARBEARIA CIRCULAR COM EFEITO DINAMICO --- */
         @keyframes pulseGlow {
-            0% { 
-                box-shadow: 0 0 5px rgba(var(--accent-rgb), 0.2), 0 0 2px var(--accent-color) inset; 
-                border-color: rgba(var(--accent-rgb), 0.5); 
-            }
-            50% { 
-                box-shadow: 0 0 25px rgba(var(--accent-rgb), 0.6), 0 0 8px var(--accent-color) inset; 
-                border-color: var(--accent-color); 
-            }
-            100% { 
-                box-shadow: 0 0 5px rgba(var(--accent-rgb), 0.2), 0 0 2px var(--accent-color) inset; 
-                border-color: rgba(var(--accent-rgb), 0.5); 
-            }
+            0% { box-shadow: 0 0 5px rgba(var(--accent-rgb), 0.2), 0 0 2px var(--accent-color) inset; border-color: rgba(var(--accent-rgb), 0.5); }
+            50% { box-shadow: 0 0 25px rgba(var(--accent-rgb), 0.6), 0 0 8px var(--accent-color) inset; border-color: var(--accent-color); }
+            100% { box-shadow: 0 0 5px rgba(var(--accent-rgb), 0.2), 0 0 2px var(--accent-color) inset; border-color: rgba(var(--accent-rgb), 0.5); }
         }
 
         .logo-barbearia {
-            width: 110px;  
-            height: 110px; 
-            object-fit: cover; 
-            border-radius: 50%; 
-            border: 3px solid var(--accent-color);
-            margin-bottom: 10px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
+            width: 110px; height: 110px; object-fit: cover; border-radius: 50%; 
+            border: 3px solid var(--accent-color); margin-bottom: 10px; display: block;
+            margin-left: auto; margin-right: auto;
             animation: pulseGlow 3s infinite ease-in-out;
-            background-color: #000;
-            transition: border-color 0.3s;
+            background-color: #000; transition: border-color 0.3s;
         }
         
         #public-header p { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.5px; }
 
         .status-badge {
-            font-size: 0.65rem;
-            padding: 4px 10px;
-            border-radius: 12px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 5px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 0.65rem; padding: 4px 10px; border-radius: 12px; display: inline-flex;
+            align-items: center; gap: 6px; margin-top: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
         }
         .status-open { background: rgba(46, 204, 113, 0.15); color: var(--success-color); border: 1px solid rgba(46, 204, 113, 0.3); }
         .status-closed { background: rgba(255, 77, 77, 0.15); color: var(--error-color); border: 1px solid rgba(255, 77, 77, 0.3); }
@@ -143,14 +132,8 @@
 
         /* --- MARCA D'ÁGUA --- */
         .watermark {
-            font-size: 0.6rem;
-            color: var(--text-muted);
-            opacity: 0.3;
-            margin-top: 40px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 300;
-            transition: opacity 0.3s;
+            font-size: 0.6rem; color: var(--text-muted); opacity: 0.3; margin-top: 40px;
+            text-transform: uppercase; letter-spacing: 1px; font-weight: 300; transition: opacity 0.3s;
         }
         .watermark:hover { opacity: 0.8; color: var(--accent-color); }
 
@@ -158,11 +141,9 @@
         #toast-box {
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
             background: #252525; color: #fff; padding: 12px 20px;
-            border-radius: 30px; font-size: 0.8rem; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.6);
-            display: none; z-index: 9999; white-space: nowrap; 
-            border: 1px solid #444; align-items: center; gap: 10px;
-            animation: slideDown 0.3s ease-out;
+            border-radius: 30px; font-size: 0.8rem; box-shadow: 0 5px 20px rgba(0,0,0,0.6);
+            display: none; z-index: 9999; white-space: nowrap; border: 1px solid #444;
+            align-items: center; gap: 10px; animation: slideDown 0.3s ease-out;
         }
         #toast-box.error { border-color: var(--error-color); color: var(--error-color); }
         #toast-box.success { border-color: var(--success-color); color: var(--success-color); }
@@ -204,7 +185,7 @@
         .btn-modal-confirm { background: var(--accent-color); color: #000; }
         .btn-modal-cancel { background: transparent; border: 1px solid #444; color: #ccc; }
 
-        /* INFO POPUP REFINADO */
+        /* INFO POPUP */
         .info-close-btn { position: absolute; top: 15px; right: 15px; color: #666; cursor: pointer; font-size: 1.2rem; transition: color 0.3s; }
         .info-close-btn:hover { color: var(--accent-color); }
         .info-content-wrapper { display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
@@ -251,8 +232,9 @@
         .dash-top-row { display: flex; justify-content: space-between; align-items: center; }
         .dash-title { color: white; font-family:'Playfair Display'; font-size: 1.4rem; }
         
+        .btn-icon-group { display: flex; gap: 10px; }
         .btn-config { background: transparent; border: 1px solid #444; color: #888; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
-        .btn-config:hover { color: var(--accent-color); border-color: var(--accent-color); transform: rotate(90deg); }
+        .btn-config:hover { color: var(--accent-color); border-color: var(--accent-color); }
 
         .barber-filter-select { width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: white; margin-bottom: 15px; font-family: 'Poppins', sans-serif; outline: none; }
         .filter-row { display: flex; gap: 8px; margin-bottom: 15px; background: #252525; padding: 5px; border-radius: 10px; overflow-x: auto; }
@@ -261,8 +243,7 @@
         .date-picker-container { position: relative; flex: 0 0 40px; display: flex; align-items: center; justify-content: center; background: #333; border-radius: 6px; cursor: pointer; }
         .date-picker-input { position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
         .date-picker-icon { color: white; font-size: 1rem; }
-        .stats-scroll-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; -ms-overflow-style: none; }
-        .stats-scroll-container::-webkit-scrollbar { display: none; }
+        .stats-scroll-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
         .stat-card { min-width: 130px; flex: 0 0 auto; background: #252525; padding: 12px; border-radius: 10px; text-align: left; border: 1px solid #333; position: relative; }
         .stat-card i { position: absolute; right: 10px; top: 10px; font-size: 1rem; opacity: 0.2; }
         .stat-number { font-size: 1.1rem; font-weight: 700; display: block; color: white; margin-top: 5px; }
@@ -270,7 +251,6 @@
         .stat-card.profit .stat-number { color: var(--success-color); }
         .stat-card.pending .stat-number { color: var(--warning-color); }
         .admin-list-container { flex: 1; overflow-y: auto; padding: 20px; position: relative; }
-        .admin-list-container::-webkit-scrollbar { display: none; }
         .admin-list-container::before { content: ''; position: absolute; left: 35px; top: 20px; bottom: 20px; width: 2px; background: #333; z-index: 0; }
         .timeline-date { margin-left: 30px; font-size: 0.8rem; color: var(--accent-color); margin-bottom: 10px; font-weight: 600; }
         .admin-item { position: relative; background: #252525; border-radius: 10px; margin-bottom: 15px; padding: 12px; margin-left: 30px; border: 1px solid #333; z-index: 1; }
@@ -291,12 +271,11 @@
         .btn-adm-check { background: var(--accent-color); color: #000; }
         .btn-adm-trash { background: transparent; color: #ff4d4d; border: 1px solid rgba(255,77,77,0.2); max-width: 40px; }
 
-        /* --- SETTINGS SCREEN --- */
-        #settings-screen { background: #151515; }
-        .settings-content { padding: 20px; overflow-y: auto; flex: 1; padding-bottom: 80px; scrollbar-width: none; /* Scroll Invisivel */ }
-        .settings-content::-webkit-scrollbar { display: none; }
+        /* --- SETTINGS & SERVICE SCREENS --- */
+        #settings-screen, #services-screen { background: #151515; overflow-x: hidden; }
+        .settings-content { padding: 20px; overflow-y: auto; flex: 1; padding-bottom: 80px; width: 100%; box-sizing: border-box; }
         
-        .settings-section { margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 20px; }
+        .settings-section { margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 20px; width: 100%; }
         .settings-section:last-child { border: none; }
         .settings-title { font-size: 0.9rem; color: var(--accent-color); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
         .form-row { margin-bottom: 15px; }
@@ -319,7 +298,7 @@
         }
         .day-btn.active { background: var(--accent-color); color: #000; border-color: var(--accent-color); }
 
-        /* Add Barber Moderno */
+        /* List Items (Profs & Services) */
         .prof-list-item { background: #252525; border-bottom: 1px solid #333; padding: 12px 5px; display: flex; justify-content: space-between; align-items: center; }
         .prof-info { display: flex; align-items: center; gap: 12px; }
         .prof-img-mini { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; background: #444; }
@@ -328,9 +307,12 @@
         .btn-edit-prof { color: var(--accent-color); }
         .btn-del-prof { color: #ff4d4d; }
 
+        .service-meta { font-size: 0.75rem; color: #888; }
+        .service-price-tag { color: var(--success-color); font-weight: 600; margin-right: 5px; }
+
         .add-prof-card { 
             background: rgba(255,255,255,0.03); border: 1px dashed #555; border-radius: 12px; padding: 15px; margin-top: 15px; 
-            display: flex; flex-direction: column; gap: 10px;
+            display: flex; flex-direction: column; gap: 10px; width: 100%;
         }
         .add-prof-card input { background: #111; border: 1px solid #333; padding: 10px; border-radius: 8px; color: white; width: 100%; outline: none; }
         .add-prof-card input:focus { border-color: var(--accent-color); }
@@ -341,7 +323,6 @@
         
         /* CONTEÚDO PRINCIPAL */
         .main-content { flex: 1; display: flex; flex-direction: column; padding: 20px; gap: 15px; overflow-y: auto; scrollbar-width: none; }
-        .main-content::-webkit-scrollbar { display: none; }
         .label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; display: block; }
         .btn-repeat { display: none; width: 100%; background: rgba(212, 175, 55, 0.15); color: var(--accent-color); border: 1px dashed var(--accent-color); padding: 10px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; margin-bottom: 5px; text-align: center; transition: all 0.2s; }
         .btn-repeat:hover { background: rgba(212, 175, 55, 0.25); }
@@ -357,8 +338,7 @@
         .custom-input:focus { border-color: var(--accent-color); }
         .row-split { display: flex; gap: 10px; }
         .time-section { flex: 1; display: flex; flex-direction: column; min-height: 80px; }
-        .time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding-right: 5px; overflow-y: auto; max-height: 100%; scrollbar-width: none; }
-        .time-grid::-webkit-scrollbar { display: none; }
+        .time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding-right: 5px; overflow-y: auto; max-height: 100%; }
         .time-btn { height: 38px; display: flex; align-items: center; justify-content: center; background: var(--input-bg); border: 1px solid #333; border-radius: 8px; font-size: 0.8rem; cursor: pointer; }
         .time-btn.selected { background: var(--accent-color); color: #000; font-weight: 700; border-color: var(--accent-color); }
         .footer-form { flex-shrink: 0; padding: 5px 20px 20px; background: var(--card-bg); border-top: 1px solid #333; z-index: 10; }
@@ -373,7 +353,6 @@
         
         /* TELA SUCESSO & GESTÃO */
         #success-content { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 30px; width: 100%; overflow-y: auto; scrollbar-width: none; }
-        #success-content::-webkit-scrollbar { display: none; }
         .tolerance-box { background: rgba(241, 196, 15, 0.1); border: 1px solid rgba(241, 196, 15, 0.3); color: #f1c40f; padding: 12px; border-radius: 8px; font-size: 0.8rem; margin-bottom: 25px; max-width: 300px; line-height: 1.4; text-align: center; }
         .success-actions-group { display: flex; flex-direction: column; gap: 15px; width: 100%; margin-bottom: 30px; }
         .appointments-section { width: 100%; border-top: 1px solid #333; padding-top: 20px; }
@@ -444,11 +423,27 @@
             <div style="margin-bottom: 15px;">
                 <input type="text" id="edit-prof-name" class="modal-input" placeholder="Nome">
                 <input type="text" id="edit-prof-img" class="modal-input" placeholder="Link da Foto">
-                <input type="hidden" id="edit-prof-id">
             </div>
             <div class="modal-actions">
                 <button class="btn-modal btn-modal-cancel" onclick="closeEditProf()">Cancelar</button>
                 <button class="btn-modal btn-modal-confirm" onclick="saveEditProf()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-service-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 class="modal-title">Editar Serviço</h3>
+            <div style="margin-bottom: 15px;">
+                <input type="text" id="edit-service-name" class="modal-input" placeholder="Nome do Serviço">
+                <div style="display: flex; gap: 5px;">
+                    <input type="number" id="edit-service-price" class="modal-input" placeholder="Valor (R$)">
+                    <input type="number" id="edit-service-time" class="modal-input" placeholder="Minutos">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-modal btn-modal-cancel" onclick="closeEditService()">Cancelar</button>
+                <button class="btn-modal btn-modal-confirm" onclick="saveEditService()">Salvar</button>
             </div>
         </div>
     </div>
@@ -518,14 +513,7 @@
                             <input type="date" id="data" class="custom-input" style="flex: 1;" required onchange="atualizarHorarios(); checarValidade()">
                             <select id="servico" class="custom-input" style="flex: 1.4;" required onchange="checarValidade()">
                                 <option value="" disabled selected>Serviço...</option>
-                                <option value="Corte de Cabelo">Corte de Cabelo (R$ 40 • 30min)</option>
-                                <option value="Barba">Barba (R$ 30 • 30min)</option>
-                                <option value="Cabelo + Barba">Cabelo + Barba (R$ 65 • 50min)</option>
-                                <option value="Acabamento">Acabamento (R$ 15 • 15min)</option>
-                                <option value="Sobrancelha">Sobrancelha (R$ 10 • 10min)</option>
-                                <option value="Hidratação">Hidratação (R$ 25 • 20min)</option>
-                                <option value="Platinado">Platinado (R$ 120 • 2h)</option>
-                            </select>
+                                </select>
                         </div>
                     </div>
                     <div class="time-section">
@@ -566,7 +554,10 @@
                 <div class="dashboard-header">
                     <div class="dash-top-row">
                         <h3 class="dash-title">Dashboard</h3>
-                        <button class="btn-config" onclick="abrirConfig()" title="Configurações"><i class="fas fa-cog"></i></button>
+                        <div class="btn-icon-group">
+                            <button class="btn-config" onclick="abrirServicos()" title="Serviços"><i class="fas fa-cut"></i></button>
+                            <button class="btn-config" onclick="abrirConfig()" title="Configurações"><i class="fas fa-cog"></i></button>
+                        </div>
                     </div>
                     <select id="admin-barber-filter" class="barber-filter-select" onchange="renderizarPainel()">
                         <option value="todos">Todos os Profissionais</option>
@@ -703,6 +694,32 @@
                 </div>
             </div>
 
+            <div id="services-screen" class="screen">
+                <div class="dashboard-header">
+                    <h3 class="dash-title">Serviços</h3>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <p class="settings-title">Lista de Serviços</p>
+                        <div id="services-list-container"></div>
+                        
+                        <div class="add-prof-card">
+                            <p style="font-size:0.75rem; color:#888; font-weight:600;">NOVO SERVIÇO</p>
+                            <input type="text" id="new-service-name" placeholder="Nome (ex: Corte Social)">
+                            <div style="display:flex; gap:10px;">
+                                <input type="number" id="new-service-price" placeholder="Valor (R$)">
+                                <input type="number" id="new-service-time" placeholder="Minutos">
+                            </div>
+                            <button class="btn-add-full" onclick="addService()"><i class="fas fa-plus-circle"></i> Adicionar Serviço</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-footer">
+                    <button class="btn-outline" onclick="trocarTela('admin-screen')">Voltar</button>
+                    <button class="btn-confirm" onclick="salvarConfig()">Salvar</button>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -725,6 +742,12 @@
                 { id: 1, nome: "Profissional 1", foto: "https://placehold.co/150/444444/FFF?text=P1" },
                 { id: 2, nome: "Profissional 2", foto: "https://placehold.co/150/444444/FFF?text=P2" },
                 { id: 3, nome: "Profissional 3", foto: "https://placehold.co/150/444444/FFF?text=P3" }
+            ],
+            servicos: [
+                { id: 1, nome: "Corte de Cabelo", preco: 40, tempo: 30 },
+                { id: 2, nome: "Barba", preco: 30, tempo: 30 },
+                { id: 3, nome: "Cabelo + Barba", preco: 65, tempo: 50 },
+                { id: 4, nome: "Pezinho", preco: 15, tempo: 15 }
             ]
         };
 
@@ -733,6 +756,8 @@
         let appConfig;
         if (savedConfig) {
             appConfig = { ...defaultConfig, ...savedConfig };
+            // Garante migração de serviços se não existir
+            if (!appConfig.servicos || appConfig.servicos.length === 0) appConfig.servicos = defaultConfig.servicos;
             if(appConfig.openHour && !appConfig.openTime) appConfig.openTime = String(appConfig.openHour).padStart(2,'0') + ":00";
             if(appConfig.closeHour && !appConfig.closeTime) appConfig.closeTime = String(appConfig.closeHour).padStart(2,'0') + ":00";
             if(!appConfig.openDays) appConfig.openDays = defaultConfig.openDays;
@@ -741,11 +766,6 @@
             appConfig = defaultConfig;
         }
         localStorage.setItem('app_config', JSON.stringify(appConfig));
-
-        const precosServicos = {
-            "Corte de Cabelo": 40, "Barba": 30, "Cabelo + Barba": 65,
-            "Acabamento": 15, "Sobrancelha": 10, "Hidratação": 25, "Platinado": 120
-        };
 
         let usuario = { nome: "", zap: "" };
         let linkZap = "";
@@ -756,6 +776,7 @@
         
         let tempOpenDays = [...appConfig.openDays];
         let currentEditingIndex = -1; // Para editar profissionais
+        let currentEditingServiceIndex = -1; // Para editar serviços
 
         const dateInput = document.getElementById('data');
         dateInput.valueAsDate = new Date();
@@ -777,10 +798,17 @@
             }
         }
 
-        // Fechar Info ao clicar fora
-        document.getElementById('info-modal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('info-modal')) toggleInfo(false);
-        });
+        // Lógica Global de Fechar Modal ao Clicar Fora
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal-overlay')) {
+                // Fecha o modal especifico clicado
+                if (event.target.id === 'admin-modal') toggleAdminModal(false);
+                if (event.target.id === 'info-modal') toggleInfo(false);
+                if (event.target.id === 'edit-prof-modal') closeEditProf();
+                if (event.target.id === 'edit-service-modal') closeEditService();
+                if (event.target.id === 'confirm-modal') fecharConfirmacao();
+            }
+        }
 
         function verificarStatus() {
             const now = new Date();
@@ -830,9 +858,7 @@
         
         // --- FUNÇÃO AUXILIAR COR ---
         function hexToRgb(hex) {
-            // Remove o # se existir
             hex = hex.replace(/^#/, '');
-            // Parse
             let bigint = parseInt(hex, 16);
             let r = (bigint >> 16) & 255;
             let g = (bigint >> 8) & 255;
@@ -876,10 +902,25 @@
                     document.getElementById('barbeiroSelecionado').value = appConfig.profissionais[0].nome;
                 }
             }
+
+            // Renderiza lista de Serviços na tela de agendamento (Select)
+            renderBookingServices();
+        }
+
+        function renderBookingServices() {
+            const select = document.getElementById('servico');
+            select.innerHTML = '<option value="" disabled selected>Serviço...</option>';
+            appConfig.servicos.forEach(srv => {
+                const opt = document.createElement('option');
+                opt.value = srv.nome; // Mantemos o nome como value para compatibilidade
+                opt.innerText = `${srv.nome} (R$ ${srv.preco} • ${srv.tempo}min)`;
+                // Guardamos metadados para uso no cálculo de horário
+                opt.dataset.tempo = srv.tempo;
+                select.appendChild(opt);
+            });
         }
 
         function abrirConfig() {
-            // Preenche os campos
             document.getElementById('cfg-nome').value = appConfig.nomeBarbearia;
             document.getElementById('cfg-desc').value = appConfig.descricao;
             document.getElementById('cfg-endereco').value = appConfig.endereco;
@@ -892,12 +933,15 @@
             document.getElementById('cfg-open').value = appConfig.openTime;
             document.getElementById('cfg-close').value = appConfig.closeTime;
             
-            // Carrega dias
             tempOpenDays = [...appConfig.openDays];
             renderDaysSelector();
-
             renderSettingsProfList();
             trocarTela('settings-screen');
+        }
+
+        function abrirServicos() {
+            renderServicesList();
+            trocarTela('services-screen');
         }
 
         function renderDaysSelector() {
@@ -947,6 +991,27 @@
             });
         }
 
+        function renderServicesList() {
+            const list = document.getElementById('services-list-container');
+            list.innerHTML = '';
+            appConfig.servicos.forEach((srv, idx) => {
+                const item = document.createElement('div');
+                item.className = 'prof-list-item';
+                item.innerHTML = `
+                    <div style="display:flex; flex-direction:column;">
+                        <span style="font-size:0.9rem; font-weight:600;">${srv.nome}</span>
+                        <span class="service-meta"><span class="service-price-tag">R$ ${srv.preco}</span> • ${srv.tempo} min</span>
+                    </div>
+                    <div>
+                        <button class="btn-icon-action btn-edit-prof" onclick="openEditService(${idx})"><i class="fas fa-pen"></i></button>
+                        <button class="btn-icon-action btn-del-prof" onclick="removeService(${idx})"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        // --- CRUD PROFISSIONAIS ---
         function addProfissional() {
             const name = document.getElementById('new-prof-name').value;
             let img = document.getElementById('new-prof-img').value;
@@ -992,6 +1057,61 @@
             closeEditProf();
         }
 
+        // --- CRUD SERVIÇOS ---
+        function addService() {
+            const name = document.getElementById('new-service-name').value;
+            const price = document.getElementById('new-service-price').value;
+            const time = document.getElementById('new-service-time').value;
+
+            if(!name || !price || !time) return showToast("Preencha todos os campos!", "error");
+
+            appConfig.servicos.push({ id: Date.now(), nome: name, preco: parseInt(price), tempo: parseInt(time) });
+            
+            // Limpa inputs
+            document.getElementById('new-service-name').value = '';
+            document.getElementById('new-service-price').value = '';
+            document.getElementById('new-service-time').value = '';
+            
+            renderServicesList();
+        }
+
+        function removeService(index) {
+            abrirConfirmacao("Remover este serviço?", "Ele sumirá da lista de agendamento.", () => {
+                appConfig.servicos.splice(index, 1);
+                renderServicesList();
+            });
+        }
+
+        function openEditService(index) {
+            currentEditingServiceIndex = index;
+            const srv = appConfig.servicos[index];
+            document.getElementById('edit-service-name').value = srv.nome;
+            document.getElementById('edit-service-price').value = srv.preco;
+            document.getElementById('edit-service-time').value = srv.tempo;
+            document.getElementById('edit-service-modal').classList.add('visible');
+        }
+
+        function closeEditService() {
+            document.getElementById('edit-service-modal').classList.remove('visible');
+            currentEditingServiceIndex = -1;
+        }
+
+        function saveEditService() {
+            if (currentEditingServiceIndex === -1) return;
+            const name = document.getElementById('edit-service-name').value;
+            const price = document.getElementById('edit-service-price').value;
+            const time = document.getElementById('edit-service-time').value;
+
+            if(!name || !price || !time) return showToast("Preencha todos os campos", "error");
+
+            appConfig.servicos[currentEditingServiceIndex].nome = name;
+            appConfig.servicos[currentEditingServiceIndex].preco = parseInt(price);
+            appConfig.servicos[currentEditingServiceIndex].tempo = parseInt(time);
+
+            renderServicesList();
+            closeEditService();
+        }
+
         function salvarConfig() {
             appConfig.nomeBarbearia = document.getElementById('cfg-nome').value || defaultConfig.nomeBarbearia;
             appConfig.descricao = document.getElementById('cfg-desc').value || defaultConfig.descricao;
@@ -1009,7 +1129,9 @@
             localStorage.setItem('app_config', JSON.stringify(appConfig));
             applyConfigToUI();
             verificarStatus(); 
-            showToast("Configurações salvas!", "success");
+            showToast("Salvo com sucesso!", "success");
+            
+            // Se veio da tela de serviços, volta para admin, senão fica em admin
             trocarTela('admin-screen');
         }
 
@@ -1139,8 +1261,9 @@
                 let valor = 0;
                 if (precoMatch) valor = parseInt(precoMatch[1]);
                 else {
-                    const nomeServicoSimples = appt.servico.split('(')[0].trim();
-                    if (precosServicos[nomeServicoSimples]) valor = precosServicos[nomeServicoSimples];
+                    // Tenta achar na lista de serviços novos
+                    const srvObj = appConfig.servicos.find(s => appt.servico.includes(s.nome));
+                    if (srvObj) valor = srvObj.preco;
                 }
                 const valorTexto = `R$ ${valor},00`;
                 const servicoLimpo = appt.servico.split('(')[0];
@@ -1242,7 +1365,7 @@
             
             // Lógica do Header Publico
             const publicHeader = document.getElementById('public-header');
-            if (idTela === 'admin-screen' || idTela === 'settings-screen') {
+            if (idTela === 'admin-screen' || idTela === 'settings-screen' || idTela === 'services-screen') {
                 publicHeader.style.display = 'none';
             } else {
                 publicHeader.style.display = 'block';
@@ -1250,7 +1373,7 @@
 
             if(idTela === 'success-screen') document.getElementById('success-content').scrollTop = 0;
 
-            if (idTela === 'login-screen' || idTela === 'admin-screen' || idTela === 'settings-screen') btnVoltar.style.display = 'none'; 
+            if (idTela === 'login-screen' || idTela === 'admin-screen' || idTela === 'settings-screen' || idTela === 'services-screen') btnVoltar.style.display = 'none'; 
             else btnVoltar.style.display = 'block';
         }
         function voltarParaLogin() {
@@ -1276,7 +1399,17 @@
             btn.style.opacity = '0.7';
             setTimeout(() => {
                 const ultimo = agendamentos[0]; 
-                document.getElementById('servico').value = ultimo.servico;
+                document.getElementById('servico').value = ultimo.servico.split('(')[0].trim(); // Tenta match pelo nome
+                
+                // Correção caso tenha mudado
+                const select = document.getElementById('servico');
+                for (let i = 0; i < select.options.length; i++) { 
+                    if (select.options[i].text.includes(ultimo.servico.split('(')[0])) { 
+                        select.selectedIndex = i; 
+                        break; 
+                    } 
+                }
+
                 selectBarber(null, ultimo.barbeiro);
                 btn.innerHTML = originalHtml;
                 btn.style.opacity = '1';
@@ -1339,6 +1472,16 @@
             const startMin = openH * 60 + openM;
             const endMin = closeH * 60 + closeM;
 
+            // Determinar intervalo com base no serviço selecionado (padrão 30 min)
+            let step = 30;
+            const servicoSelect = document.getElementById('servico');
+            if(servicoSelect.selectedIndex > 0) {
+                const opt = servicoSelect.options[servicoSelect.selectedIndex];
+                if(opt.dataset.tempo) step = parseInt(opt.dataset.tempo);
+            }
+
+            // Loop de horários (sempre de 30 em 30 para padronizar o grid, mas validação futura poderia usar duração)
+            // Mantendo visualização de 30 em 30 para simplicidade visual
             for (let time = startMin; time < endMin; time += 30) {
                 const hh = Math.floor(time / 60);
                 const mm = time % 60;
@@ -1462,8 +1605,16 @@
             const partesData = appt.data.split('/');
             const dataIso = `${partesData[2]}-${partesData[1]}-${partesData[0]}`;
             document.getElementById('data').value = dataIso;
+            
             const select = document.getElementById('servico');
-            for (let i = 0; i < select.options.length; i++) { if (select.options[i].text === appt.servico) { select.selectedIndex = i; break; } }
+            // Tenta selecionar pelo texto do serviço
+            for (let i = 0; i < select.options.length; i++) { 
+                if (appt.servico.includes(select.options[i].value)) { 
+                    select.selectedIndex = i; 
+                    break; 
+                } 
+            }
+            
             selectBarber(null, appt.barbeiro);
             agendamentos = agendamentos.filter(a => a.id !== id);
             localStorage.setItem('app_barbearia_db', JSON.stringify(agendamentos));

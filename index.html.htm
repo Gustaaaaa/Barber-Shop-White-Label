@@ -10,8 +10,10 @@
 
     <style>
         :root {
-            --blue-color: #222;
-            --accent-color: #d4af37; /* Cor dourada */
+            /* Variáveis Dinâmicas */
+            --accent-color: #d4af37; 
+            --accent-rgb: 212, 175, 55; /* Calculado via JS para transparências */
+            
             --bg-dark: #121212;
             --card-bg: #1e1e1e;
             --input-bg: #2a2a2a;
@@ -56,57 +58,72 @@
             }
         }
 
-        /* --- HEADER --- */
-        header {
+        /* --- HEADER PUBLICO --- */
+        #public-header {
             flex-shrink: 0;
-            padding: 20px 20px 15px; /* Ajustei um pouco o padding */
+            padding: 20px 20px 15px;
             text-align: center;
             background: radial-gradient(circle at bottom, #2a2a2a 0%, #1e1e1e 70%);
             border-bottom: 1px solid #333;
             z-index: 10;
             position: relative;
+            transition: all 0.3s ease;
         }
 
-        .back-btn {
+        .header-icons {
             position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
+            top: 20px;
+            width: 100%;
+            left: 0;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none; 
+        }
+
+        .icon-btn {
+            pointer-events: auto;
             color: var(--text-main);
             font-size: 1.2rem;
             cursor: pointer;
-            padding: 10px;
-            display: none;
+            padding: 5px;
             transition: color 0.3s;
         }
-        .back-btn:hover { color: var(--accent-color); }
+        .icon-btn:hover { color: var(--accent-color); }
+        #btn-voltar { display: none; }
 
-        /* --- LOGO BARBEARIA CIRCULAR COM EFEITO --- */
+        /* --- LOGO BARBEARIA CIRCULAR COM EFEITO DINAMICO --- */
         @keyframes pulseGlow {
-            0% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.4), 0 0 2px var(--accent-color) inset; border-color: rgba(212, 175, 55, 0.8); }
-            50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.7), 0 0 8px var(--accent-color) inset; border-color: var(--accent-color); }
-            100% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.4), 0 0 2px var(--accent-color) inset; border-color: rgba(212, 175, 55, 0.8); }
+            0% { 
+                box-shadow: 0 0 5px rgba(var(--accent-rgb), 0.2), 0 0 2px var(--accent-color) inset; 
+                border-color: rgba(var(--accent-rgb), 0.5); 
+            }
+            50% { 
+                box-shadow: 0 0 25px rgba(var(--accent-rgb), 0.6), 0 0 8px var(--accent-color) inset; 
+                border-color: var(--accent-color); 
+            }
+            100% { 
+                box-shadow: 0 0 5px rgba(var(--accent-rgb), 0.2), 0 0 2px var(--accent-color) inset; 
+                border-color: rgba(var(--accent-rgb), 0.5); 
+            }
         }
 
         .logo-barbearia {
-            width: 110px;  /* Tamanho fixo para garantir o círculo */
-            height: 110px; /* Tamanho fixo para garantir o círculo */
-            object-fit: cover; /* Preenche o círculo cortando excessos */
-            border-radius: 50%; /* Transforma em círculo */
-            
-            /* Efeitos de Borda e Brilho */
+            width: 110px;  
+            height: 110px; 
+            object-fit: cover; 
+            border-radius: 50%; 
             border: 3px solid var(--accent-color);
             margin-bottom: 10px;
             display: block;
             margin-left: auto;
             margin-right: auto;
-            
-            /* Animação Pulsante */
             animation: pulseGlow 3s infinite ease-in-out;
-            background-color: #000; /* Fundo preto caso a imagem demore a carregar */
+            background-color: #000;
+            transition: border-color 0.3s;
         }
         
-        header p { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.5px; }
+        #public-header p { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.5px; }
 
         .status-badge {
             font-size: 0.65rem;
@@ -124,7 +141,7 @@
         .status-closed { background: rgba(255, 77, 77, 0.15); color: var(--error-color); border: 1px solid rgba(255, 77, 77, 0.3); }
         .status-dot { width: 6px; height: 6px; border-radius: 50%; background-color: currentColor; box-shadow: 0 0 5px currentColor; }
 
-        /* --- MARCA D'ÁGUA GSTDESIGN --- */
+        /* --- MARCA D'ÁGUA --- */
         .watermark {
             font-size: 0.6rem;
             color: var(--text-muted);
@@ -151,7 +168,7 @@
         #toast-box.success { border-color: var(--success-color); color: var(--success-color); }
         @keyframes slideDown { from { transform: translate(-50%, -20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
 
-        /* Modal Genérico */
+        /* MODAIS */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
@@ -165,6 +182,7 @@
             border-radius: 16px; width: 90%; max-width: 320px; text-align: center;
             box-shadow: 0 10px 40px rgba(0,0,0,0.7);
             transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
         }
         .modal-overlay.visible .modal-card { transform: scale(1); }
 
@@ -177,7 +195,6 @@
             margin-bottom: 5px; outline: none; letter-spacing: 5px; transition: 0.3s;
         }
         .modal-input:focus { border-color: var(--accent-color); }
-        
         .input-error { border-color: var(--error-color) !important; animation: shake 0.4s ease-in-out; }
         .error-message-text { color: var(--error-color); font-size: 0.75rem; height: 20px; margin-bottom: 10px; opacity: 0; transition: opacity 0.3s; display: block; }
         .error-message-text.visible { opacity: 1; }
@@ -186,6 +203,21 @@
         .btn-modal { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; font-size: 0.9rem; }
         .btn-modal-confirm { background: var(--accent-color); color: #000; }
         .btn-modal-cancel { background: transparent; border: 1px solid #444; color: #ccc; }
+
+        /* INFO POPUP REFINADO */
+        .info-close-btn { position: absolute; top: 15px; right: 15px; color: #666; cursor: pointer; font-size: 1.2rem; transition: color 0.3s; }
+        .info-close-btn:hover { color: var(--accent-color); }
+        .info-content-wrapper { display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
+        .info-row { display: flex; align-items: flex-start; gap: 15px; color: #ddd; font-size: 0.9rem; text-align: left; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .info-row:last-child { border-bottom: none; }
+        .info-icon-box { flex-shrink: 0; width: 20px; text-align: center; color: var(--accent-color); margin-top: 3px; }
+        .info-text { flex: 1; line-height: 1.4; color: #ccc; font-weight: 300; }
+        
+        .google-rating { 
+            background: #252525; border: 1px solid #333; color: #fff; padding: 8px 15px; border-radius: 12px; 
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold; font-size: 0.9rem; margin-top: 15px; width: 100%;
+        }
+        .google-rating i { color: #f1c40f; }
 
         /* --- TELAS --- */
         .screen-container { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; }
@@ -197,8 +229,6 @@
         #login-screen { background: transparent; }
         .login-wrapper { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 40px; text-align: center; }
         .login-logo-area { margin-bottom: 30px; }
-        /* REMOVI O ICONE DE TESOURA GIGANTE POIS A LOGO JÁ CHAMA ATENÇÃO */
-        /* .login-icon { font-size: 4rem; color: var(--accent-color); margin-bottom: 15px; text-shadow: 0 0 20px rgba(212, 175, 55, 0.3); } */
         .login-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #fff; margin-bottom: 5px; }
         .login-subtitle { font-size: 0.85rem; color: #ccc; font-weight: 300; }
         .input-validation-wrapper { position: relative; margin-bottom: 15px; }
@@ -214,7 +244,16 @@
 
         /* --- ADMIN DASHBOARD --- */
         #admin-screen { background: #151515; }
-        .dashboard-header { padding: 15px 20px; background: #1e1e1e; border-bottom: 1px solid #333; }
+        .dashboard-header { 
+            padding: 15px 20px; background: #1e1e1e; border-bottom: 1px solid #333; 
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .dash-top-row { display: flex; justify-content: space-between; align-items: center; }
+        .dash-title { color: white; font-family:'Playfair Display'; font-size: 1.4rem; }
+        
+        .btn-config { background: transparent; border: 1px solid #444; color: #888; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
+        .btn-config:hover { color: var(--accent-color); border-color: var(--accent-color); transform: rotate(90deg); }
+
         .barber-filter-select { width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: white; margin-bottom: 15px; font-family: 'Poppins', sans-serif; outline: none; }
         .filter-row { display: flex; gap: 8px; margin-bottom: 15px; background: #252525; padding: 5px; border-radius: 10px; overflow-x: auto; }
         .filter-btn { flex: 1; background: transparent; border: none; color: #888; padding: 8px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; font-weight: 600; transition: 0.2s; white-space: nowrap; }
@@ -252,16 +291,64 @@
         .btn-adm-check { background: var(--accent-color); color: #000; }
         .btn-adm-trash { background: transparent; color: #ff4d4d; border: 1px solid rgba(255,77,77,0.2); max-width: 40px; }
 
+        /* --- SETTINGS SCREEN --- */
+        #settings-screen { background: #151515; }
+        .settings-content { padding: 20px; overflow-y: auto; flex: 1; padding-bottom: 80px; scrollbar-width: none; /* Scroll Invisivel */ }
+        .settings-content::-webkit-scrollbar { display: none; }
+        
+        .settings-section { margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 20px; }
+        .settings-section:last-child { border: none; }
+        .settings-title { font-size: 0.9rem; color: var(--accent-color); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .form-row { margin-bottom: 15px; }
+        .form-label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 5px; }
+        .settings-input { width: 100%; background: #252525; border: 1px solid #444; color: white; padding: 10px; border-radius: 8px; font-family: 'Poppins'; }
+        .settings-input:focus { border-color: var(--accent-color); outline: none; }
+        
+        /* Cor Picker */
+        input[type="color"] {
+            -webkit-appearance: none; border: none; width: 100%; height: 40px; border-radius: 8px; cursor: pointer; padding: 2px; background: #333;
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: none; border-radius: 6px; }
+
+        /* Day Selector */
+        .days-wrapper { display: flex; gap: 5px; margin-top: 5px; justify-content: space-between; }
+        .day-btn { 
+            width: 35px; height: 35px; border-radius: 8px; background: #2a2a2a; border: 1px solid #444; 
+            color: #777; font-size: 0.7rem; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;
+        }
+        .day-btn.active { background: var(--accent-color); color: #000; border-color: var(--accent-color); }
+
+        /* Add Barber Moderno */
+        .prof-list-item { background: #252525; border-bottom: 1px solid #333; padding: 12px 5px; display: flex; justify-content: space-between; align-items: center; }
+        .prof-info { display: flex; align-items: center; gap: 12px; }
+        .prof-img-mini { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; background: #444; }
+        .btn-icon-action { background: transparent; border: none; opacity: 0.7; cursor: pointer; transition: 0.2s; font-size: 0.9rem; margin-left: 5px; }
+        .btn-icon-action:hover { opacity: 1; transform: scale(1.1); }
+        .btn-edit-prof { color: var(--accent-color); }
+        .btn-del-prof { color: #ff4d4d; }
+
+        .add-prof-card { 
+            background: rgba(255,255,255,0.03); border: 1px dashed #555; border-radius: 12px; padding: 15px; margin-top: 15px; 
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .add-prof-card input { background: #111; border: 1px solid #333; padding: 10px; border-radius: 8px; color: white; width: 100%; outline: none; }
+        .add-prof-card input:focus { border-color: var(--accent-color); }
+        .btn-add-full { background: var(--accent-color); color: #000; font-weight: bold; border: none; padding: 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; }
+
+        /* Footer Fixo Settings */
+        .settings-footer { position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px 20px 20px; background: #1e1e1e; border-top: 1px solid #333; display: flex; gap: 10px; z-index: 20; }
+        
         /* CONTEÚDO PRINCIPAL */
         .main-content { flex: 1; display: flex; flex-direction: column; padding: 20px; gap: 15px; overflow-y: auto; scrollbar-width: none; }
         .main-content::-webkit-scrollbar { display: none; }
         .label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; display: block; }
         .btn-repeat { display: none; width: 100%; background: rgba(212, 175, 55, 0.15); color: var(--accent-color); border: 1px dashed var(--accent-color); padding: 10px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; margin-bottom: 5px; text-align: center; transition: all 0.2s; }
         .btn-repeat:hover { background: rgba(212, 175, 55, 0.25); }
-        .barber-row { display: flex; gap: 10px; min-height: 80px; }
-        .barber-card { flex: 1; background: var(--input-bg); border: 1px solid #333; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; padding: 10px 5px; }
+        .barber-row { display: flex; gap: 10px; min-height: 80px; overflow-x: auto; padding-bottom: 5px; }
+        .barber-card { min-width: 90px; flex: 1; background: var(--input-bg); border: 1px solid #333; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; padding: 10px 5px; }
         .barber-card img { width: 45px; height: 45px; border-radius: 50%; margin-bottom: 6px; object-fit: cover; border: 2px solid transparent; background-color: #444; }
-        .barber-card span { font-size: 0.7rem; font-weight: 500; }
+        .barber-card span { font-size: 0.7rem; font-weight: 500; text-align: center; line-height: 1.2; }
         .barber-card.active { border-color: var(--accent-color); background: rgba(212, 175, 55, 0.15); }
         .barber-card.active img { border-color: var(--accent-color); }
         .barber-card.active span { color: var(--accent-color); }
@@ -321,6 +408,51 @@
         </div>
     </div>
 
+    <div id="info-modal" class="modal-overlay">
+        <div class="modal-card" style="text-align: left; padding: 30px 25px; width: 90%; max-width: 350px;">
+            <i class="fas fa-times info-close-btn" onclick="toggleInfo(false)"></i>
+            <h3 class="modal-title" style="margin-bottom: 20px; text-align: center;" id="info-nome-barbearia">Informações</h3>
+            
+            <div class="info-content-wrapper">
+                <div class="info-row">
+                    <div class="info-icon-box"><i class="fas fa-map-marker-alt"></i></div>
+                    <span class="info-text" id="info-endereco">...</span>
+                </div>
+                <div class="info-row">
+                    <div class="info-icon-box"><i class="fas fa-clock"></i></div>
+                    <span class="info-text" id="info-horario">...</span>
+                </div>
+                <div class="info-row">
+                    <div class="info-icon-box"><i class="fas fa-align-left"></i></div>
+                    <span class="info-text" id="info-desc">Descrição da barbearia...</span>
+                </div>
+            </div>
+            
+            <div class="google-rating">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width:18px;">
+                <span>4.9</span> 
+                <div style="display:flex; gap:2px;">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-prof-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 class="modal-title">Editar Barbeiro</h3>
+            <div style="margin-bottom: 15px;">
+                <input type="text" id="edit-prof-name" class="modal-input" placeholder="Nome">
+                <input type="text" id="edit-prof-img" class="modal-input" placeholder="Link da Foto">
+                <input type="hidden" id="edit-prof-id">
+            </div>
+            <div class="modal-actions">
+                <button class="btn-modal btn-modal-cancel" onclick="closeEditProf()">Cancelar</button>
+                <button class="btn-modal btn-modal-confirm" onclick="saveEditProf()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
     <div id="confirm-modal" class="modal-overlay">
         <div class="modal-card">
             <h3 class="modal-title" id="confirm-title">Tem certeza?</h3>
@@ -334,12 +466,15 @@
 
     <div class="app-container">
         
-        <header>
-            <div id="btn-voltar" class="back-btn" onclick="voltarParaLogin()"><i class="fas fa-arrow-left"></i></div>
+        <header id="public-header">
+            <div class="header-icons">
+                <div id="btn-voltar" class="icon-btn" onclick="voltarParaLogin()"><i class="fas fa-arrow-left"></i></div>
+                <div class="icon-btn" onclick="toggleInfo(true)" style="margin-left: auto;"><i class="fas fa-info-circle"></i></div>
+            </div>
             
-            <img src="https://i.imgur.com/n5ehuej.png" alt="Logo Barbearia" class="logo-barbearia">
+            <img src="" id="display-logo" alt="Logo Barbearia" class="logo-barbearia">
             
-            <p>Seu Endereço Aqui - Cidade/UF</p>
+            <p id="display-address">Carregando...</p>
             <div id="status-loja" class="status-badge status-closed"><div class="status-dot"></div> <span id="status-texto">Verificando...</span></div>
         </header>
 
@@ -347,7 +482,7 @@
             <div id="login-screen" class="screen active">
                 <div class="login-wrapper">
                     <div class="login-logo-area">
-                        <h2 class="login-title">Bem-vindo</h2>
+                        <h2 class="login-title">Bem-vindo!</h2>
                         <p class="login-subtitle">Agende seu estilo em segundos</p>
                     </div>
                     <div class="input-group">
@@ -373,18 +508,9 @@
                     <div id="repeat-area" class="btn-repeat" onclick="repetirUltimo()"><i class="fas fa-history"></i> Repetir último agendamento</div>
                     <div>
                         <span class="label">Profissional</span>
-                        <div class="barber-row">
-                            <div class="barber-card active" onclick="selectBarber(this, 'Profissional 1')">
-                                <img src="https://placehold.co/150/444444/FFF?text=P1" alt="P1"><span>Profissional 1</span>
+                        <div class="barber-row" id="barber-selection-container">
                             </div>
-                            <div class="barber-card" onclick="selectBarber(this, 'Profissional 2')">
-                                <img src="https://placehold.co/150/444444/FFF?text=P2" alt="P2"><span>Profissional 2</span>
-                            </div>
-                            <div class="barber-card" onclick="selectBarber(this, 'Profissional 3')">
-                                <img src="https://placehold.co/150/444444/FFF?text=P3" alt="P3"><span>Profissional 3</span>
-                            </div>
-                        </div>
-                        <input type="hidden" id="barbeiroSelecionado" value="Profissional 1">
+                        <input type="hidden" id="barbeiroSelecionado">
                     </div>
                     <div class="input-group">
                         <span class="label">Serviço e Data</span>
@@ -411,7 +537,7 @@
                 <div class="footer-form">
                     <p id="msg-erro"><i class="fas fa-exclamation-circle"></i> Selecione data, serviço e horário!</p>
                     <button id="btn-agendar" class="btn-confirm inactive" onclick="enviarZap(event)">Confirmar Agendamento</button>
-                    <a href="https://goo.gl/maps/XYZ" target="_blank" class="address"><i class="fas fa-map-marker-alt"></i> Ver como chegar no Google Maps</a>
+                    <a href="#" target="_blank" class="address" id="btn-maps-link"><i class="fas fa-map-marker-alt"></i> Ver como chegar no Google Maps</a>
                 </div>
             </div>
 
@@ -425,8 +551,8 @@
                     </div>
                     <div class="success-actions-group">
                         <button class="btn-confirm" onclick="reabrirZap()"><i class="fab fa-whatsapp"></i> Confirmar no WhatsApp</button>
-                        <button class="btn-insta" onclick="window.open('https://instagram.com/seunome', '_blank')"><i class="fab fa-instagram"></i> Siga @seunome</button>
-                        <button class="btn-outline" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=Jarivatuba+Joinville', '_blank')"><i class="fas fa-map-marked-alt"></i> Rota no Google Maps</button>
+                        <button class="btn-insta" id="btn-insta-link" onclick=""><i class="fab fa-instagram"></i> Siga nosso Instagram</button>
+                        <button class="btn-outline" onclick="abrirMaps()"><i class="fas fa-map-marked-alt"></i> Rota no Google Maps</button>
                         <button class="btn-outline" onclick="novoAgendamento()"><i class="fas fa-plus"></i> Fazer Novo Agendamento</button>
                     </div>
                     <div class="appointments-section">
@@ -438,13 +564,13 @@
 
             <div id="admin-screen" class="screen">
                 <div class="dashboard-header">
-                    <h3 style="color:white; margin-bottom:15px; font-family:'Playfair Display';">Painel de Gestão</h3>
+                    <div class="dash-top-row">
+                        <h3 class="dash-title">Dashboard</h3>
+                        <button class="btn-config" onclick="abrirConfig()" title="Configurações"><i class="fas fa-cog"></i></button>
+                    </div>
                     <select id="admin-barber-filter" class="barber-filter-select" onchange="renderizarPainel()">
                         <option value="todos">Todos os Profissionais</option>
-                        <option value="Profissional 1">Profissional 1</option>
-                        <option value="Profissional 2">Profissional 2</option>
-                        <option value="Profissional 3">Profissional 3</option>
-                    </select>
+                        </select>
                     <div class="filter-row">
                         <button class="filter-btn active" onclick="filtrarAdmin('hoje', this)">Hoje</button>
                         <button class="filter-btn" onclick="filtrarAdmin('amanha', this)">Amanhã</button>
@@ -485,10 +611,137 @@
                     <button class="btn-outline" onclick="trocarTela('login-screen')">Sair do Painel</button>
                 </div>
             </div>
+
+            <div id="settings-screen" class="screen">
+                <div class="dashboard-header">
+                    <h3 class="dash-title">Configurações</h3>
+                </div>
+                <div class="settings-content">
+                    
+                    <div class="settings-section">
+                        <p class="settings-title">Personalização</p>
+                        <div class="form-row">
+                            <label class="form-label">Cor Principal do App</label>
+                            <input type="color" id="cfg-color" class="settings-input" value="#d4af37">
+                        </div>
+                         <div class="form-row">
+                            <label class="form-label">Senha do Painel</label>
+                            <input type="text" id="cfg-pass" class="settings-input" placeholder="Padrão: 1234">
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <p class="settings-title">Horário de Funcionamento</p>
+                        <div class="row-split">
+                            <div style="flex:1">
+                                <label class="form-label">Abertura</label>
+                                <input type="time" id="cfg-open" class="settings-input">
+                            </div>
+                            <div style="flex:1">
+                                <label class="form-label">Fechamento</label>
+                                <input type="time" id="cfg-close" class="settings-input">
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <label class="form-label">Dias de Funcionamento</label>
+                            <div class="days-wrapper" id="days-selector">
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <p class="settings-title">Dados da Barbearia</p>
+                        <div class="form-row">
+                            <label class="form-label">Nome da Barbearia</label>
+                            <input type="text" id="cfg-nome" class="settings-input" placeholder="Ex: Barbearia do Zé">
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Descrição (Aparece no ícone Info)</label>
+                            <input type="text" id="cfg-desc" class="settings-input" placeholder="Ex: A melhor da região...">
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Endereço Exibido</label>
+                            <input type="text" id="cfg-endereco" class="settings-input" placeholder="Rua X, 123 - Centro">
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Link Google Maps (URL)</label>
+                            <input type="text" id="cfg-maps" class="settings-input" placeholder="https://maps.google.com...">
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">WhatsApp da Loja (DDD+Num)</label>
+                            <input type="text" id="cfg-zap" class="settings-input" placeholder="47999999999">
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Instagram (Link Completo)</label>
+                            <input type="text" id="cfg-insta" class="settings-input" placeholder="https://instagram.com/seuinsta">
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">URL da Logo (Imgur/Link direto)</label>
+                            <input type="text" id="cfg-logo" class="settings-input" placeholder="https://...">
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <p class="settings-title">Equipe</p>
+                        <div id="prof-list-container"></div>
+                        
+                        <div class="add-prof-card">
+                            <p style="font-size:0.75rem; color:#888; font-weight:600;">NOVO PROFISSIONAL</p>
+                            <input type="text" id="new-prof-name" placeholder="Nome do Barbeiro">
+                            <input type="text" id="new-prof-img" placeholder="Link da Foto (Imgur, etc)">
+                            <button class="btn-add-full" onclick="addProfissional()"><i class="fas fa-plus-circle"></i> Adicionar Profissional</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <button class="btn-outline" style="border-color: #ff4d4d; color: #ff4d4d;" onclick="resetarConfiguracoes()">Restaurar Padrões</button>
+                    </div>
+                </div>
+                <div class="settings-footer">
+                    <button class="btn-outline" onclick="trocarTela('admin-screen')">Voltar</button>
+                    <button class="btn-confirm" onclick="salvarConfig()">Salvar</button>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
+        // --- CONFIGURAÇÃO PADRÃO (WHITE LABEL) ---
+        const defaultConfig = {
+            nomeBarbearia: "Barbearia",
+            descricao: "Cortes modernos e clássicos com o melhor atendimento da cidade.",
+            endereco: "Seu Endereço Aqui - Cidade/UF",
+            mapsLink: "https://maps.google.com",
+            whatsapp: "5500000000000",
+            instagram: "https://instagram.com",
+            logoUrl: "https://i.imgur.com/n5ehuej.png",
+            themeColor: "#d4af37",
+            adminPass: "1234",
+            openTime: "08:00",
+            closeTime: "20:00",
+            openDays: [1, 2, 3, 4, 5, 6], // 0=Dom, 1=Seg...
+            profissionais: [
+                { id: 1, nome: "Profissional 1", foto: "https://placehold.co/150/444444/FFF?text=P1" },
+                { id: 2, nome: "Profissional 2", foto: "https://placehold.co/150/444444/FFF?text=P2" },
+                { id: 3, nome: "Profissional 3", foto: "https://placehold.co/150/444444/FFF?text=P3" }
+            ]
+        };
+
+        // --- CORREÇÃO AUTOMÁTICA ---
+        let savedConfig = JSON.parse(localStorage.getItem('app_config'));
+        let appConfig;
+        if (savedConfig) {
+            appConfig = { ...defaultConfig, ...savedConfig };
+            if(appConfig.openHour && !appConfig.openTime) appConfig.openTime = String(appConfig.openHour).padStart(2,'0') + ":00";
+            if(appConfig.closeHour && !appConfig.closeTime) appConfig.closeTime = String(appConfig.closeHour).padStart(2,'0') + ":00";
+            if(!appConfig.openDays) appConfig.openDays = defaultConfig.openDays;
+            if(!appConfig.descricao) appConfig.descricao = defaultConfig.descricao;
+        } else {
+            appConfig = defaultConfig;
+        }
+        localStorage.setItem('app_config', JSON.stringify(appConfig));
+
         const precosServicos = {
             "Corte de Cabelo": 40, "Barba": 30, "Cabelo + Barba": 65,
             "Acabamento": 15, "Sobrancelha": 10, "Hidratação": 25, "Platinado": 120
@@ -499,20 +752,58 @@
         let agendamentos = JSON.parse(localStorage.getItem('app_barbearia_db')) || [];
         let adminFiltro = 'hoje';
         let adminDataCustom = '';
-        let confirmCallback = null; // Para armazenar a ação do modal
+        let confirmCallback = null; 
+        
+        let tempOpenDays = [...appConfig.openDays];
+        let currentEditingIndex = -1; // Para editar profissionais
 
         const dateInput = document.getElementById('data');
         dateInput.valueAsDate = new Date();
+
+        // --- INICIALIZAÇÃO ---
+        applyConfigToUI(); 
         
+        // --- FUNÇÕES GERAIS ---
+        function toggleInfo(show) {
+            const modal = document.getElementById('info-modal');
+            if(show) {
+                document.getElementById('info-nome-barbearia').innerText = appConfig.nomeBarbearia;
+                document.getElementById('info-endereco').innerText = appConfig.endereco;
+                document.getElementById('info-horario').innerText = `${appConfig.openTime} às ${appConfig.closeTime}`;
+                document.getElementById('info-desc').innerText = appConfig.descricao;
+                modal.classList.add('visible');
+            } else {
+                modal.classList.remove('visible');
+            }
+        }
+
+        // Fechar Info ao clicar fora
+        document.getElementById('info-modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('info-modal')) toggleInfo(false);
+        });
+
         function verificarStatus() {
             const now = new Date();
             const diaSemana = now.getDay(); 
             const hora = now.getHours();
+            const minutos = now.getMinutes();
+            const currentTimeVal = hora * 60 + minutos;
+
+            const [oh, om] = appConfig.openTime.split(':').map(Number);
+            const [ch, cm] = appConfig.closeTime.split(':').map(Number);
+            const openTimeVal = oh * 60 + om;
+            const closeTimeVal = ch * 60 + cm;
+
             const statusDiv = document.getElementById('status-loja');
             const texto = document.getElementById('status-texto');
+            
             let aberto = false;
-            if (diaSemana !== 0 && hora >= 8 && hora < 20) aberto = true;
-            if (diaSemana === 6 && hora >= 17) aberto = false;
+            if (appConfig.openDays.includes(diaSemana)) {
+                if (currentTimeVal >= openTimeVal && currentTimeVal < closeTimeVal) {
+                    aberto = true;
+                }
+            }
+
             if (aberto) {
                 statusDiv.className = 'status-badge status-open';
                 texto.innerText = 'Aberto Agora';
@@ -537,10 +828,202 @@
             localStorage.setItem('app_barbearia_db', JSON.stringify(agendamentos));
         }
         
+        // --- FUNÇÃO AUXILIAR COR ---
+        function hexToRgb(hex) {
+            // Remove o # se existir
+            hex = hex.replace(/^#/, '');
+            // Parse
+            let bigint = parseInt(hex, 16);
+            let r = (bigint >> 16) & 255;
+            let g = (bigint >> 8) & 255;
+            let b = bigint & 255;
+            return `${r}, ${g}, ${b}`;
+        }
+
+        // --- SISTEMA DE CONFIGURAÇÃO ---
+        function applyConfigToUI() {
+            // Aplicar Cor Dinâmica e RGB
+            document.documentElement.style.setProperty('--accent-color', appConfig.themeColor);
+            document.documentElement.style.setProperty('--accent-rgb', hexToRgb(appConfig.themeColor));
+
+            // Textos
+            document.getElementById('display-address').innerText = appConfig.endereco;
+            document.getElementById('display-logo').src = appConfig.logoUrl;
+            
+            // Links
+            document.getElementById('btn-maps-link').href = appConfig.mapsLink || "#";
+            
+            // Renderiza lista de profissionais na tela de agendamento
+            const container = document.getElementById('barber-selection-container');
+            if(container) {
+                container.innerHTML = '';
+                const adminFilter = document.getElementById('admin-barber-filter');
+                adminFilter.innerHTML = '<option value="todos">Todos os Profissionais</option>';
+
+                if(appConfig.profissionais && appConfig.profissionais.length > 0) {
+                    appConfig.profissionais.forEach((prof, index) => {
+                        const card = document.createElement('div');
+                        card.className = index === 0 ? 'barber-card active' : 'barber-card';
+                        card.onclick = () => selectBarber(card, prof.nome);
+                        card.innerHTML = `<img src="${prof.foto}" alt="${prof.nome}"><span>${prof.nome}</span>`;
+                        container.appendChild(card);
+
+                        const opt = document.createElement('option');
+                        opt.value = prof.nome;
+                        opt.innerText = prof.nome;
+                        adminFilter.appendChild(opt);
+                    });
+                    document.getElementById('barbeiroSelecionado').value = appConfig.profissionais[0].nome;
+                }
+            }
+        }
+
+        function abrirConfig() {
+            // Preenche os campos
+            document.getElementById('cfg-nome').value = appConfig.nomeBarbearia;
+            document.getElementById('cfg-desc').value = appConfig.descricao;
+            document.getElementById('cfg-endereco').value = appConfig.endereco;
+            document.getElementById('cfg-maps').value = appConfig.mapsLink;
+            document.getElementById('cfg-zap').value = appConfig.whatsapp;
+            document.getElementById('cfg-insta').value = appConfig.instagram;
+            document.getElementById('cfg-logo').value = appConfig.logoUrl;
+            document.getElementById('cfg-color').value = appConfig.themeColor;
+            document.getElementById('cfg-pass').value = appConfig.adminPass;
+            document.getElementById('cfg-open').value = appConfig.openTime;
+            document.getElementById('cfg-close').value = appConfig.closeTime;
+            
+            // Carrega dias
+            tempOpenDays = [...appConfig.openDays];
+            renderDaysSelector();
+
+            renderSettingsProfList();
+            trocarTela('settings-screen');
+        }
+
+        function renderDaysSelector() {
+            const container = document.getElementById('days-selector');
+            container.innerHTML = '';
+            const dias = [
+                { i: 0, t: 'Dom' }, { i: 1, t: 'Seg' }, { i: 2, t: 'Ter' }, 
+                { i: 3, t: 'Qua' }, { i: 4, t: 'Qui' }, { i: 5, t: 'Sex' }, { i: 6, t: 'Sáb' }
+            ];
+            
+            dias.forEach(d => {
+                const btn = document.createElement('div');
+                const isActive = tempOpenDays.includes(d.i);
+                btn.className = isActive ? 'day-btn active' : 'day-btn';
+                btn.innerText = d.t;
+                btn.onclick = () => toggleDay(d.i);
+                container.appendChild(btn);
+            });
+        }
+
+        function toggleDay(dayIndex) {
+            if (tempOpenDays.includes(dayIndex)) {
+                tempOpenDays = tempOpenDays.filter(d => d !== dayIndex);
+            } else {
+                tempOpenDays.push(dayIndex);
+            }
+            renderDaysSelector();
+        }
+
+        function renderSettingsProfList() {
+            const list = document.getElementById('prof-list-container');
+            list.innerHTML = '';
+            appConfig.profissionais.forEach((prof, idx) => {
+                const item = document.createElement('div');
+                item.className = 'prof-list-item';
+                item.innerHTML = `
+                    <div class="prof-info">
+                        <img src="${prof.foto}" class="prof-img-mini">
+                        <span style="font-size:0.85rem;">${prof.nome}</span>
+                    </div>
+                    <div>
+                        <button class="btn-icon-action btn-edit-prof" onclick="openEditProf(${idx})"><i class="fas fa-pen"></i></button>
+                        <button class="btn-icon-action btn-del-prof" onclick="removeProfissional(${idx})"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function addProfissional() {
+            const name = document.getElementById('new-prof-name').value;
+            let img = document.getElementById('new-prof-img').value;
+            if(!name) return showToast("Digite o nome!", "error");
+            if(!img) img = "https://placehold.co/150/444444/FFF?text=" + name.charAt(0);
+            
+            appConfig.profissionais.push({ id: Date.now(), nome: name, foto: img });
+            document.getElementById('new-prof-name').value = '';
+            document.getElementById('new-prof-img').value = '';
+            renderSettingsProfList();
+        }
+
+        function removeProfissional(index) {
+            abrirConfirmacao("Remover este barbeiro?", "Essa ação é irreversível.", () => {
+                appConfig.profissionais.splice(index, 1);
+                renderSettingsProfList();
+            });
+        }
+
+        function openEditProf(index) {
+            currentEditingIndex = index;
+            const prof = appConfig.profissionais[index];
+            document.getElementById('edit-prof-name').value = prof.nome;
+            document.getElementById('edit-prof-img').value = prof.foto;
+            document.getElementById('edit-prof-modal').classList.add('visible');
+        }
+
+        function closeEditProf() {
+            document.getElementById('edit-prof-modal').classList.remove('visible');
+            currentEditingIndex = -1;
+        }
+
+        function saveEditProf() {
+            if (currentEditingIndex === -1) return;
+            const name = document.getElementById('edit-prof-name').value;
+            const img = document.getElementById('edit-prof-img').value;
+            if(!name) return showToast("Nome não pode ser vazio", "error");
+            
+            appConfig.profissionais[currentEditingIndex].nome = name;
+            appConfig.profissionais[currentEditingIndex].foto = img || `https://placehold.co/150/444444/FFF?text=${name.charAt(0)}`;
+            
+            renderSettingsProfList();
+            closeEditProf();
+        }
+
+        function salvarConfig() {
+            appConfig.nomeBarbearia = document.getElementById('cfg-nome').value || defaultConfig.nomeBarbearia;
+            appConfig.descricao = document.getElementById('cfg-desc').value || defaultConfig.descricao;
+            appConfig.endereco = document.getElementById('cfg-endereco').value || defaultConfig.endereco;
+            appConfig.mapsLink = document.getElementById('cfg-maps').value || defaultConfig.mapsLink;
+            appConfig.whatsapp = document.getElementById('cfg-zap').value || defaultConfig.whatsapp;
+            appConfig.instagram = document.getElementById('cfg-insta').value || defaultConfig.instagram;
+            appConfig.logoUrl = document.getElementById('cfg-logo').value || defaultConfig.logoUrl;
+            appConfig.themeColor = document.getElementById('cfg-color').value;
+            appConfig.adminPass = document.getElementById('cfg-pass').value || "1234";
+            appConfig.openTime = document.getElementById('cfg-open').value || "08:00";
+            appConfig.closeTime = document.getElementById('cfg-close').value || "20:00";
+            appConfig.openDays = tempOpenDays;
+
+            localStorage.setItem('app_config', JSON.stringify(appConfig));
+            applyConfigToUI();
+            verificarStatus(); 
+            showToast("Configurações salvas!", "success");
+            trocarTela('admin-screen');
+        }
+
+        function resetarConfiguracoes() {
+            abrirConfirmacao("Resetar Tudo?", "Isso apagará as configurações da loja.", () => {
+                localStorage.removeItem('app_config');
+                location.reload(); 
+            });
+        }
+
         // --- SISTEMA DE TOAST E MODAIS ---
         function showToast(message, type = 'normal') {
             const toast = document.getElementById('toast-box');
-            toast.className = ''; // Reset
+            toast.className = ''; 
             if(type === 'error') toast.classList.add('error');
             if(type === 'success') toast.classList.add('success');
             
@@ -551,7 +1034,6 @@
             setTimeout(() => { toast.style.display = 'none'; }, 3000);
         }
 
-        // Modal de Confirmação Genérico
         function abrirConfirmacao(titulo, desc, callback) {
             document.getElementById('confirm-title').innerText = titulo;
             document.getElementById('confirm-desc').innerText = desc;
@@ -565,13 +1047,11 @@
             confirmCallback = null;
         }
 
-        // Listener do botão sim
         document.getElementById('btn-confirm-action').onclick = function() {
             if(confirmCallback) confirmCallback();
             fecharConfirmacao();
         };
 
-        // Modal Admin
         function toggleAdminModal(show) {
             const modal = document.getElementById('admin-modal');
             const passInput = document.getElementById('admin-password');
@@ -592,13 +1072,14 @@
             const passInput = document.getElementById('admin-password');
             const errorMsg = document.getElementById('password-error');
             
-            if(passInput.value === '1234') {
+            const senhaCorreta = appConfig.adminPass || "1234";
+
+            if(passInput.value === senhaCorreta) {
                 toggleAdminModal(false);
                 limparExpirados();
                 trocarTela('admin-screen');
                 renderizarPainel();
             } else {
-                // ANIMAÇÃO DE ERRO
                 passInput.classList.add('input-error');
                 errorMsg.classList.add('visible');
                 if (navigator.vibrate) navigator.vibrate(200);
@@ -646,7 +1127,7 @@
                 else if (adminFiltro === 'amanha') matchData = (dataIso === amanha);
                 else if (adminFiltro === 'data') matchData = (dataIso === adminDataCustom);
                 let matchBarber = true;
-                if (filtroBarbeiro !== 'todos') matchBarber = appt.barbeiro.includes(filtroBarbeiro);
+                if (filtroBarbeiro !== 'todos') matchBarber = appt.barbeiro === filtroBarbeiro;
                 return matchData && matchBarber;
             }).sort((a, b) => a.hora.localeCompare(b.hora));
 
@@ -759,9 +1240,18 @@
             document.getElementById(idTela).classList.add('active');
             const btnVoltar = document.getElementById('btn-voltar');
             
+            // Lógica do Header Publico
+            const publicHeader = document.getElementById('public-header');
+            if (idTela === 'admin-screen' || idTela === 'settings-screen') {
+                publicHeader.style.display = 'none';
+            } else {
+                publicHeader.style.display = 'block';
+            }
+
             if(idTela === 'success-screen') document.getElementById('success-content').scrollTop = 0;
 
-            if (idTela === 'login-screen' || idTela === 'admin-screen') btnVoltar.style.display = 'none'; else btnVoltar.style.display = 'block';
+            if (idTela === 'login-screen' || idTela === 'admin-screen' || idTela === 'settings-screen') btnVoltar.style.display = 'none'; 
+            else btnVoltar.style.display = 'block';
         }
         function voltarParaLogin() {
             const telaAtual = document.querySelector('.screen.active').id;
@@ -771,6 +1261,9 @@
             document.getElementById('horaSelecionada').value = "";
             document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
             checarValidade(); trocarTela('form-screen');
+        }
+        function abrirMaps() {
+            window.open(appConfig.mapsLink, '_blank');
         }
         function verificarHistoricoRecente() {
             if (agendamentos.length > 0) document.getElementById('repeat-area').style.display = 'block';
@@ -819,15 +1312,11 @@
             inputHora.value = ''; 
             checarValidade(); 
 
-            if (diaSemana === 0) {
+            // Se o dia não estiver na lista de funcionamento
+            if (!appConfig.openDays.includes(diaSemana)) {
                 avancarDia(dateObj, tentativas);
                 return;
             }
-
-            let horarios = [];
-            if (diaSemana === 1) horarios = ["14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30"];
-            else if (diaSemana === 6) horarios = ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30"];
-            else horarios = ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30"];
 
             const hoje = new Date();
             const dataHojeStr = hoje.toISOString().split('T')[0];
@@ -845,28 +1334,33 @@
 
             let slotsEncontrados = 0;
 
-            horarios.forEach(hora => {
-                if (ocupados.includes(hora)) return;
+            const [openH, openM] = appConfig.openTime.split(':').map(Number);
+            const [closeH, closeM] = appConfig.closeTime.split(':').map(Number);
+            const startMin = openH * 60 + openM;
+            const endMin = closeH * 60 + closeM;
+
+            for (let time = startMin; time < endMin; time += 30) {
+                const hh = Math.floor(time / 60);
+                const mm = time % 60;
+                const horaStr = `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+
+                if (ocupados.includes(horaStr)) continue;
                 
-                if (isHoje) {
-                    const [h, m] = hora.split(':');
-                    const horaMinutos = parseInt(h) * 60 + parseInt(m);
-                    if (horaMinutos < horaAtual) return;
-                }
+                if (isHoje && time < horaAtual) continue;
 
                 slotsEncontrados++;
                 const btn = document.createElement('div');
                 btn.className = 'time-btn';
-                btn.innerText = hora;
+                btn.innerText = horaStr;
                 btn.onclick = () => {
                     document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
-                    inputHora.value = hora;
+                    inputHora.value = horaStr;
                     if (navigator.vibrate) navigator.vibrate(40);
                     checarValidade();
                 };
                 grid.appendChild(btn);
-            });
+            }
 
             if (slotsEncontrados === 0) {
                 avancarDia(dateObj, tentativas);
@@ -925,12 +1419,17 @@
             agendamentos.unshift(novoAgendamento); 
             localStorage.setItem('app_barbearia_db', JSON.stringify(agendamentos));
             let msg = `Olá, sou *${usuario.nome}*.\n\nGostaria de agendar:\n✂️ *${servicoTexto}*\n💈 Com: ${barbeiro}\n📅 Dia: ${data}\n⏰ Hora: ${hora}\n📞 Contato: ${usuario.zap}`;
-            linkZap = `https://wa.me/5547997527322?text=${encodeURIComponent(msg)}`;
+            linkZap = `https://wa.me/${appConfig.whatsapp}?text=${encodeURIComponent(msg)}`;
             window.open(linkZap, '_blank');
             renderizarLista(); trocarTela('success-screen');
         }
+        
         function reabrirZap() { if(linkZap) window.open(linkZap, '_blank'); }
         
+        document.getElementById('btn-insta-link').onclick = function() {
+            window.open(appConfig.instagram, '_blank');
+        }
+
         function renderizarLista() {
             const container = document.getElementById('lista-agendamentos');
             container.innerHTML = "";
@@ -954,7 +1453,7 @@
                 localStorage.setItem('app_barbearia_db', JSON.stringify(agendamentos));
                 renderizarLista();
                 const msg = `Olá, sou ${usuario.nome}. Gostaria de CANCELAR meu horário do dia ${appt.data} às ${appt.hora}.`;
-                window.open(`https://wa.me/5547997527322?text=${encodeURIComponent(msg)}`, '_blank');
+                window.open(`https://wa.me/${appConfig.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
             });
         }
         

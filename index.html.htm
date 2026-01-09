@@ -126,7 +126,7 @@
         .logo-container-login {
             position: relative;
             display: inline-block;
-            margin-top: 15px; /* Respiro superior ajustado */
+            margin-top: 15px; 
             margin-bottom: 15px;
             cursor: pointer;
             transition: transform 0.2s;
@@ -173,7 +173,7 @@
 
         @keyframes pulseGlow {
             0% { box-shadow: 0 0 5px rgba(var(--accent-rgb), 0.2), 0 0 2px var(--accent-color) inset; border-color: rgba(var(--accent-rgb), 0.5); }
-            50% { box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.6), 0 0 6px var(--accent-color) inset; border-color: var(--accent-color); }
+            50% { box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.5), 0 0 6px var(--accent-color) inset; border-color: var(--accent-color); }
             100% { box-shadow: 0 0 5px rgba(var(--accent-rgb), 0.2), 0 0 2px var(--accent-color) inset; border-color: rgba(var(--accent-rgb), 0.5); }
         }
 
@@ -311,8 +311,7 @@
         #login-screen { background: transparent; }
         .login-wrapper { 
             flex: 1; display: flex; flex-direction: column; justify-content: center; 
-            padding: 20px 40px 40px 40px; /* Aumentado padding bottom */
-            text-align: center; margin-top: 0; 
+            padding: 20px 40px 40px 40px; text-align: center; margin-top: 0; 
         }
         .login-logo-area { margin-bottom: 25px; }
         .login-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #fff; margin-bottom: 5px; }
@@ -322,7 +321,7 @@
         .login-input:focus { border-color: var(--accent-color); }
         .valid-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--success-color); opacity: 0; transition: 0.3s; pointer-events: none; font-size: 1rem; }
         .valid-icon.show { opacity: 1; transform: translateY(-50%) scale(1.1); }
-        .btn-barber-login { background: transparent; border: 1px solid #333; color: #666; padding: 10px; border-radius: 8px; width: 100%; margin-top: 15px; cursor: pointer; font-size: 0.8rem; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 5px; }
+        .btn-barber-login { background: transparent; border: 1px solid #333; color: #666; padding: 10px; border-radius: 8px; width: 100%; margin-top: 15px; cursor: pointer; font-size: 0.8rem; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 15px; }
         .btn-barber-login:hover { border-color: var(--accent-color); color: var(--accent-color); }
 
         /* DASHBOARD */
@@ -427,8 +426,10 @@
         .address:hover { color: var(--accent-color); }
         .btn-edit { background-color: rgba(var(--accent-rgb), 0.15); color: var(--accent-color); border-color: rgba(var(--accent-rgb), 0.3); }
         .btn-cancel { background-color: rgba(255, 77, 77, 0.15); color: var(--error-color); border-color: rgba(255, 77, 77, 0.3); }
-        .btn-insta { width: 100%; height: 50px; background: #3897f0; color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; }
-        .btn-outline { width: 100%; background: transparent; border: 2px solid var(--accent-color); color: var(--text-main); padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 0.9rem; }
+        
+        /* RESTAURAÇÃO DO BOTÃO INSTAGRAM PREMIUM (GOLD/DARK) */
+        .btn-insta { width: 100%; height: 50px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .btn-outline { width: 100%; background: transparent; border: 2px solid var(--accent-color); color: var(--text-main); padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 0.9rem; margin-top: 5px;}
         .closed-msg { grid-column: span 4; text-align: center; color: #ff5555; padding: 10px; background: rgba(255, 85, 85, 0.1); border-radius: 8px; font-size: 0.8rem; }
     </style>
 </head>
@@ -562,6 +563,7 @@
                     </div>
                     <button class="btn-confirm" onclick="fazerLogin()" style="margin-top: 10px;">Entrar</button>
                     <button class="btn-barber-login" onclick="toggleAdminModal(true)"><i class="fas fa-scissors"></i> Sou Barbeiro</button>
+                    <div class="watermark">Produzido por GSTDESIGN 2026</div>
                 </div>
             </div>
 
@@ -605,7 +607,6 @@
                         <div class="tolerance-box"><i class="fas fa-exclamation-triangle"></i> <span><strong>Atenção:</strong> Tolerância de 15 minutos. Após esse tempo, o agendamento será cancelado automaticamente.</span></div>
                     </div>
                     <div class="success-actions-group">
-                        <button class="btn-confirm" onclick="reabrirZap()"><i class="fab fa-whatsapp"></i> Confirmar no WhatsApp</button>
                         <button class="btn-insta" id="btn-insta-link" onclick=""><i class="fab fa-instagram"></i> Siga nosso Instagram</button>
                         <button class="btn-outline" onclick="abrirMaps()"><i class="fas fa-map-marked-alt"></i> Rota no Google Maps</button>
                         <button class="btn-outline" onclick="novoAgendamento()"><i class="fas fa-plus"></i> Fazer Novo Agendamento</button>
@@ -787,7 +788,7 @@
             ]
         };
 
-        // EXPOSE FUNCTIONS
+        // EXPOSE FUNCTIONS (Para o HTML conseguir chamar)
         window.toggleInfo = toggleInfo;
         window.openStory = openStory;
         window.closeStory = closeStory;
@@ -1223,15 +1224,14 @@
             if (meusAgendamentos.length === 0) { container.innerHTML = '<p style="color: #555; font-size: 0.8rem; text-align: center;">Nenhum agendamento recente.</p>'; return; }
             meusAgendamentos.forEach(appt => {
                 const item = document.createElement('div'); item.className = 'appt-item';
-                item.innerHTML = `<div class="appt-details"><strong>${appt.data} às ${appt.hora}</strong>${appt.servico} <br> <span style="color:#777">com ${appt.barbeiro}</span>${appt.status === 'concluido' ? '<br><span style="color:#2ecc71; font-size:0.7rem">Realizado</span>' : ''}</div>${appt.status !== 'concluido' ? `<div class="appt-actions"><button class="btn-action btn-edit" onclick="editarAgendamento(${appt.firebaseId})"><i class="fas fa-edit"></i> Reagendar</button><button class="btn-action btn-cancel" onclick="cancelarAgendamento(${appt.firebaseId})"><i class="fas fa-times"></i> Cancelar</button></div>` : ''}`;
+                item.innerHTML = `<div class="appt-details"><strong>${appt.data} às ${appt.hora}</strong>${appt.servico} <br> <span style="color:#777">com ${appt.barbeiro}</span>${appt.status === 'concluido' ? '<br><span style="color:#2ecc71; font-size:0.7rem">Realizado</span>' : ''}</div>${appt.status !== 'concluido' ? `<div class="appt-actions"><button class="btn-action btn-edit" onclick="editarAgendamento('${appt.firebaseId}')"><i class="fas fa-edit"></i> Reagendar</button><button class="btn-action btn-cancel" onclick="cancelarAgendamento('${appt.firebaseId}')"><i class="fas fa-times"></i> Cancelar</button></div>` : ''}`;
                 container.appendChild(item);
             });
         }
         
         function cancelarAgendamento(id) {
             abrirConfirmacao("Cancelar horário?", "O barbeiro será notificado no WhatsApp.", () => {
-                const appt = agendamentos.find(a => a.firebaseId === id);
-                if(appt) deleteDoc(doc(db, "agendamentos", id));
+                if(id) deleteDoc(doc(db, "agendamentos", id));
                 const msg = `Olá, sou ${usuario.nome}. Gostaria de CANCELAR meu horário do dia ${appt.data} às ${appt.hora}.`;
                 window.open(`https://wa.me/${appConfig.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
             });
@@ -1259,15 +1259,20 @@
             if(show) { m.classList.add('visible'); p.value=''; p.classList.remove('input-error'); document.getElementById('password-error').classList.remove('visible'); setTimeout(()=>p.focus(), 100); }
             else m.classList.remove('visible');
         }
+        
+        // CORREÇÃO: Usa senha padrão caso config não carregue
         function verificarSenhaAdmin() {
             const p = document.getElementById('admin-password');
-            if(p.value === (appConfig.adminPass || "1234")) {
+            const pass = appConfig.adminPass ? appConfig.adminPass : "1234";
+            
+            if(p.value === pass) {
                 toggleAdminModal(false); limparExpirados(); trocarTela('admin-screen'); renderizarPainel();
             } else {
                 p.classList.add('input-error'); document.getElementById('password-error').classList.add('visible');
                 if(navigator.vibrate) navigator.vibrate(200); setTimeout(()=>{ p.classList.remove('input-error'); p.value=''; }, 400);
             }
         }
+        
         function fecharConfirmacao() { document.getElementById('confirm-modal').classList.remove('visible'); confirmCallback = null; }
         function abrirConfirmacao(t, d, cb) {
             document.getElementById('confirm-title').innerText = t; document.getElementById('confirm-desc').innerText = d;

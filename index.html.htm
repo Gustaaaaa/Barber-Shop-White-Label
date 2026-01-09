@@ -45,7 +45,7 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            overflow: hidden; /* IMPORTANTE: Mantém o story dentro das bordas */
+            overflow: hidden; 
         }
 
         @media (min-width: 451px) {
@@ -147,29 +147,25 @@
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             border-radius: 50%;
-            /* Gradiente Sutil na cor da barbearia */
             background: conic-gradient(from 0deg, transparent 0%, var(--accent-color) 100%);
             z-index: 0;
             animation: spin 2s linear infinite;
-            padding: 3px; /* Espessura do anel */
-            -webkit-mask: 
-                linear-gradient(#fff 0 0) content-box, 
-                linear-gradient(#fff 0 0);
+            padding: 3px; 
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
         }
 
-        /* ESTADO VISTO (SEEN) */
         .logo-container-login.seen .story-ring {
-            background: #444; /* Cinza sutil */
+            background: #444; 
             animation: none;
         }
         
         .logo-login-huge {
             position: relative;
-            width: 118px; height: 118px; /* Ligeiramente menor que o container */
+            width: 118px; height: 118px; 
             object-fit: cover; border-radius: 50%; 
-            border: 3px solid var(--bg-dark); /* Borda interna separadora */
+            border: 3px solid var(--bg-dark); 
             background-color: #000; 
             z-index: 1;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -179,14 +175,18 @@
 
         /* --- STORY OVERLAY (FIXED NO CONTAINER) --- */
         .story-overlay {
-            position: absolute; /* Mudado de fixed para absolute */
+            position: absolute; 
             top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 30000;
             display: none; flex-direction: column;
-            border-radius: inherit; /* Herda borda do container se tiver */
+            border-radius: inherit; 
+            transition: transform 0.3s ease-out; /* Suavidade no swipe */
         }
         .story-overlay.active { display: flex; animation: fadeIn 0.3s; }
         
+        /* Classe para remover transição durante o arraste */
+        .story-overlay.dragging { transition: none; }
+
         .story-progress-container {
             display: flex; gap: 5px; padding: 15px 10px 0;
             position: absolute; top: 0; left: 0; width: 100%; z-index: 20;
@@ -255,11 +255,12 @@
 
         /* MODAIS */
         .modal-overlay {
-            position: absolute; /* Para ficar contido no app */
+            position: absolute; 
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
             z-index: 20000; display: none; align-items: center; justify-content: center;
             opacity: 0; transition: opacity 0.3s;
+            cursor: pointer; /* Ajuda no clique mobile */
         }
         .modal-overlay.visible { display: flex; opacity: 1; }
         
@@ -269,6 +270,7 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.7);
             transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
+            cursor: default; /* Evita que o clique no card feche o modal */
         }
         .modal-overlay.visible .modal-card { transform: scale(1); }
 
@@ -501,7 +503,7 @@
             <div class="story-close" onclick="event.stopPropagation(); closeStory()">×</div>
         </div>
         <div class="story-content">
-            <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=1000&auto=format&fit=crop" class="story-image" alt="Story">
+            <img src="" id="story-image-display" class="story-image" alt="Story">
         </div>
     </div>
 
@@ -812,6 +814,10 @@
                             <label class="form-label">URL da Logo (Imgur/Link direto)</label>
                             <input type="text" id="cfg-logo" class="settings-input" placeholder="https://...">
                         </div>
+                        <div class="form-row">
+                            <label class="form-label">Imagem do Story (URL)</label>
+                            <input type="text" id="cfg-story" class="settings-input" placeholder="https://...">
+                        </div>
                     </div>
 
                     <div class="settings-section">
@@ -875,6 +881,7 @@
             whatsapp: "5500000000000",
             instagram: "https://instagram.com",
             logoUrl: "https://i.imgur.com/n5ehuej.png",
+            storyUrl: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=1000&auto=format&fit=crop",
             themeColor: "#d4af37",
             adminPass: "1234",
             openTime: "08:00",
@@ -904,6 +911,7 @@
             if(appConfig.closeHour && !appConfig.closeTime) appConfig.closeTime = String(appConfig.closeHour).padStart(2,'0') + ":00";
             if(!appConfig.openDays) appConfig.openDays = defaultConfig.openDays;
             if(!appConfig.descricao) appConfig.descricao = defaultConfig.descricao;
+            if(!appConfig.storyUrl) appConfig.storyUrl = defaultConfig.storyUrl;
         } else {
             appConfig = defaultConfig;
         }
@@ -954,11 +962,37 @@
             }
         }
 
-        // --- STORY LOGIC ---
+        // --- STORY LOGIC (SWIPE DOWN) ---
+        const storyOverlay = document.getElementById('story-overlay');
+        let touchStartY = 0;
+        let touchCurrentY = 0;
+
+        storyOverlay.addEventListener('touchstart', e => {
+            touchStartY = e.touches[0].clientY;
+        }, {passive: true});
+
+        storyOverlay.addEventListener('touchmove', e => {
+            touchCurrentY = e.touches[0].clientY;
+            const diff = touchCurrentY - touchStartY;
+            if (diff > 0) { // Dragging down
+                storyOverlay.classList.add('dragging');
+                storyOverlay.style.transform = `translateY(${diff}px)`;
+            }
+        }, {passive: true});
+
+        storyOverlay.addEventListener('touchend', e => {
+            storyOverlay.classList.remove('dragging');
+            const diff = touchCurrentY - touchStartY;
+            if (diff > 100) { // Threshold to close
+                closeStory();
+            } else {
+                storyOverlay.style.transform = ''; // Reset position
+            }
+            touchStartY = 0;
+            touchCurrentY = 0;
+        });
+
         function checkStoryStatus() {
-            // Verifica se ja viu (pra pintar de cinza)
-            // Resetamos a cada sessao ou guardamos no localstorage?
-            // Vamos guardar no sessionStorage pra resetar quando fechar o navegador
             if(sessionStorage.getItem('story_seen')) {
                 document.getElementById('logo-container').classList.add('seen');
             }
@@ -967,6 +1001,7 @@
         function openStory() {
             const overlay = document.getElementById('story-overlay');
             overlay.classList.add('active');
+            overlay.style.transform = ''; // Reset transform just in case
             
             // Mark as seen
             sessionStorage.setItem('story_seen', 'true');
@@ -975,11 +1010,11 @@
             // Populate Story Data
             document.getElementById('story-logo-small').src = appConfig.logoUrl;
             document.getElementById('story-brand-name').innerText = appConfig.nomeBarbearia;
+            document.getElementById('story-image-display').src = appConfig.storyUrl;
             
             // Calc Time Ago (Simulated)
             const now = new Date();
             const hour = now.getHours();
-            // Simula postado as 9 da manha
             let diff = hour - 9;
             if (diff < 1) diff = 1; 
             document.getElementById('story-time-display').innerText = diff + "h";
@@ -994,12 +1029,12 @@
         function closeStory() {
             const overlay = document.getElementById('story-overlay');
             overlay.classList.remove('active');
+            overlay.style.transform = ''; // Reset position
             clearTimeout(storyTimer);
             
-            // Reset animation hack
             const fill = overlay.querySelector('.story-fill');
             fill.style.animation = 'none';
-            fill.offsetHeight; /* trigger reflow */
+            fill.offsetHeight; 
             fill.style.animation = null; 
         }
 
@@ -1137,6 +1172,7 @@
             document.getElementById('cfg-zap').value = appConfig.whatsapp;
             document.getElementById('cfg-insta').value = appConfig.instagram;
             document.getElementById('cfg-logo').value = appConfig.logoUrl;
+            document.getElementById('cfg-story').value = appConfig.storyUrl;
             document.getElementById('cfg-color').value = appConfig.themeColor;
             document.getElementById('cfg-pass').value = appConfig.adminPass;
             document.getElementById('cfg-open').value = appConfig.openTime;
@@ -1329,6 +1365,7 @@
             appConfig.whatsapp = document.getElementById('cfg-zap').value || defaultConfig.whatsapp;
             appConfig.instagram = document.getElementById('cfg-insta').value || defaultConfig.instagram;
             appConfig.logoUrl = document.getElementById('cfg-logo').value || defaultConfig.logoUrl;
+            appConfig.storyUrl = document.getElementById('cfg-story').value || defaultConfig.storyUrl;
             appConfig.themeColor = document.getElementById('cfg-color').value;
             appConfig.adminPass = document.getElementById('cfg-pass').value || "1234";
             appConfig.openTime = document.getElementById('cfg-open').value || "08:00";

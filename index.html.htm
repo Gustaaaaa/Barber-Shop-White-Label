@@ -1,4 +1,4 @@
-<!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -11,7 +11,7 @@
     <style>
         :root {
             --blue-color: #222;
-            --accent-color: #d4af37;
+            --accent-color: #d4af37; /* Cor dourada */
             --bg-dark: #121212;
             --card-bg: #1e1e1e;
             --input-bg: #2a2a2a;
@@ -59,7 +59,7 @@
         /* --- HEADER --- */
         header {
             flex-shrink: 0;
-            padding: 15px 20px 10px;
+            padding: 20px 20px 15px; /* Ajustei um pouco o padding */
             text-align: center;
             background: radial-gradient(circle at bottom, #2a2a2a 0%, #1e1e1e 70%);
             border-bottom: 1px solid #333;
@@ -81,12 +81,29 @@
         }
         .back-btn:hover { color: var(--accent-color); }
 
-        header h1 {
-            font-family: 'Playfair Display', serif;
-            color: var(--text-main);
-            font-size: 1.5rem;
-            margin-bottom: 2px;
-            line-height: 1;
+        /* --- LOGO BARBEARIA CIRCULAR COM EFEITO --- */
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.4), 0 0 2px var(--accent-color) inset; border-color: rgba(212, 175, 55, 0.8); }
+            50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.7), 0 0 8px var(--accent-color) inset; border-color: var(--accent-color); }
+            100% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.4), 0 0 2px var(--accent-color) inset; border-color: rgba(212, 175, 55, 0.8); }
+        }
+
+        .logo-barbearia {
+            width: 110px;  /* Tamanho fixo para garantir o círculo */
+            height: 110px; /* Tamanho fixo para garantir o círculo */
+            object-fit: cover; /* Preenche o círculo cortando excessos */
+            border-radius: 50%; /* Transforma em círculo */
+            
+            /* Efeitos de Borda e Brilho */
+            border: 3px solid var(--accent-color);
+            margin-bottom: 10px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            
+            /* Animação Pulsante */
+            animation: pulseGlow 3s infinite ease-in-out;
+            background-color: #000; /* Fundo preto caso a imagem demore a carregar */
         }
         
         header p { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.5px; }
@@ -107,9 +124,20 @@
         .status-closed { background: rgba(255, 77, 77, 0.15); color: var(--error-color); border: 1px solid rgba(255, 77, 77, 0.3); }
         .status-dot { width: 6px; height: 6px; border-radius: 50%; background-color: currentColor; box-shadow: 0 0 5px currentColor; }
 
-        /* --- NOTIFICAÇÕES & MODAIS (NOVO) --- */
-        
-        /* Toast (Notificação Flutuante) */
+        /* --- MARCA D'ÁGUA GSTDESIGN --- */
+        .watermark {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            opacity: 0.3;
+            margin-top: 40px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 300;
+            transition: opacity 0.3s;
+        }
+        .watermark:hover { opacity: 0.8; color: var(--accent-color); }
+
+        /* --- TOAST NOTIFICATION --- */
         #toast-box {
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
             background: #252525; color: #fff; padding: 12px 20px;
@@ -123,7 +151,7 @@
         #toast-box.success { border-color: var(--success-color); color: var(--success-color); }
         @keyframes slideDown { from { transform: translate(-50%, -20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
 
-        /* Modal Genérico (Fundo) */
+        /* Modal Genérico */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
@@ -150,21 +178,13 @@
         }
         .modal-input:focus { border-color: var(--accent-color); }
         
-        /* ANIMAÇÃO DE ERRO (SHAKE) */
-        .input-error {
-            border-color: var(--error-color) !important;
-            animation: shake 0.4s ease-in-out;
-        }
-        .error-message-text {
-            color: var(--error-color); font-size: 0.75rem; height: 20px; margin-bottom: 10px;
-            opacity: 0; transition: opacity 0.3s; display: block;
-        }
+        .input-error { border-color: var(--error-color) !important; animation: shake 0.4s ease-in-out; }
+        .error-message-text { color: var(--error-color); font-size: 0.75rem; height: 20px; margin-bottom: 10px; opacity: 0; transition: opacity 0.3s; display: block; }
         .error-message-text.visible { opacity: 1; }
 
         .modal-actions { display: flex; gap: 10px; margin-top: 10px; }
         .btn-modal { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; font-size: 0.9rem; }
         .btn-modal-confirm { background: var(--accent-color); color: #000; }
-        .btn-modal-danger { background: var(--error-color); color: #fff; }
         .btn-modal-cancel { background: transparent; border: 1px solid #444; color: #ccc; }
 
         /* --- TELAS --- */
@@ -176,8 +196,9 @@
         /* LOGIN */
         #login-screen { background: transparent; }
         .login-wrapper { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 40px; text-align: center; }
-        .login-logo-area { margin-bottom: 40px; }
-        .login-icon { font-size: 4rem; color: var(--accent-color); margin-bottom: 15px; text-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+        .login-logo-area { margin-bottom: 30px; }
+        /* REMOVI O ICONE DE TESOURA GIGANTE POIS A LOGO JÁ CHAMA ATENÇÃO */
+        /* .login-icon { font-size: 4rem; color: var(--accent-color); margin-bottom: 15px; text-shadow: 0 0 20px rgba(212, 175, 55, 0.3); } */
         .login-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #fff; margin-bottom: 5px; }
         .login-subtitle { font-size: 0.85rem; color: #ccc; font-weight: 300; }
         .input-validation-wrapper { position: relative; margin-bottom: 15px; }
@@ -262,6 +283,8 @@
         .btn-confirm:active { transform: scale(0.98); }
         .address { margin-top: 15px; text-align: center; font-size: 0.75rem; color: var(--text-muted); text-decoration: none; display: block; transition: color 0.2s; }
         .address:hover { color: var(--accent-color); }
+        
+        /* TELA SUCESSO & GESTÃO */
         #success-content { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 30px; width: 100%; overflow-y: auto; scrollbar-width: none; }
         #success-content::-webkit-scrollbar { display: none; }
         .tolerance-box { background: rgba(241, 196, 15, 0.1); border: 1px solid rgba(241, 196, 15, 0.3); color: #f1c40f; padding: 12px; border-radius: 8px; font-size: 0.8rem; margin-bottom: 25px; max-width: 300px; line-height: 1.4; text-align: center; }
@@ -313,8 +336,10 @@
         
         <header>
             <div id="btn-voltar" class="back-btn" onclick="voltarParaLogin()"><i class="fas fa-arrow-left"></i></div>
-            <h1>Sua Barbearia</h1>
-            <p>Seu Endereço Aqui - Cidade</p>
+            
+            <img src="https://i.imgur.com/n5ehuej.png" alt="Logo Barbearia" class="logo-barbearia">
+            
+            <p>Seu Endereço Aqui - Cidade/UF</p>
             <div id="status-loja" class="status-badge status-closed"><div class="status-dot"></div> <span id="status-texto">Verificando...</span></div>
         </header>
 
@@ -322,7 +347,6 @@
             <div id="login-screen" class="screen active">
                 <div class="login-wrapper">
                     <div class="login-logo-area">
-                        <i class="fas fa-cut login-icon"></i>
                         <h2 class="login-title">Bem-vindo</h2>
                         <p class="login-subtitle">Agende seu estilo em segundos</p>
                     </div>
@@ -338,6 +362,8 @@
                     </div>
                     <button class="btn-confirm" onclick="fazerLogin()" style="margin-top: 10px;">Entrar</button>
                     <button class="btn-barber-login" onclick="toggleAdminModal(true)"><i class="fas fa-scissors"></i> Sou Barbeiro</button>
+                    
+                    <div class="watermark">Produzido por GSTDESIGN 2026</div>
                 </div>
             </div>
 
@@ -349,13 +375,13 @@
                         <span class="label">Profissional</span>
                         <div class="barber-row">
                             <div class="barber-card active" onclick="selectBarber(this, 'Profissional 1')">
-                                <img src="https://placehold.co/150/444444/FFF?text=P1" alt="Profissional 1"><span>Profissional 1</span>
+                                <img src="https://placehold.co/150/444444/FFF?text=P1" alt="P1"><span>Profissional 1</span>
                             </div>
                             <div class="barber-card" onclick="selectBarber(this, 'Profissional 2')">
-                                <img src="https://placehold.co/150/444444/FFF?text=P2" alt="Profissional 2"><span>Profissional 2</span>
+                                <img src="https://placehold.co/150/444444/FFF?text=P2" alt="P2"><span>Profissional 2</span>
                             </div>
                             <div class="barber-card" onclick="selectBarber(this, 'Profissional 3')">
-                                <img src="https://placehold.co/150/444444/FFF?text=P3" alt="Profissional 3"><span>Profissional 3</span>
+                                <img src="https://placehold.co/150/444444/FFF?text=P3" alt="P3"><span>Profissional 3</span>
                             </div>
                         </div>
                         <input type="hidden" id="barbeiroSelecionado" value="Profissional 1">
@@ -947,5 +973,4 @@
         }
     </script>
 </body>
-</html>
 </html>

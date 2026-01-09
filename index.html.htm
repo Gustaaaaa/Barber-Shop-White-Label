@@ -35,6 +35,8 @@
             overflow: hidden; /* Trava scroll global */
             display: flex;
             justify-content: center;
+            position: fixed; /* Trava extra para mobile */
+            top: 0; left: 0;
         }
 
         .app-container {
@@ -45,11 +47,11 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            overflow: hidden; 
+            overflow: hidden; /* Garante que nada vaze */
         }
 
         @media (min-width: 451px) {
-            body { align-items: center; }
+            body { align-items: center; position: static; }
             .app-container {
                 height: 90vh;
                 border-radius: 20px;
@@ -126,7 +128,7 @@
         .logo-container-login {
             position: relative;
             display: inline-block;
-            margin-top: 15px; 
+            margin-top: 10px;
             margin-bottom: 15px;
             cursor: pointer;
             transition: transform 0.2s;
@@ -237,7 +239,7 @@
         /* --- MARCA D'ÁGUA (FOOTER) --- */
         .watermark {
             font-size: 0.6rem; color: var(--text-muted); opacity: 0.3; 
-            margin-top: 30px; /* Mais afastado do botão */
+            margin-top: 25px; /* Mais afastado do botão */
             text-transform: uppercase; letter-spacing: 1px; font-weight: 300; transition: opacity 0.3s;
         }
         .watermark:hover { opacity: 0.8; color: var(--accent-color); }
@@ -308,12 +310,8 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* LOGIN */
-        #login-screen { background: transparent; overflow-y: auto; } /* Permitir scroll se tela muito pequena */
-        .login-wrapper { 
-            flex: 1; display: flex; flex-direction: column; justify-content: center; 
-            padding: 20px 40px 40px 40px; text-align: center; margin-top: 0; 
-            min-height: 100%; /* Garantir altura */
-        }
+        #login-screen { background: transparent; }
+        .login-wrapper { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 20px 40px 25px 40px; text-align: center; margin-top: 0; }
         .login-logo-area { margin-bottom: 25px; }
         .login-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #fff; margin-bottom: 5px; }
         .login-subtitle { font-size: 0.85rem; color: #ccc; font-weight: 300; }
@@ -322,7 +320,7 @@
         .login-input:focus { border-color: var(--accent-color); }
         .valid-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--success-color); opacity: 0; transition: 0.3s; pointer-events: none; font-size: 1rem; }
         .valid-icon.show { opacity: 1; transform: translateY(-50%) scale(1.1); }
-        .btn-barber-login { background: transparent; border: 1px solid #333; color: #666; padding: 10px; border-radius: 8px; width: 100%; margin-top: 15px; cursor: pointer; font-size: 0.8rem; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 5px; }
+        .btn-barber-login { background: transparent; border: 1px solid #333; color: #666; padding: 10px; border-radius: 8px; width: 100%; margin-top: 15px; cursor: pointer; font-size: 0.8rem; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 15px; }
         .btn-barber-login:hover { border-color: var(--accent-color); color: var(--accent-color); }
 
         /* DASHBOARD */
@@ -376,10 +374,6 @@
         .settings-title { font-size: 0.9rem; color: var(--accent-color); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
         .form-row { margin-bottom: 15px; width: 100%; }
         .form-label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 5px; }
-        /* PASSWORD TOGGLE CONTAINER */
-        .password-container { position: relative; }
-        .password-toggle-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #888; cursor: pointer; font-size: 1rem; }
-        
         .settings-input { width: 100%; background: #252525; border: 1px solid #444; color: white; padding: 10px; border-radius: 8px; font-family: 'Poppins'; }
         .settings-input:focus { border-color: var(--accent-color); outline: none; }
         input[type="color"] { -webkit-appearance: none; border: none; width: 100%; height: 40px; border-radius: 8px; cursor: pointer; padding: 2px; background: #333; }
@@ -434,6 +428,11 @@
         .btn-insta { width: 100%; height: 50px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .btn-outline { width: 100%; background: transparent; border: 2px solid var(--accent-color); color: var(--text-main); padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 0.9rem; margin-top: 5px;}
         .closed-msg { grid-column: span 4; text-align: center; color: #ff5555; padding: 10px; background: rgba(255, 85, 85, 0.1); border-radius: 8px; font-size: 0.8rem; }
+        
+        /* PASSWORD TOGGLE */
+        .password-container { position: relative; width: 100%; }
+        .password-toggle-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #888; cursor: pointer; padding: 5px; }
+        .password-toggle-btn:hover { color: var(--accent-color); }
     </style>
 </head>
 <body>
@@ -441,18 +440,9 @@
     <div id="toast-box"></div>
 
     <div id="story-overlay" class="story-overlay">
-        <div class="story-progress-container">
-            <div class="story-bar"><div class="story-fill"></div></div>
-        </div>
-        <div class="story-header" onclick="window.open(appConfig.instagram, '_blank')">
-            <img src="" id="story-logo-small" class="story-avatar-small">
-            <span id="story-brand-name">Barbearia</span>
-            <span id="story-time-display" style="opacity:0.6; font-weight:400; font-size:0.8rem;"></span>
-            <div class="story-close" onclick="event.stopPropagation(); closeStory()">×</div>
-        </div>
-        <div class="story-content">
-            <img src="" id="story-image-display" class="story-image" alt="Story">
-        </div>
+        <div class="story-progress-container"><div class="story-bar"><div class="story-fill"></div></div></div>
+        <div class="story-header" onclick="window.open(appConfig.instagram, '_blank')"><img src="" id="story-logo-small" class="story-avatar-small"><span id="story-brand-name">Barbearia</span><span id="story-time-display" style="opacity:0.6; font-weight:400; font-size:0.8rem;"></span><div class="story-close" onclick="event.stopPropagation(); closeStory()">×</div></div>
+        <div class="story-content"><img src="" id="story-image-display" class="story-image" alt="Story"></div>
     </div>
 
     <div id="admin-modal" class="modal-overlay">
@@ -461,9 +451,7 @@
             <p style="font-size:0.8rem; color:#888; margin-bottom:20px;">Área exclusiva da equipe</p>
             <input type="password" id="admin-password" class="modal-input" placeholder="****" maxlength="4" inputmode="numeric" oninput="this.value = this.value.replace(/\D/g, ''); if(this.value.length === 4) verificarSenhaAdmin();">
             <span id="password-error" class="error-message-text"><i class="fas fa-times-circle"></i> Senha incorreta</span>
-            <div class="modal-actions">
-                <button class="btn-modal btn-modal-cancel" onclick="toggleAdminModal(false)">Cancelar</button>
-            </div>
+            <div class="modal-actions"><button class="btn-modal btn-modal-cancel" onclick="toggleAdminModal(false)">Cancelar</button></div>
         </div>
     </div>
 
@@ -476,10 +464,7 @@
                 <div class="info-row"><div class="info-icon-box"><i class="fas fa-clock"></i></div><span class="info-text" id="info-horario">...</span></div>
                 <div class="info-row"><div class="info-icon-box"><i class="fas fa-align-left"></i></div><span class="info-text" id="info-desc">Descrição da barbearia...</span></div>
             </div>
-            <div class="google-rating">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width:18px;">
-                <span>4.9</span> <div style="display:flex; gap:2px;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-            </div>
+            <div class="google-rating"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width:18px;"><span>4.9</span> <div style="display:flex; gap:2px;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div></div>
             <div class="watermark-popup">Produzido por GSTDESIGN 2026</div>
         </div>
     </div>
@@ -487,31 +472,16 @@
     <div id="edit-prof-modal" class="modal-overlay">
         <div class="modal-card">
             <h3 class="modal-title">Editar Barbeiro</h3>
-            <div style="margin-bottom: 15px;">
-                <input type="text" id="edit-prof-name" class="modal-input" placeholder="Nome">
-                <input type="text" id="edit-prof-img" class="modal-input" placeholder="Link da Foto">
-            </div>
-            <div class="modal-actions">
-                <button class="btn-modal btn-modal-cancel" onclick="closeEditProf()">Cancelar</button>
-                <button class="btn-modal btn-modal-confirm" onclick="saveEditProf()">Salvar</button>
-            </div>
+            <div style="margin-bottom: 15px;"><input type="text" id="edit-prof-name" class="modal-input" placeholder="Nome"><input type="text" id="edit-prof-img" class="modal-input" placeholder="Link da Foto"></div>
+            <div class="modal-actions"><button class="btn-modal btn-modal-cancel" onclick="closeEditProf()">Cancelar</button><button class="btn-modal btn-modal-confirm" onclick="saveEditProf()">Salvar</button></div>
         </div>
     </div>
 
     <div id="edit-service-modal" class="modal-overlay">
         <div class="modal-card">
             <h3 class="modal-title">Editar Serviço</h3>
-            <div style="margin-bottom: 15px;">
-                <input type="text" id="edit-service-name" class="modal-input" placeholder="Nome do Serviço">
-                <div style="display: flex; gap: 5px;">
-                    <input type="number" id="edit-service-price" class="modal-input" placeholder="Valor (R$)">
-                    <input type="number" id="edit-service-time" class="modal-input" placeholder="Minutos">
-                </div>
-            </div>
-            <div class="modal-actions">
-                <button class="btn-modal btn-modal-cancel" onclick="closeEditService()">Cancelar</button>
-                <button class="btn-modal btn-modal-confirm" onclick="saveEditService()">Salvar</button>
-            </div>
+            <div style="margin-bottom: 15px;"><input type="text" id="edit-service-name" class="modal-input" placeholder="Nome do Serviço"><div style="display: flex; gap: 5px;"><input type="number" id="edit-service-price" class="modal-input" placeholder="Valor (R$)"><input type="number" id="edit-service-time" class="modal-input" placeholder="Minutos"></div></div>
+            <div class="modal-actions"><button class="btn-modal btn-modal-cancel" onclick="closeEditService()">Cancelar</button><button class="btn-modal btn-modal-confirm" onclick="saveEditService()">Salvar</button></div>
         </div>
     </div>
 
@@ -519,25 +489,16 @@
         <div class="modal-card">
             <h3 class="modal-title" id="confirm-title">Tem certeza?</h3>
             <p class="modal-desc" id="confirm-desc">Essa ação não pode ser desfeita.</p>
-            <div class="modal-actions">
-                <button class="btn-modal btn-modal-cancel" onclick="fecharConfirmacao()">Não</button>
-                <button id="btn-confirm-action" class="btn-modal btn-modal-confirm" onclick="executarAcaoConfirmacao()">Sim, confirmar</button>
-            </div>
+            <div class="modal-actions"><button class="btn-modal btn-modal-cancel" onclick="fecharConfirmacao()">Não</button><button id="btn-confirm-action" class="btn-modal btn-modal-confirm" onclick="executarAcaoConfirmacao()">Sim, confirmar</button></div>
         </div>
     </div>
 
     <div class="app-container">
-        
         <header id="public-header">
             <div class="header-top-bar">
-                <div class="icon-area-left">
-                    <div id="btn-voltar" class="icon-btn" onclick="voltarParaLogin()"><i class="fas fa-arrow-left"></i></div>
-                    <div id="btn-share" class="icon-btn" onclick="compartilharLink()"><i class="fas fa-share-alt"></i></div>
-                </div>
+                <div class="icon-area-left"><div id="btn-voltar" class="icon-btn" onclick="voltarParaLogin()"><i class="fas fa-arrow-left"></i></div><div id="btn-share" class="icon-btn" onclick="compartilharLink()"><i class="fas fa-share-alt"></i></div></div>
                 <h1 id="header-barber-name" class="header-brand-name">Barbearia</h1>
-                <div class="icon-area-right">
-                    <div class="icon-btn" onclick="toggleInfo(true)"><i class="fas fa-info-circle"></i></div>
-                </div>
+                <div class="icon-area-right"><div class="icon-btn" onclick="toggleInfo(true)"><i class="fas fa-info-circle"></i></div></div>
             </div>
             <p id="display-address">Carregando...</p>
             <div id="status-loja" class="status-badge status-closed"><div class="status-dot"></div> <span id="status-texto">Verificando...</span></div>
@@ -552,17 +513,11 @@
                             <img src="" id="login-logo-img" class="logo-login-huge" alt="Logo">
                         </div>
                         <h2 class="login-title">Bem-vindo!</h2>
-                        <p class="login-subtitle">Agende seu estilo em segundos</p>
+                        <p class="login-subtitle" id="login-subtitle">Agende seu estilo em segundos</p>
                     </div>
                     <div class="input-group">
-                        <div class="input-validation-wrapper">
-                            <input type="text" id="login-nome" class="custom-input login-input" placeholder="Seu Nome Completo" oninput="validarInputsLogin()">
-                            <i class="fas fa-check-circle valid-icon" id="valid-nome"></i>
-                        </div>
-                        <div class="input-validation-wrapper">
-                            <input type="tel" id="login-zap" class="custom-input login-input" placeholder="WhatsApp (DDD + Número)" oninput="mascaraTelefone(this); validarInputsLogin()">
-                            <i class="fas fa-check-circle valid-icon" id="valid-zap"></i>
-                        </div>
+                        <div class="input-validation-wrapper"><input type="text" id="login-nome" class="custom-input login-input" placeholder="Seu Nome Completo" oninput="validarInputsLogin()"><i class="fas fa-check-circle valid-icon" id="valid-nome"></i></div>
+                        <div class="input-validation-wrapper"><input type="tel" id="login-zap" class="custom-input login-input" placeholder="WhatsApp (DDD + Número)" oninput="mascaraTelefone(this); validarInputsLogin()"><i class="fas fa-check-circle valid-icon" id="valid-zap"></i></div>
                     </div>
                     <button class="btn-confirm" onclick="fazerLogin()" style="margin-top: 10px;">Entrar</button>
                     <button class="btn-barber-login" onclick="toggleAdminModal(true)"><i class="fas fa-scissors"></i> Sou Barbeiro</button>
@@ -574,31 +529,11 @@
                 <div class="main-content">
                     <p style="font-size: 0.9rem; color: #ccc; margin-bottom: 10px;">Olá, <strong id="user-name-display" style="color:white; font-size: 1.1rem;">...</strong></p>
                     <div id="repeat-area" class="btn-repeat" onclick="repetirUltimo()"><i class="fas fa-history"></i> Repetir último agendamento</div>
-                    <div>
-                        <span class="label">Profissional</span>
-                        <div class="barber-row" id="barber-selection-container"></div>
-                        <input type="hidden" id="barbeiroSelecionado">
-                    </div>
-                    <div class="input-group">
-                        <span class="label">Serviço e Data</span>
-                        <div class="row-split">
-                            <input type="date" id="data" class="custom-input" style="flex: 1;" required onchange="atualizarHorarios(); checarValidade()">
-                            <select id="servico" class="custom-input" style="flex: 1.4;" required onchange="checarValidade()">
-                                <option value="" disabled selected>Serviço...</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="time-section">
-                        <span class="label">Horários Disponíveis</span>
-                        <div class="time-grid" id="timeGrid"></div>
-                        <input type="hidden" id="horaSelecionada" required>
-                    </div>
+                    <div><span class="label">Profissional</span><div class="barber-row" id="barber-selection-container"></div><input type="hidden" id="barbeiroSelecionado"></div>
+                    <div class="input-group"><span class="label">Serviço e Data</span><div class="row-split"><input type="date" id="data" class="custom-input" style="flex: 1;" required onchange="atualizarHorarios(); checarValidade()"><select id="servico" class="custom-input" style="flex: 1.4;" required onchange="checarValidade()"><option value="" disabled selected>Serviço...</option></select></div></div>
+                    <div class="time-section"><span class="label">Horários Disponíveis</span><div class="time-grid" id="timeGrid"></div><input type="hidden" id="horaSelecionada" required></div>
                 </div>
-                <div class="footer-form">
-                    <p id="msg-erro"><i class="fas fa-exclamation-circle"></i> Selecione data, serviço e horário!</p>
-                    <button id="btn-agendar" class="btn-confirm inactive" onclick="enviarZap(event)">Confirmar Agendamento</button>
-                    <a href="#" target="_blank" class="address" id="btn-maps-link"><i class="fas fa-map-marker-alt"></i> Ver como chegar no Google Maps</a>
-                </div>
+                <div class="footer-form"><p id="msg-erro"><i class="fas fa-exclamation-circle"></i> Selecione data, serviço e horário!</p><button id="btn-agendar" class="btn-confirm inactive" onclick="enviarZap(event)">Confirmar Agendamento</button><a href="#" target="_blank" class="address" id="btn-maps-link"><i class="fas fa-map-marker-alt"></i> Ver como chegar no Google Maps</a></div>
             </div>
 
             <div id="success-screen" class="screen">
@@ -624,23 +559,9 @@
 
             <div id="admin-screen" class="screen">
                 <div class="dashboard-header">
-                    <div class="dash-top-row">
-                        <h3 class="dash-title">Dashboard</h3>
-                        <div class="btn-icon-group">
-                            <button class="btn-config" onclick="abrirServicos()" title="Serviços"><i class="fas fa-cut"></i></button>
-                            <button class="btn-config" onclick="abrirConfig()" title="Configurações"><i class="fas fa-cog"></i></button>
-                        </div>
-                    </div>
+                    <div class="dash-top-row"><h3 class="dash-title">Dashboard</h3><div class="btn-icon-group"><button class="btn-config" onclick="abrirServicos()" title="Serviços"><i class="fas fa-cut"></i></button><button class="btn-config" onclick="abrirConfig()" title="Configurações"><i class="fas fa-cog"></i></button></div></div>
                     <select id="admin-barber-filter" class="barber-filter-select" onchange="renderizarPainel()"><option value="todos">Todos os Profissionais</option></select>
-                    <div class="filter-row">
-                        <button class="filter-btn active" onclick="filtrarAdmin('hoje', this)">Hoje</button>
-                        <button class="filter-btn" onclick="filtrarAdmin('amanha', this)">Amanhã</button>
-                        <button class="filter-btn" onclick="filtrarAdmin('todos', this)">Todos</button>
-                        <div class="date-picker-container" title="Escolher Data">
-                            <i class="fas fa-calendar-alt date-picker-icon"></i>
-                            <input type="date" id="admin-date-picker" class="date-picker-input" onchange="filtrarAdmin('data', this)">
-                        </div>
-                    </div>
+                    <div class="filter-row"><button class="filter-btn active" onclick="filtrarAdmin('hoje', this)">Hoje</button><button class="filter-btn" onclick="filtrarAdmin('amanha', this)">Amanhã</button><button class="filter-btn" onclick="filtrarAdmin('todos', this)">Todos</button><div class="date-picker-container" title="Escolher Data"><i class="fas fa-calendar-alt date-picker-icon"></i><input type="date" id="admin-date-picker" class="date-picker-input" onchange="filtrarAdmin('data', this)"></div></div>
                     <div class="stats-scroll-container">
                         <div class="stat-card"><i class="fas fa-calendar-check"></i><span class="stat-number" id="total-cortes">0</span><span class="stat-label">Agendados</span></div>
                         <div class="stat-card pending"><i class="fas fa-clock"></i><span class="stat-number" id="total-pendente">R$ 0</span><span class="stat-label">A Receber</span></div>
@@ -655,81 +576,34 @@
             <div id="settings-screen" class="screen">
                 <div class="dashboard-header"><h3 class="dash-title">Configurações</h3></div>
                 <div class="settings-content">
-                    <div class="settings-section">
-                        <p class="settings-title">Personalização</p>
+                    <div class="settings-section"><p class="settings-title">Personalização</p>
                         <div class="form-row"><label class="form-label">Cor Principal do App</label><input type="color" id="cfg-color" class="settings-input" value="#d4af37"></div>
-                         <div class="form-row"><label class="form-label">Senha do Painel</label>
-                            <div class="password-container">
-                                <input type="password" id="cfg-pass" class="settings-input" placeholder="Padrão: 1234" maxlength="4" inputmode="numeric">
-                                <button class="password-toggle-btn" onclick="toggleConfigPassword()"><i class="fas fa-eye"></i></button>
-                            </div>
-                        </div>
-                        <div class="form-row"><label class="form-label">Subtítulo (Tela Inicial)</label><input type="text" id="cfg-subtitulo" class="settings-input" placeholder="Agende seu estilo em segundos"></div>
+                        <div class="form-row"><label class="form-label">Subtítulo da Tela Inicial</label><input type="text" id="cfg-subtitle" class="settings-input" placeholder="Agende seu estilo em segundos"></div>
+                         <div class="form-row">
+                             <label class="form-label">Senha do Painel (4 números)</label>
+                             <div class="password-container">
+                                 <input type="password" id="cfg-pass" class="settings-input" placeholder="Padrão: 1234" maxlength="4" inputmode="numeric">
+                                 <button type="button" class="password-toggle-btn" onclick="togglePassVisibility('cfg-pass')"><i class="fas fa-eye"></i></button>
+                             </div>
+                         </div>
                     </div>
-                    <div class="settings-section">
-                        <p class="settings-title">Horário de Funcionamento</p>
-                        <div class="row-split">
-                            <div style="flex:1"><label class="form-label">Abertura</label><input type="time" id="cfg-open" class="settings-input"></div>
-                            <div style="flex:1"><label class="form-label">Fechamento</label><input type="time" id="cfg-close" class="settings-input"></div>
-                        </div>
-                        <div class="row-split" style="margin-top:10px;">
-                            <div style="flex:1"><label class="form-label">Início Intervalo</label><input type="time" id="cfg-break-start" class="settings-input"></div>
-                            <div style="flex:1"><label class="form-label">Fim Intervalo</label><input type="time" id="cfg-break-end" class="settings-input"></div>
-                        </div>
+                    <div class="settings-section"><p class="settings-title">Horário de Funcionamento</p>
+                        <div class="row-split"><div style="flex:1"><label class="form-label">Abertura</label><input type="time" id="cfg-open" class="settings-input"></div><div style="flex:1"><label class="form-label">Fechamento</label><input type="time" id="cfg-close" class="settings-input"></div></div>
+                        <div style="margin-top:10px;"><p style="font-size:0.75rem; color:#888;">Horário de Intervalo (Opcional)</p>
+                        <div class="row-split"><div style="flex:1"><label class="form-label">Início</label><input type="time" id="cfg-break-start" class="settings-input"></div><div style="flex:1"><label class="form-label">Fim</label><input type="time" id="cfg-break-end" class="settings-input"></div></div></div>
                         <div style="margin-top: 15px;"><label class="form-label">Dias de Funcionamento</label><div class="days-wrapper" id="days-selector"></div></div>
                     </div>
-                    <div class="settings-section">
-                        <p class="settings-title">Dados da Barbearia</p>
-                        <div class="form-row"><label class="form-label">Nome da Barbearia</label><input type="text" id="cfg-nome" class="settings-input"></div>
-                        <div class="form-row"><label class="form-label">Descrição (Aparece no ícone Info)</label><input type="text" id="cfg-desc" class="settings-input"></div>
-                        <div class="form-row"><label class="form-label">Endereço Exibido</label><input type="text" id="cfg-endereco" class="settings-input"></div>
-                        <div class="form-row"><label class="form-label">Link Google Maps (URL)</label><input type="text" id="cfg-maps" class="settings-input"></div>
-                        <div class="form-row"><label class="form-label">WhatsApp da Loja (DDD+Num)</label><input type="text" id="cfg-zap" class="settings-input"></div>
-                        <div class="form-row"><label class="form-label">Instagram (Link Completo)</label><input type="text" id="cfg-insta" class="settings-input"></div>
-                        <div class="form-row"><label class="form-label">URL da Logo (Imgur/Link direto)</label><input type="text" id="cfg-logo" class="settings-input"></div>
-                        <div class="form-row"><label class="form-label">Imagem do Story (URL)</label><input type="text" id="cfg-story" class="settings-input"></div>
-                    </div>
-                    <div class="settings-section">
-                        <p class="settings-title">Equipe</p>
-                        <div id="prof-list-container"></div>
-                        <div class="add-prof-card">
-                            <p style="font-size:0.75rem; color:#888; font-weight:600;">NOVO PROFISSIONAL</p>
-                            <input type="text" id="new-prof-name" placeholder="Nome do Barbeiro">
-                            <input type="text" id="new-prof-img" placeholder="Link da Foto (Imgur, etc)">
-                            <button class="btn-add-full" onclick="addProfissional()"><i class="fas fa-plus-circle"></i> Adicionar Profissional</button>
-                        </div>
-                    </div>
-                    <div class="settings-section">
-                        <button class="btn-outline" style="border-color: #ff4d4d; color: #ff4d4d;" onclick="resetarConfiguracoes()">Restaurar Padrões</button>
-                    </div>
+                    <div class="settings-section"><p class="settings-title">Dados da Barbearia</p><div class="form-row"><label class="form-label">Nome da Barbearia</label><input type="text" id="cfg-nome" class="settings-input"></div><div class="form-row"><label class="form-label">Descrição (Aparece no ícone Info)</label><input type="text" id="cfg-desc" class="settings-input"></div><div class="form-row"><label class="form-label">Endereço Exibido</label><input type="text" id="cfg-endereco" class="settings-input"></div><div class="form-row"><label class="form-label">Link Google Maps (URL)</label><input type="text" id="cfg-maps" class="settings-input"></div><div class="form-row"><label class="form-label">WhatsApp da Loja (DDD+Num)</label><input type="text" id="cfg-zap" class="settings-input"></div><div class="form-row"><label class="form-label">Instagram (Link Completo)</label><input type="text" id="cfg-insta" class="settings-input"></div><div class="form-row"><label class="form-label">URL da Logo (Imgur/Link direto)</label><input type="text" id="cfg-logo" class="settings-input"></div><div class="form-row"><label class="form-label">Imagem do Story (URL)</label><input type="text" id="cfg-story" class="settings-input"></div></div>
+                    <div class="settings-section"><p class="settings-title">Equipe</p><div id="prof-list-container"></div><div class="add-prof-card"><p style="font-size:0.75rem; color:#888; font-weight:600;">NOVO PROFISSIONAL</p><input type="text" id="new-prof-name" placeholder="Nome do Barbeiro"><input type="text" id="new-prof-img" placeholder="Link da Foto (Imgur, etc)"><button class="btn-add-full" onclick="addProfissional()"><i class="fas fa-plus-circle"></i> Adicionar Profissional</button></div></div>
+                    <div class="settings-section"><button class="btn-outline" style="border-color: #ff4d4d; color: #ff4d4d;" onclick="resetarConfiguracoes()">Restaurar Padrões</button></div>
                 </div>
-                <div class="settings-footer">
-                    <button class="btn-outline" onclick="trocarTela('admin-screen')">Voltar</button>
-                    <button class="btn-confirm" onclick="salvarConfig()">Salvar</button>
-                </div>
+                <div class="settings-footer"><button class="btn-outline" onclick="trocarTela('admin-screen')">Voltar</button><button class="btn-confirm" onclick="salvarConfig()">Salvar</button></div>
             </div>
 
             <div id="services-screen" class="screen">
                 <div class="dashboard-header"><h3 class="dash-title">Serviços</h3></div>
-                <div class="settings-content">
-                    <div class="settings-section">
-                        <p class="settings-title">Lista de Serviços</p>
-                        <div id="services-list-container"></div>
-                        <div class="add-prof-card">
-                            <p style="font-size:0.75rem; color:#888; font-weight:600;">NOVO SERVIÇO</p>
-                            <input type="text" id="new-service-name" placeholder="Nome (ex: Corte Social)">
-                            <div style="display:flex; gap:10px;">
-                                <input type="number" id="new-service-price" placeholder="Valor (R$)">
-                                <input type="number" id="new-service-time" placeholder="Minutos">
-                            </div>
-                            <button class="btn-add-full" onclick="addService()"><i class="fas fa-plus-circle"></i> Adicionar Serviço</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="settings-footer">
-                    <button class="btn-outline" onclick="trocarTela('admin-screen')">Voltar</button>
-                    <button class="btn-confirm" onclick="salvarConfig()">Salvar</button>
-                </div>
+                <div class="settings-content"><div class="settings-section"><p class="settings-title">Lista de Serviços</p><div id="services-list-container"></div><div class="add-prof-card"><p style="font-size:0.75rem; color:#888; font-weight:600;">NOVO SERVIÇO</p><input type="text" id="new-service-name" placeholder="Nome (ex: Corte Social)"><div style="display:flex; gap:10px;"><input type="number" id="new-service-price" placeholder="Valor (R$)"><input type="number" id="new-service-time" placeholder="Minutos"></div><button class="btn-add-full" onclick="addService()"><i class="fas fa-plus-circle"></i> Adicionar Serviço</button></div></div></div>
+                <div class="settings-footer"><button class="btn-outline" onclick="trocarTela('admin-screen')">Voltar</button><button class="btn-confirm" onclick="salvarConfig()">Salvar</button></div>
             </div>
 
         </div>
@@ -739,7 +613,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, getDoc, setDoc, updateDoc, deleteDoc, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // --- CONFIGURAÇÃO DO FIREBASE ---
         const firebaseConfig = {
             apiKey: "AIzaSyCdidGqRySr382mykhZd3G7TqVRwJycsX4",
             authDomain: "app-barbearia-de86f.firebaseapp.com",
@@ -750,7 +623,6 @@
             measurementId: "G-LE74FLQHHN"
         };
 
-        // Inicialização Segura
         let app, db;
         try {
             app = initializeApp(firebaseConfig);
@@ -760,7 +632,6 @@
             console.error("Erro Firebase:", e);
         }
 
-        // --- VARIÁVEIS GLOBAIS ---
         let appConfig = {};
         let agendamentos = [];
         let usuario = { nome: "", zap: "" };
@@ -777,7 +648,6 @@
         const dateInput = document.getElementById('data');
         dateInput.valueAsDate = new Date();
 
-        // Configuração Padrão (Fallback)
         const defaultConfig = {
             nomeBarbearia: "Barbearia",
             subtitulo: "Agende seu estilo em segundos",
@@ -848,21 +718,23 @@
         window.editarAgendamento = editarAgendamento;
         window.cancelarAgendamento = cancelarAgendamento;
         window.executarAcaoConfirmacao = ejecutarAcaoConfirmacao;
-        window.toggleConfigPassword = toggleConfigPassword;
+        window.togglePassVisibility = togglePassVisibility;
 
-        // CALLBACK GLOBAL
         let funcaoConfirmacaoAtual = null;
-        function ejecutarAcaoConfirmacao() { if (funcaoConfirmacaoAtual) funcaoConfirmacaoAtual(); fecharConfirmacao(); }
 
-        // INICIALIZA O APP
+        function ejecutarAcaoConfirmacao() {
+            if (funcaoConfirmacaoAtual) {
+                funcaoConfirmacaoAtual();
+            }
+            fecharConfirmacao();
+        }
+
         initApp();
 
         async function initApp() {
-            // Carrega padrão primeiro para não travar
             appConfig = defaultConfig;
             applyConfigToUI();
 
-            // Timeout de segurança
             setTimeout(() => {
                 if(document.getElementById('display-address').innerText === 'Carregando...') {
                     applyConfigToUI();
@@ -870,7 +742,6 @@
             }, 2000);
 
             try {
-                // 1. CONFIG
                 onSnapshot(doc(db, "config", "loja"), (snapshot) => {
                     if (snapshot.exists()) {
                         appConfig = { ...defaultConfig, ...snapshot.data() };
@@ -879,23 +750,25 @@
                     }
                     applyConfigToUI();
                     verificarStatus();
-                }, (error) => console.warn("Erro Config:", error));
+                }, (error) => {
+                    console.warn("Sem permissão ou offline (Config):", error);
+                });
 
-                // 2. AGENDAMENTOS
                 const q = query(collection(db, "agendamentos"), orderBy("id", "desc"));
                 onSnapshot(q, (snapshot) => {
                     agendamentos = snapshot.docs.map(d => ({ firebaseId: d.id, ...d.data() }));
+                    
                     if(usuario.nome) renderizarLista();
                     if(document.getElementById('admin-screen').classList.contains('active')) renderizarPainel();
                     atualizarHorarios();
-                }, (error) => console.warn("Erro Agendamentos:", error));
+                }, (error) => {
+                    console.warn("Sem permissão ou offline (Agendamentos):", error);
+                });
 
             } catch (e) {
                 console.error("Erro fatal init:", e);
             }
         }
-
-        // --- FUNÇÕES ---
 
         function toggleInfo(show) {
             const modal = document.getElementById('info-modal');
@@ -910,16 +783,9 @@
             }
         }
 
-        function toggleConfigPassword() {
-            const input = document.getElementById('cfg-pass');
-            const btn = document.querySelector('.password-toggle-btn i');
-            if (input.type === "password") {
-                input.type = "text";
-                btn.className = "fas fa-eye-slash";
-            } else {
-                input.type = "password";
-                btn.className = "fas fa-eye";
-            }
+        function togglePassVisibility(id) {
+            const input = document.getElementById(id);
+            if (input.type === "password") input.type = "text"; else input.type = "password";
         }
 
         window.onclick = function(event) {
@@ -997,14 +863,6 @@
                     aberto = true;
                 }
             }
-            // Break time logic for status
-            if (appConfig.breakStart && appConfig.breakEnd) {
-                const [bh, bm] = appConfig.breakStart.split(':').map(Number);
-                const [eh, em] = appConfig.breakEnd.split(':').map(Number);
-                const bStart = bh*60+bm;
-                const bEnd = eh*60+em;
-                if(currentTimeVal >= bStart && currentTimeVal < bEnd) aberto = false;
-            }
 
             if (aberto) {
                 statusDiv.className = 'status-badge status-open';
@@ -1029,7 +887,7 @@
 
             document.getElementById('display-address').innerText = appConfig.endereco;
             document.getElementById('header-barber-name').innerText = appConfig.nomeBarbearia;
-            document.querySelector('.login-subtitle').innerText = appConfig.subtitulo || "Agende seu estilo em segundos";
+            if(appConfig.subtitulo) document.getElementById('login-subtitle').innerText = appConfig.subtitulo;
             document.getElementById('login-logo-img').src = appConfig.logoUrl;
             document.getElementById('btn-maps-link').href = appConfig.mapsLink || "#";
             
@@ -1101,7 +959,6 @@
             const btnShare = document.getElementById('btn-share');
             const publicHeader = document.getElementById('public-header');
             
-            // CORREÇÃO: Esconde o cabeçalho se for admin
             if (idTela === 'admin-screen' || idTela === 'settings-screen' || idTela === 'services-screen') {
                 publicHeader.style.display = 'none';
             } else {
@@ -1184,15 +1041,14 @@
             const [oh, om] = appConfig.openTime.split(':').map(Number);
             const [ch, cm] = appConfig.closeTime.split(':').map(Number);
             const start = oh*60 + om; const end = ch*60 + cm;
-            
-            let breakStartMin = -1;
-            let breakEndMin = -1;
 
-            if (appConfig.breakStart && appConfig.breakEnd) {
+            // Break Logic
+            let breakStart = -1, breakEnd = -1;
+            if(appConfig.breakStart && appConfig.breakEnd) {
                 const [bh, bm] = appConfig.breakStart.split(':').map(Number);
-                const [eh, em] = appConfig.breakEnd.split(':').map(Number);
-                breakStartMin = bh * 60 + bm;
-                breakEndMin = eh * 60 + em;
+                const [beh, bem] = appConfig.breakEnd.split(':').map(Number);
+                breakStart = bh*60 + bm;
+                breakEnd = beh*60 + bem;
             }
             
             let step = 30;
@@ -1205,10 +1061,9 @@
 
             let count = 0;
             for(let t=start; t<end; t+=30) {
+                if(breakStart !== -1 && t >= breakStart && t < breakEnd) continue;
                 if(isToday && t < nowMin) continue;
-                // Interval Logic
-                if (breakStartMin !== -1 && t >= breakStartMin && t < breakEndMin) continue;
-
+                
                 const hh = Math.floor(t/60); const mm = t%60;
                 const hStr = `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
                 if(occupied.includes(hStr)) continue;
@@ -1322,17 +1177,11 @@
         
         function verificarSenhaAdmin() {
             const p = document.getElementById('admin-password');
-            const pass = (appConfig && appConfig.adminPass) ? appConfig.adminPass : "1234";
+            const pass = appConfig.adminPass ? appConfig.adminPass : "1234";
             
             if(p.value === pass) {
                 toggleAdminModal(false); 
-                // AQUI ESTAVA O BUG: Forçamos a troca de tela e removemos qualquer outra classe ativa
-                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-                document.getElementById('admin-screen').classList.add('active');
-                
-                // Esconde header público
-                document.getElementById('public-header').style.display = 'none';
-                
+                trocarTela('admin-screen'); 
                 renderizarPainel();
             } else {
                 p.classList.add('input-error'); document.getElementById('password-error').classList.add('visible');
@@ -1346,8 +1195,6 @@
             document.getElementById('confirm-title').innerText = t; 
             document.getElementById('confirm-desc').innerText = d;
             document.getElementById('confirm-modal').classList.add('visible'); 
-            
-            // Define a função que o botão HTML vai chamar
             funcaoConfirmacaoAtual = cb;
         }
 
@@ -1370,9 +1217,9 @@
             document.getElementById('cfg-pass').value = appConfig.adminPass;
             document.getElementById('cfg-open').value = appConfig.openTime;
             document.getElementById('cfg-close').value = appConfig.closeTime;
-            document.getElementById('cfg-subtitulo').value = appConfig.subtitulo || "";
-            document.getElementById('cfg-break-start').value = appConfig.breakStart || "";
-            document.getElementById('cfg-break-end').value = appConfig.breakEnd || "";
+            document.getElementById('cfg-subtitle').value = appConfig.subtitulo;
+            document.getElementById('cfg-break-start').value = appConfig.breakStart;
+            document.getElementById('cfg-break-end').value = appConfig.breakEnd;
 
             tempOpenDays = [...(appConfig.openDays || [])];
             renderDaysSelector(); renderSettingsProfList(); trocarTela('settings-screen');
@@ -1380,7 +1227,6 @@
 
         async function salvarConfig() {
             appConfig.nomeBarbearia = document.getElementById('cfg-nome').value || defaultConfig.nomeBarbearia;
-            appConfig.subtitulo = document.getElementById('cfg-subtitulo').value;
             appConfig.descricao = document.getElementById('cfg-desc').value || defaultConfig.descricao;
             appConfig.endereco = document.getElementById('cfg-endereco').value || defaultConfig.endereco;
             appConfig.mapsLink = document.getElementById('cfg-maps').value || defaultConfig.mapsLink;
@@ -1392,6 +1238,7 @@
             appConfig.adminPass = document.getElementById('cfg-pass').value || "1234";
             appConfig.openTime = document.getElementById('cfg-open').value || "08:00";
             appConfig.closeTime = document.getElementById('cfg-close').value || "20:00";
+            appConfig.subtitulo = document.getElementById('cfg-subtitle').value || defaultConfig.subtitulo;
             appConfig.breakStart = document.getElementById('cfg-break-start').value;
             appConfig.breakEnd = document.getElementById('cfg-break-end').value;
             appConfig.openDays = tempOpenDays;
@@ -1544,6 +1391,11 @@
                 await deleteDoc(doc(db, "agendamentos", id));
                 showToast("Removido.");
             });
+        }
+
+        function togglePassVisibility(id) {
+            const input = document.getElementById(id);
+            if (input.type === "password") input.type = "text"; else input.type = "password";
         }
     </script>
 </body>

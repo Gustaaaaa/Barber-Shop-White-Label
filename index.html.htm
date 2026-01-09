@@ -1322,8 +1322,750 @@
                 const appt = agendamentos.find(a => a.id === id);
                 if(appt) await deleteDoc(doc(db, "agendamentos", appt.firebaseId));
                 showToast("Removido.");
+
+<script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, getDoc, setDoc, updateDoc, deleteDoc, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // --- CONFIGURAÇÃO DO FIREBASE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCdidGqRySr382mykhZd3G7TqVRwJycsX4",
+            authDomain: "app-barbearia-de86f.firebaseapp.com",
+            projectId: "app-barbearia-de86f",
+            storageBucket: "app-barbearia-de86f.firebasestorage.app",
+            messagingSenderId: "67148084464",
+            appId: "1:67148084464:web:90a07392ef7330294a3e35",
+            measurementId: "G-LE74FLQHHN"
+        };
+
+        // Inicialização Segura
+        let app, db;
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            console.log("Firebase conectado.");
+        } catch (e) {
+            console.error("Erro Firebase:", e);
+        }
+
+        // --- VARIÁVEIS GLOBAIS ---
+        let appConfig = {};
+        let agendamentos = [];
+        let usuario = { nome: "", zap: "" };
+        let linkZap = "";
+        let adminFiltro = 'hoje';
+        let adminDataCustom = '';
+        let confirmCallback = null; 
+        
+        let tempOpenDays = [];
+        let currentEditingIndex = -1;
+        let currentEditingServiceIndex = -1;
+        let storyTimer = null;
+
+        const dateInput = document.getElementById('data');
+        dateInput.valueAsDate = new Date();
+
+        // Configuração Padrão (Fallback)
+        const defaultConfig = {
+            nomeBarbearia: "Barbearia",
+            descricao: "Cortes modernos e clássicos.",
+            endereco: "Seu Endereço Aqui",
+            mapsLink: "#",
+            whatsapp: "5500000000000",
+            instagram: "https://instagram.com",
+            logoUrl: "https://placehold.co/150/d4af37/000?text=LOGO",
+            storyUrl: "https://placehold.co/400x800/222/d4af37?text=Story",
+            themeColor: "#d4af37",
+            adminPass: "1234",
+            openTime: "08:00",
+            closeTime: "20:00",
+            openDays: [1, 2, 3, 4, 5, 6], 
+            profissionais: [
+                { id: 1, nome: "Profissional 1", foto: "https://placehold.co/150/444444/FFF?text=P1" },
+                { id: 2, nome: "Profissional 2", foto: "https://placehold.co/150/444444/FFF?text=P2" }
+            ],
+            servicos: [
+                { id: 1, nome: "Corte de Cabelo", preco: 40, tempo: 30 },
+                { id: 2, nome: "Barba", preco: 30, tempo: 30 }
+            ]
+        };
+
+        // EXPOSE FUNCTIONS (Para o HTML conseguir chamar)
+        window.toggleInfo = toggleInfo;
+        window.openStory = openStory;
+        window.closeStory = closeStory;
+        window.compartilharLink = compartilharLink;
+        window.validarInputsLogin = validarInputsLogin;
+        window.mascaraTelefone = mascaraTelefone;
+        window.fazerLogin = fazerLogin;
+        window.toggleAdminModal = toggleAdminModal;
+        window.verificarSenhaAdmin = verificarSenhaAdmin;
+        window.repetirUltimo = repetirUltimo;
+        window.selectBarber = selectBarber;
+        window.atualizarHorarios = atualizarHorarios;
+        window.checarValidade = checarValidade;
+        window.enviarZap = enviarZap;
+        window.reabrirZap = reabrirZap;
+        window.novoAgendamento = novoAgendamento;
+        window.abrirMaps = abrirMaps;
+        window.abrirServicos = abrirServicos;
+        window.abrirConfig = abrirConfig;
+        window.filtrarAdmin = filtrarAdmin;
+        window.renderizarPainel = renderizarPainel;
+        window.trocarTela = trocarTela;
+        window.voltarParaLogin = voltarParaLogin;
+        window.fecharConfirmacao = fecharConfirmacao;
+        window.salvarConfig = salvarConfig;
+        window.resetarConfiguracoes = resetarConfiguracoes;
+        window.toggleDay = toggleDay;
+        window.addProfissional = addProfissional;
+        window.removeProfissional = removeProfissional;
+        window.openEditProf = openEditProf;
+        window.closeEditProf = closeEditProf;
+        window.saveEditProf = saveEditProf;
+        window.addService = addService;
+        window.removeService = removeService;
+        window.openEditService = openEditService;
+        window.closeEditService = closeEditService;
+        window.saveEditService = saveEditService;
+        window.adminConfirmar = adminConfirmar;
+        window.adminDeletar = adminDeletar;
+        window.editarAgendamento = editarAgendamento;
+        window.cancelarAgendamento = cancelarAgendamento;
+
+        // INICIALIZA O APP
+        initApp();
+
+        async function initApp() {
+            // Carrega padrão primeiro para não travar
+            appConfig = defaultConfig;
+            applyConfigToUI();
+
+            try {
+                // 1. ESCUTA CONFIGURAÇÕES EM TEMPO REAL
+                // Correção aqui: Mudamos o nome do argumento para 'snapshot' para não conflitar com a função 'doc'
+                onSnapshot(doc(db, "config", "loja"), (snapshot) => {
+                    if (snapshot.exists()) {
+                        appConfig = { ...defaultConfig, ...snapshot.data() };
+                    } else {
+                        // Se não existe, cria no banco
+                        setDoc(doc(db, "config", "loja"), defaultConfig);
+                    }
+                    applyConfigToUI();
+                    verificarStatus();
+                }, (error) => {
+                    console.warn("Sem permissão ou offline (Config):", error);
+                });
+
+                // 2. ESCUTA AGENDAMENTOS EM TEMPO REAL
+                const q = query(collection(db, "agendamentos"), orderBy("id", "desc"));
+                onSnapshot(q, (snapshot) => {
+                    agendamentos = snapshot.docs.map(d => ({ firebaseId: d.id, ...d.data() }));
+                    
+                    if(usuario.nome) renderizarLista();
+                    if(document.getElementById('admin-screen').classList.contains('active')) renderizarPainel();
+                    atualizarHorarios();
+                }, (error) => {
+                    console.warn("Sem permissão ou offline (Agendamentos):", error);
+                });
+
+            } catch (e) {
+                console.error("Erro fatal init:", e);
+            }
+        }
+
+        // --- FUNÇÕES DE UI E LÓGICA ---
+
+        function toggleInfo(show) {
+            const modal = document.getElementById('info-modal');
+            if(show) {
+                document.getElementById('info-nome-barbearia').innerText = appConfig.nomeBarbearia;
+                document.getElementById('info-endereco').innerText = appConfig.endereco;
+                document.getElementById('info-horario').innerText = `${appConfig.openTime} às ${appConfig.closeTime}`;
+                document.getElementById('info-desc').innerText = appConfig.descricao;
+                modal.classList.add('visible');
+            } else {
+                modal.classList.remove('visible');
+            }
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal-overlay')) {
+                if (event.target.id === 'admin-modal') toggleAdminModal(false);
+                if (event.target.id === 'info-modal') toggleInfo(false);
+                if (event.target.id === 'edit-prof-modal') closeEditProf();
+                if (event.target.id === 'edit-service-modal') closeEditService();
+                if (event.target.id === 'confirm-modal') fecharConfirmacao();
+            }
+        }
+
+        const storyOverlay = document.getElementById('story-overlay');
+        let touchStartY = 0; let touchCurrentY = 0;
+        storyOverlay.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, {passive: true});
+        storyOverlay.addEventListener('touchmove', e => {
+            touchCurrentY = e.touches[0].clientY;
+            const diff = touchCurrentY - touchStartY;
+            if (diff > 0) { storyOverlay.classList.add('dragging'); storyOverlay.style.transform = `translateY(${diff}px)`; }
+        }, {passive: true});
+        storyOverlay.addEventListener('touchend', e => {
+            storyOverlay.classList.remove('dragging');
+            if ((touchCurrentY - touchStartY) > 100) closeStory(); else storyOverlay.style.transform = '';
+            touchStartY = 0; touchCurrentY = 0;
+        });
+
+        function checkStoryStatus() {
+            if(sessionStorage.getItem('story_seen')) document.getElementById('logo-container').classList.add('seen');
+        }
+        function openStory() {
+            const overlay = document.getElementById('story-overlay');
+            overlay.classList.add('active'); overlay.style.transform = '';
+            sessionStorage.setItem('story_seen', 'true');
+            document.getElementById('logo-container').classList.add('seen');
+            document.getElementById('story-logo-small').src = appConfig.logoUrl;
+            document.getElementById('story-brand-name').innerText = appConfig.nomeBarbearia;
+            document.getElementById('story-image-display').src = appConfig.storyUrl;
+            const now = new Date();
+            let diff = now.getHours() - 9; if (diff < 1) diff = 1; 
+            document.getElementById('story-time-display').innerText = diff + "h";
+            clearTimeout(storyTimer); storyTimer = setTimeout(closeStory, 5000);
+        }
+        function closeStory() {
+            const overlay = document.getElementById('story-overlay');
+            overlay.classList.remove('active'); overlay.style.transform = '';
+            clearTimeout(storyTimer);
+            const fill = overlay.querySelector('.story-fill');
+            fill.style.animation = 'none'; fill.offsetHeight; fill.style.animation = null; 
+        }
+
+        function compartilharLink() {
+            const url = window.location.href;
+            if (navigator.share) navigator.share({title: appConfig.nomeBarbearia, text: 'Agende seu horário!', url: url}).catch(console.error);
+            else { navigator.clipboard.writeText(url).then(() => showToast("Link copiado!", "success")); }
+        }
+
+        function verificarStatus() {
+            const now = new Date();
+            const diaSemana = now.getDay(); 
+            const hora = now.getHours();
+            const minutos = now.getMinutes();
+            const currentTimeVal = hora * 60 + minutos;
+
+            const [oh, om] = appConfig.openTime.split(':').map(Number);
+            const [ch, cm] = appConfig.closeTime.split(':').map(Number);
+            const openTimeVal = oh * 60 + om;
+            const closeTimeVal = ch * 60 + cm;
+
+            const statusDiv = document.getElementById('status-loja');
+            const texto = document.getElementById('status-texto');
+            
+            let aberto = false;
+            if (appConfig.openDays && appConfig.openDays.includes(diaSemana)) {
+                if (currentTimeVal >= openTimeVal && currentTimeVal < closeTimeVal) {
+                    aberto = true;
+                }
+            }
+
+            if (aberto) {
+                statusDiv.className = 'status-badge status-open';
+                texto.innerText = 'Aberto Agora';
+            } else {
+                statusDiv.className = 'status-badge status-closed';
+                texto.innerText = 'Fechado Agora';
+            }
+        }
+
+        function hexToRgb(hex) {
+            if(!hex) return "212, 175, 55";
+            hex = hex.replace(/^#/, '');
+            let bigint = parseInt(hex, 16);
+            let r = (bigint >> 16) & 255; let g = (bigint >> 8) & 255; let b = bigint & 255;
+            return `${r}, ${g}, ${b}`;
+        }
+
+        function applyConfigToUI() {
+            document.documentElement.style.setProperty('--accent-color', appConfig.themeColor);
+            document.documentElement.style.setProperty('--accent-rgb', hexToRgb(appConfig.themeColor));
+            document.getElementById('display-address').innerText = appConfig.endereco;
+            document.getElementById('header-barber-name').innerText = appConfig.nomeBarbearia;
+            document.getElementById('login-logo-img').src = appConfig.logoUrl;
+            document.getElementById('btn-maps-link').href = appConfig.mapsLink || "#";
+            
+            const container = document.getElementById('barber-selection-container');
+            if(container) {
+                container.innerHTML = '';
+                const adminFilter = document.getElementById('admin-barber-filter');
+                adminFilter.innerHTML = '<option value="todos">Todos os Profissionais</option>';
+
+                if(appConfig.profissionais && appConfig.profissionais.length > 0) {
+                    appConfig.profissionais.forEach((prof, index) => {
+                        const card = document.createElement('div');
+                        card.className = index === 0 ? 'barber-card active' : 'barber-card';
+                        card.onclick = () => selectBarber(card, prof.nome);
+                        card.innerHTML = `<img src="${prof.foto}" alt="${prof.nome}"><span>${prof.nome}</span>`;
+                        container.appendChild(card);
+                        const opt = document.createElement('option');
+                        opt.value = prof.nome; opt.innerText = prof.nome; adminFilter.appendChild(opt);
+                    });
+                    document.getElementById('barbeiroSelecionado').value = appConfig.profissionais[0].nome;
+                }
+            }
+            renderBookingServices();
+            checkStoryStatus();
+        }
+
+        function renderBookingServices() {
+            const select = document.getElementById('servico');
+            select.innerHTML = '<option value="" disabled selected>Serviço...</option>';
+            appConfig.servicos.forEach(srv => {
+                const opt = document.createElement('option');
+                opt.value = srv.nome; opt.innerText = `${srv.nome} (R$ ${srv.preco} • ${srv.tempo}min)`;
+                opt.dataset.tempo = srv.tempo; select.appendChild(opt);
+            });
+        }
+
+        function validarInputsLogin() {
+            const nome = document.getElementById('login-nome').value;
+            const zap = document.getElementById('login-zap').value;
+            const iconNome = document.getElementById('valid-nome');
+            const iconZap = document.getElementById('valid-zap');
+            if (nome.trim().length > 3) iconNome.classList.add('show'); else iconNome.classList.remove('show');
+            const zapNumeros = zap.replace(/\D/g, "");
+            if (zapNumeros.length >= 10) iconZap.classList.add('show'); else iconZap.classList.remove('show');
+        }
+
+        function fazerLogin() {
+            const nome = document.getElementById('login-nome').value.trim();
+            const zap = document.getElementById('login-zap').value.trim();
+            if (nome.length <= 3 || zap.length < 10) { 
+                showToast("Preencha nome e WhatsApp corretamente!", "error");
+                return; 
+            }
+            usuario.nome = nome; usuario.zap = zap.replace(/\D/g, "");
+            document.getElementById('user-name-display').innerText = nome;
+            if(agendamentos.some(a => a.cliente === nome)) document.getElementById('repeat-area').style.display = 'block';
+            trocarTela('form-screen'); atualizarHorarios();
+        }
+
+        function mascaraTelefone(input) {
+            let v = input.value;
+            v = v.replace(/\D/g, ""); v = v.replace(/^(\d{2})(\d)/g, "($1) $2"); v = v.replace(/(\d)(\d{4})$/, "$1-$2"); input.value = v.substring(0, 15);
+        }
+
+        function trocarTela(idTela) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(idTela).classList.add('active');
+            const btnVoltar = document.getElementById('btn-voltar');
+            const btnShare = document.getElementById('btn-share');
+            const publicHeader = document.getElementById('public-header');
+            
+            if (idTela === 'admin-screen' || idTela === 'settings-screen' || idTela === 'services-screen') {
+                publicHeader.style.display = 'none';
+            } else {
+                publicHeader.style.display = 'block';
+            }
+
+            if(idTela === 'success-screen') document.getElementById('success-content').scrollTop = 0;
+
+            if (idTela === 'login-screen') {
+                btnVoltar.style.display = 'none';
+                btnShare.style.display = 'flex';
+            } else if (idTela === 'admin-screen' || idTela === 'settings-screen' || idTela === 'services-screen') {
+                btnVoltar.style.display = 'none';
+                btnShare.style.display = 'none';
+            } else {
+                btnVoltar.style.display = 'flex';
+                btnShare.style.display = 'none';
+            }
+        }
+
+        function voltarParaLogin() {
+            const telaAtual = document.querySelector('.screen.active').id;
+            if (telaAtual === 'success-screen') trocarTela('form-screen'); else trocarTela('login-screen');
+        }
+        function novoAgendamento() {
+            document.getElementById('horaSelecionada').value = "";
+            document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+            checarValidade(); trocarTela('form-screen');
+        }
+        function abrirMaps() { window.open(appConfig.mapsLink, '_blank'); }
+
+        function repetirUltimo() {
+            const meus = agendamentos.filter(a => a.cliente === usuario.nome);
+            if (meus.length === 0) return;
+            const btn = document.getElementById('repeat-area'); const html = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>'; btn.style.opacity = '0.7';
+            setTimeout(() => {
+                const ult = meus[0];
+                const sel = document.getElementById('servico');
+                for(let i=0; i<sel.options.length; i++) { if(sel.options[i].text.includes(ult.servico.split('(')[0])) { sel.selectedIndex = i; break; } }
+                selectBarber(null, ult.barbeiro);
+                btn.innerHTML = html; btn.style.opacity = '1'; checarValidade(); showToast('Dados carregados!', 'success');
+            }, 800);
+        }
+
+        function checarValidade() {
+            const d = document.getElementById('data').value; const h = document.getElementById('horaSelecionada').value; const s = document.getElementById('servico').value;
+            const btn = document.getElementById('btn-agendar'); const msg = document.getElementById('msg-erro');
+            if(d && h && s) { btn.classList.remove('inactive'); msg.style.display = 'none'; } else { btn.classList.add('inactive'); }
+        }
+
+        function atualizarHorarios() {
+            const val = document.getElementById('data').value;
+            const grid = document.getElementById('timeGrid');
+            const input = document.getElementById('horaSelecionada');
+            if(!val) return;
+            
+            const [y, m, d] = val.split('-').map(Number);
+            const date = new Date(y, m-1, d, 12, 0, 0);
+            const diaSem = date.getDay();
+            
+            grid.innerHTML = ''; input.value = ''; checarValidade();
+
+            if(appConfig.openDays && !appConfig.openDays.includes(diaSem)) {
+                date.setDate(date.getDate() + 1);
+                const ny = date.getFullYear(); const nm = String(date.getMonth()+1).padStart(2,'0'); const nd = String(date.getDate()).padStart(2,'0');
+                document.getElementById('data').value = `${ny}-${nm}-${nd}`;
+                showToast(`Dia fechado. Buscando ${nd}/${nm}...`);
+                setTimeout(atualizarHorarios, 100);
+                return;
+            }
+
+            const now = new Date();
+            const todayStr = now.toISOString().split('T')[0];
+            const isToday = (val === todayStr);
+            const nowMin = now.getHours()*60 + now.getMinutes();
+            
+            const [oh, om] = appConfig.openTime.split(':').map(Number);
+            const [ch, cm] = appConfig.closeTime.split(':').map(Number);
+            const start = oh*60 + om; const end = ch*60 + cm;
+            
+            let step = 30;
+            const sOpt = document.getElementById('servico').options[document.getElementById('servico').selectedIndex];
+            if(sOpt && sOpt.dataset.tempo) step = parseInt(sOpt.dataset.tempo);
+
+            const fmtDate = val.split('-').reverse().join('/');
+            const barb = document.getElementById('barbeiroSelecionado').value;
+            const occupied = agendamentos.filter(a => a.barbeiro === barb && a.data === fmtDate && (a.status === 'pendente' || a.status === 'concluido')).map(a => a.hora);
+
+            let count = 0;
+            for(let t=start; t<end; t+=30) {
+                if(isToday && t < nowMin) continue;
+                const hh = Math.floor(t/60); const mm = t%60;
+                const hStr = `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+                if(occupied.includes(hStr)) continue;
+                
+                count++;
+                const btn = document.createElement('div'); btn.className = 'time-btn'; btn.innerText = hStr;
+                btn.onclick = () => {
+                    document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected'); input.value = hStr; if(navigator.vibrate) navigator.vibrate(40); checarValidade();
+                };
+                grid.appendChild(btn);
+            }
+            if(count === 0) {
+                date.setDate(date.getDate() + 1);
+                const ny = date.getFullYear(); const nm = String(date.getMonth()+1).padStart(2,'0'); const nd = String(date.getDate()).padStart(2,'0');
+                document.getElementById('data').value = `${ny}-${nm}-${nd}`;
+                showToast(`Lotado. Buscando ${nd}/${nm}...`);
+                setTimeout(atualizarHorarios, 100);
+            }
+        }
+
+        function selectBarber(el, nome) {
+            const cards = document.querySelectorAll('.barber-card');
+            if(!el) {
+                cards.forEach(c => { c.classList.remove('active'); if(c.innerText.includes(nome)) { c.classList.add('active'); document.getElementById('barbeiroSelecionado').value = nome; } });
+                return;
+            }
+            cards.forEach(c => c.classList.remove('active')); el.classList.add('active');
+            document.getElementById('barbeiroSelecionado').value = nome;
+            if(navigator.vibrate) navigator.vibrate(30); atualizarHorarios();
+        }
+
+        async function enviarZap(e) {
+            e.preventDefault();
+            const h = document.getElementById('horaSelecionada').value; const sSel = document.getElementById('servico');
+            if(!h || !sSel.value) {
+                const btn = document.getElementById('btn-agendar'); btn.classList.add('shake-anim'); document.getElementById('msg-erro').style.display = 'block';
+                if(navigator.vibrate) navigator.vibrate([100,50,100]); setTimeout(()=>btn.classList.remove('shake-anim'), 500); return;
+            }
+            const sTxt = sSel.options[sSel.selectedIndex].text;
+            const d = document.getElementById('data').value.split('-').reverse().join('/');
+            const b = document.getElementById('barbeiroSelecionado').value;
+            
+            await addDoc(collection(db, "agendamentos"), {
+                id: Date.now(), data: d, hora: h, servico: sTxt, barbeiro: b, cliente: usuario.nome, zapUsuario: usuario.zap, status: 'pendente'
+            });
+
+            const msg = `Olá, sou *${usuario.nome}*.\n\nGostaria de agendar:\n✂️ *${sTxt}*\n💈 Com: ${b}\n📅 Dia: ${d}\n⏰ Hora: ${h}\n📞 Contato: ${usuario.zap}`;
+            linkZap = `https://wa.me/${appConfig.whatsapp}?text=${encodeURIComponent(msg)}`;
+            window.open(linkZap, '_blank');
+            celebrarAgendamento(); renderizarLista(); trocarTela('success-screen');
+        }
+        
+        function celebrarAgendamento() {
+            const colors = [appConfig.themeColor, '#ffffff', '#ffd700'];
+            for(let i=0; i<50; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                document.body.appendChild(confetti);
+                setTimeout(() => { confetti.remove(); }, 5000);
+            }
+        }
+        
+        function reabrirZap() { if(linkZap) window.open(linkZap, '_blank'); }
+        document.getElementById('btn-insta-link').onclick = function() { window.open(appConfig.instagram, '_blank'); }
+
+        function renderizarLista() {
+            const container = document.getElementById('lista-agendamentos'); container.innerHTML = "";
+            const meusAgendamentos = agendamentos.filter(a => a.cliente === usuario.nome);
+            if (meusAgendamentos.length === 0) { container.innerHTML = '<p style="color: #555; font-size: 0.8rem; text-align: center;">Nenhum agendamento recente.</p>'; return; }
+            meusAgendamentos.forEach(appt => {
+                const item = document.createElement('div'); item.className = 'appt-item';
+                item.innerHTML = `<div class="appt-details"><strong>${appt.data} às ${appt.hora}</strong>${appt.servico} <br> <span style="color:#777">com ${appt.barbeiro}</span>${appt.status === 'concluido' ? '<br><span style="color:#2ecc71; font-size:0.7rem">Realizado</span>' : ''}</div>${appt.status !== 'concluido' ? `<div class="appt-actions"><button class="btn-action btn-edit" onclick="editarAgendamento(${appt.id})"><i class="fas fa-edit"></i> Reagendar</button><button class="btn-action btn-cancel" onclick="cancelarAgendamento(${appt.id})"><i class="fas fa-times"></i> Cancelar</button></div>` : ''}`;
+                container.appendChild(item);
+            });
+        }
+        
+        function cancelarAgendamento(id) {
+            abrirConfirmacao("Cancelar horário?", "O barbeiro será notificado no WhatsApp.", () => {
+                const appt = agendamentos.find(a => a.id === id);
+                if(appt) deleteDoc(doc(db, "agendamentos", appt.firebaseId));
+                const msg = `Olá, sou ${usuario.nome}. Gostaria de CANCELAR meu horário do dia ${appt.data} às ${appt.hora}.`;
+                window.open(`https://wa.me/${appConfig.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
+            });
+        }
+        
+        function editarAgendamento(id) {
+            const appt = agendamentos.find(a => a.id === id);
+            const partesData = appt.data.split('/');
+            const dataIso = `${partesData[2]}-${partesData[1]}-${partesData[0]}`;
+            document.getElementById('data').value = dataIso;
+            const select = document.getElementById('servico');
+            for (let i = 0; i < select.options.length; i++) { if (appt.servico.includes(select.options[i].value)) { select.selectedIndex = i; break; } }
+            selectBarber(null, appt.barbeiro);
+            
+            if(appt) deleteDoc(doc(db, "agendamentos", appt.firebaseId));
+            
+            trocarTela('form-screen'); atualizarHorarios();
+            showToast("Dados carregados. Escolha o novo horário.", "success");
+        }
+
+        // --- ADMIN & SETTINGS ---
+        function toggleAdminModal(show) {
+            const m = document.getElementById('admin-modal'); const p = document.getElementById('admin-password');
+            if(show) { m.classList.add('visible'); p.value=''; p.classList.remove('input-error'); document.getElementById('password-error').classList.remove('visible'); setTimeout(()=>p.focus(), 100); }
+            else m.classList.remove('visible');
+        }
+        function verificarSenhaAdmin() {
+            const p = document.getElementById('admin-password');
+            if(p.value === (appConfig.adminPass || "1234")) {
+                toggleAdminModal(false); limparExpirados(); trocarTela('admin-screen'); renderizarPainel();
+            } else {
+                p.classList.add('input-error'); document.getElementById('password-error').classList.add('visible');
+                if(navigator.vibrate) navigator.vibrate(200); setTimeout(()=>{ p.classList.remove('input-error'); p.value=''; }, 400);
+            }
+        }
+        function fecharConfirmacao() { document.getElementById('confirm-modal').classList.remove('visible'); confirmCallback = null; }
+        function abrirConfirmacao(t, d, cb) {
+            document.getElementById('confirm-title').innerText = t; document.getElementById('confirm-desc').innerText = d;
+            document.getElementById('confirm-modal').classList.add('visible'); confirmCallback = cb;
+        }
+
+        function showToast(m, t='normal') {
+            const b = document.getElementById('toast-box'); b.className=''; if(t==='error') b.classList.add('error'); if(t==='success') b.classList.add('success');
+            b.innerHTML = t==='error' ? `<i class="fas fa-exclamation-circle"></i> ${m}` : t==='success' ? `<i class="fas fa-check-circle"></i> ${m}` : m;
+            b.style.display = 'flex'; setTimeout(()=>b.style.display='none', 3000);
+        }
+
+        function abrirConfig() {
+            document.getElementById('cfg-nome').value = appConfig.nomeBarbearia;
+            document.getElementById('cfg-desc').value = appConfig.descricao;
+            document.getElementById('cfg-endereco').value = appConfig.endereco;
+            document.getElementById('cfg-maps').value = appConfig.mapsLink;
+            document.getElementById('cfg-zap').value = appConfig.whatsapp;
+            document.getElementById('cfg-insta').value = appConfig.instagram;
+            document.getElementById('cfg-logo').value = appConfig.logoUrl;
+            document.getElementById('cfg-story').value = appConfig.storyUrl;
+            document.getElementById('cfg-color').value = appConfig.themeColor;
+            document.getElementById('cfg-pass').value = appConfig.adminPass;
+            document.getElementById('cfg-open').value = appConfig.openTime;
+            document.getElementById('cfg-close').value = appConfig.closeTime;
+            tempOpenDays = [...(appConfig.openDays || [])];
+            renderDaysSelector(); renderSettingsProfList(); trocarTela('settings-screen');
+        }
+
+        async function salvarConfig() {
+            appConfig.nomeBarbearia = document.getElementById('cfg-nome').value || defaultConfig.nomeBarbearia;
+            appConfig.descricao = document.getElementById('cfg-desc').value || defaultConfig.descricao;
+            appConfig.endereco = document.getElementById('cfg-endereco').value || defaultConfig.endereco;
+            appConfig.mapsLink = document.getElementById('cfg-maps').value || defaultConfig.mapsLink;
+            appConfig.whatsapp = document.getElementById('cfg-zap').value || defaultConfig.whatsapp;
+            appConfig.instagram = document.getElementById('cfg-insta').value || defaultConfig.instagram;
+            appConfig.logoUrl = document.getElementById('cfg-logo').value || defaultConfig.logoUrl;
+            appConfig.storyUrl = document.getElementById('cfg-story').value || defaultConfig.storyUrl;
+            appConfig.themeColor = document.getElementById('cfg-color').value;
+            appConfig.adminPass = document.getElementById('cfg-pass').value || "1234";
+            appConfig.openTime = document.getElementById('cfg-open').value || "08:00";
+            appConfig.closeTime = document.getElementById('cfg-close').value || "20:00";
+            appConfig.openDays = tempOpenDays;
+
+            await setDoc(doc(db, "config", "loja"), appConfig);
+            showToast("Salvo com sucesso!", "success");
+            trocarTela('admin-screen');
+        }
+
+        function resetarConfiguracoes() {
+            abrirConfirmacao("Resetar Tudo?", "Irreversível.", async () => {
+                await setDoc(doc(db, "config", "loja"), defaultConfig);
+                location.reload(); 
+            });
+        }
+
+        function renderDaysSelector() {
+            const container = document.getElementById('days-selector'); container.innerHTML = '';
+            const dias = [{i:0,t:'Dom'},{i:1,t:'Seg'},{i:2,t:'Ter'},{i:3,t:'Qua'},{i:4,t:'Qui'},{i:5,t:'Sex'},{i:6,t:'Sáb'}];
+            dias.forEach(d => {
+                const btn = document.createElement('div');
+                btn.className = tempOpenDays.includes(d.i) ? 'day-btn active' : 'day-btn';
+                btn.innerText = d.t; btn.onclick = () => toggleDay(d.i); container.appendChild(btn);
+            });
+        }
+        function toggleDay(i) {
+            if(tempOpenDays.includes(i)) tempOpenDays = tempOpenDays.filter(d => d !== i); else tempOpenDays.push(i);
+            renderDaysSelector();
+        }
+
+        function renderSettingsProfList() {
+            const list = document.getElementById('prof-list-container'); list.innerHTML = '';
+            appConfig.profissionais.forEach((prof, idx) => {
+                const item = document.createElement('div'); item.className = 'prof-list-item';
+                item.innerHTML = `<div class="prof-info"><img src="${prof.foto}" class="prof-img-mini"><span style="font-size:0.85rem;">${prof.nome}</span></div><div><button class="btn-icon-action btn-edit-prof" onclick="openEditProf(${idx})"><i class="fas fa-pen"></i></button><button class="btn-icon-action btn-del-prof" onclick="removeProfissional(${idx})"><i class="fas fa-trash"></i></button></div>`;
+                list.appendChild(item);
+            });
+        }
+        function addProfissional() {
+            const name = document.getElementById('new-prof-name').value; let img = document.getElementById('new-prof-img').value;
+            if(!name) return showToast("Digite o nome!", "error");
+            if(!img) img = "https://placehold.co/150/444444/FFF?text=" + name.charAt(0);
+            appConfig.profissionais.push({ id: Date.now(), nome: name, foto: img });
+            document.getElementById('new-prof-name').value = ''; document.getElementById('new-prof-img').value = '';
+            renderSettingsProfList();
+        }
+        function removeProfissional(idx) {
+            abrirConfirmacao("Remover?", "Irreversível.", () => { appConfig.profissionais.splice(idx, 1); renderSettingsProfList(); });
+        }
+        function openEditProf(idx) {
+            currentEditingIndex = idx; const p = appConfig.profissionais[idx];
+            document.getElementById('edit-prof-name').value = p.nome; document.getElementById('edit-prof-img').value = p.foto;
+            document.getElementById('edit-prof-modal').classList.add('visible');
+        }
+        function closeEditProf() { document.getElementById('edit-prof-modal').classList.remove('visible'); currentEditingIndex = -1; }
+        function saveEditProf() {
+            if (currentEditingIndex === -1) return;
+            const n = document.getElementById('edit-prof-name').value; const i = document.getElementById('edit-prof-img').value;
+            if(!n) return showToast("Nome vazio", "error");
+            appConfig.profissionais[currentEditingIndex].nome = n; appConfig.profissionais[currentEditingIndex].foto = i || `https://placehold.co/150/444444/FFF?text=${n.charAt(0)}`;
+            renderSettingsProfList(); closeEditProf();
+        }
+
+        function abrirServicos() { renderServicesList(); trocarTela('services-screen'); }
+        function renderServicesList() {
+            const list = document.getElementById('services-list-container'); list.innerHTML = '';
+            appConfig.servicos.forEach((srv, idx) => {
+                const item = document.createElement('div'); item.className = 'prof-list-item';
+                item.innerHTML = `<div style="display:flex; flex-direction:column;"><span style="font-size:0.9rem; font-weight:600;">${srv.nome}</span><span class="service-meta"><span class="service-price-tag">R$ ${srv.preco}</span> • ${srv.tempo} min</span></div><div><button class="btn-icon-action btn-edit-prof" onclick="openEditService(${idx})"><i class="fas fa-pen"></i></button><button class="btn-icon-action btn-del-prof" onclick="removeService(${idx})"><i class="fas fa-trash"></i></button></div>`;
+                list.appendChild(item);
+            });
+        }
+        function addService() {
+            const n = document.getElementById('new-service-name').value; const p = document.getElementById('new-service-price').value; const t = document.getElementById('new-service-time').value;
+            if(!n || !p || !t) return showToast("Preencha tudo!", "error");
+            appConfig.servicos.push({ id: Date.now(), nome: n, preco: parseInt(p), tempo: parseInt(t) });
+            document.getElementById('new-service-name').value = ''; document.getElementById('new-service-price').value = ''; document.getElementById('new-service-time').value = '';
+            renderServicesList();
+        }
+        function removeService(idx) {
+            abrirConfirmacao("Remover?", "Sairá da lista.", () => { appConfig.servicos.splice(idx, 1); renderServicesList(); });
+        }
+        function openEditService(idx) {
+            currentEditingServiceIndex = idx; const s = appConfig.servicos[idx];
+            document.getElementById('edit-service-name').value = s.nome; document.getElementById('edit-service-price').value = s.preco; document.getElementById('edit-service-time').value = s.tempo;
+            document.getElementById('edit-service-modal').classList.add('visible');
+        }
+        function closeEditService() { document.getElementById('edit-service-modal').classList.remove('visible'); currentEditingServiceIndex = -1; }
+        function saveEditService() {
+            if (currentEditingServiceIndex === -1) return;
+            const n = document.getElementById('edit-service-name').value; const p = document.getElementById('edit-service-price').value; const t = document.getElementById('edit-service-time').value;
+            if(!n || !p || !t) return showToast("Preencha tudo", "error");
+            appConfig.servicos[currentEditingServiceIndex] = { id: appConfig.servicos[currentEditingServiceIndex].id, nome: n, preco: parseInt(p), tempo: parseInt(t) };
+            renderServicesList(); closeEditService();
+        }
+
+        function filtrarAdmin(tipo, el) {
+            adminFiltro = tipo;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            if(tipo !== 'data') el.classList.add('active'); else adminDataCustom = el.value;
+            document.getElementById('list-label').innerText = tipo === 'hoje' ? 'Lista de Hoje' : tipo === 'amanha' ? 'Lista de Amanhã' : 'Todos os Agendamentos';
+            renderizarPainel();
+        }
+
+        function renderizarPainel() {
+            const container = document.getElementById('admin-list'); const filtroBarbeiro = document.getElementById('admin-barber-filter').value;
+            container.innerHTML = "";
+            let totalCount = 0; let aReceber = 0; let emCaixa = 0; let totalValueAll = 0;
+            const hoje = new Date().toISOString().split('T')[0];
+            const amanha = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0];
+
+            let listaFiltrada = agendamentos.filter(appt => {
+                if(appt.status === 'cancelado_auto') return false; 
+                const d = appt.data.split('/'); const dIso = `${d[2]}-${d[1]}-${d[0]}`;
+                let matchData = (adminFiltro === 'hoje' && dIso === hoje) || (adminFiltro === 'amanha' && dIso === amanha) || (adminFiltro === 'data' && dIso === adminDataCustom) || (adminFiltro === 'todos');
+                let matchBarber = (filtroBarbeiro === 'todos') || (appt.barbeiro === filtroBarbeiro);
+                return matchData && matchBarber;
+            }).sort((a, b) => a.hora.localeCompare(b.hora));
+
+            if (listaFiltrada.length === 0) container.innerHTML = '<p style="color:#666; text-align:center; margin-top:20px">Nenhum corte encontrado.</p>';
+            let proximoEncontrado = false;
+
+            listaFiltrada.forEach(appt => {
+                let precoMatch = appt.servico.match(/R\$\s*(\d+)/); let valor = precoMatch ? parseInt(precoMatch[1]) : 0;
+                if(valor === 0) { const s = appConfig.servicos.find(s => appt.servico.includes(s.nome)); if(s) valor = s.preco; }
+                const valorTexto = `R$ ${valor},00`; const sL = appt.servico.split('(')[0];
+                totalValueAll += valor; if(appt.status === 'concluido') emCaixa += valor; else { totalCount++; aReceber += valor; }
+                const isPago = appt.status === 'concluido';
+                const div = document.createElement('div'); div.className = isPago ? 'admin-item pago' : 'admin-item';
+                let nextBadge = (!isPago && !proximoEncontrado) ? '<span class="next-client-badge">PRÓXIMO</span>' : ''; if(nextBadge) proximoEncontrado = true;
+                
+                div.innerHTML = `<div class="timeline-date">${appt.hora}</div>${nextBadge}<div class="item-top"><h4 style="color:white; flex:1; ${isPago ? 'text-decoration:line-through; opacity:0.7' : ''}">${appt.cliente}</h4><div class="service-price">${valorTexto}</div></div><span class="service-name">${sL}</span><span class="barber-info"><i class="fas fa-cut"></i> ${appt.barbeiro}</span>${!isPago ? `<div class="item-actions"><button class="btn-adm btn-adm-zap" onclick="window.open('https://wa.me/55${appt.zapUsuario ? appt.zapUsuario.replace(/\D/g, "") : ""}', '_blank')"><i class="fab fa-whatsapp"></i></button><button class="btn-adm btn-adm-check" onclick="adminConfirmar(${appt.firebaseId})"><i class="fas fa-check"></i></button><button class="btn-adm btn-adm-trash" onclick="adminDeletar(${appt.firebaseId})"><i class="fas fa-trash"></i></button></div>` : `<div class="item-actions"><button class="btn-adm btn-adm-trash" onclick="adminDeletar(${appt.firebaseId})"><i class="fas fa-trash"></i></button></div>`}`;
+                container.appendChild(div);
+            });
+            document.getElementById('total-cortes').innerText = totalCount; document.getElementById('total-pendente').innerText = `R$ ${aReceber}`; document.getElementById('total-caixa').innerText = `R$ ${emCaixa}`;
+            const tm = listaFiltrada.length > 0 ? Math.round(totalValueAll / listaFiltrada.length) : 0; document.getElementById('ticket-medio').innerText = `R$ ${tm}`;
+        }
+
+        async function adminConfirmar(id) {
+            abrirConfirmacao('Pago?', 'Confirmar pagamento.', async () => {
+                await updateDoc(doc(db, "agendamentos", id), { status: 'concluido' });
+                showToast("Confirmado!", "success");
+            });
+        }
+        async function adminDeletar(id) {
+            abrirConfirmacao('Excluir?', 'Remover da lista.', async () => {
+                await deleteDoc(doc(db, "agendamentos", id));
+                showToast("Removido.");
             });
         }
     </script>
 </body>
 </html>
+                
+            });
+        }
+    </script>
+</body>
+</html>
+

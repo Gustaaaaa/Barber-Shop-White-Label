@@ -126,7 +126,7 @@
         .logo-container-login {
             position: relative;
             display: inline-block;
-            margin-top: 15px; 
+            margin-top: 10px;
             margin-bottom: 15px;
             cursor: pointer;
             transition: transform 0.2s;
@@ -237,7 +237,7 @@
         /* --- MARCA D'ÁGUA (FOOTER) --- */
         .watermark {
             font-size: 0.6rem; color: var(--text-muted); opacity: 0.3; 
-            margin-top: 30px; /* Mais afastado do botão */
+            margin-top: 25px; /* Mais afastado do botão */
             text-transform: uppercase; letter-spacing: 1px; font-weight: 300; transition: opacity 0.3s;
         }
         .watermark:hover { opacity: 0.8; color: var(--accent-color); }
@@ -308,18 +308,8 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* LOGIN */
-        #login-screen { 
-            background: transparent; 
-            overflow: hidden; /* Trava Scroll */
-            touch-action: none; /* Desabilita scroll touch */
-            height: 100%;
-            width: 100%;
-        }
-        .login-wrapper { 
-            flex: 1; display: flex; flex-direction: column; justify-content: center; 
-            padding: 20px 40px 40px 40px; text-align: center; margin-top: 0; 
-            height: 100%;
-        }
+        #login-screen { background: transparent; }
+        .login-wrapper { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 20px 40px 25px 40px; text-align: center; margin-top: 0; }
         .login-logo-area { margin-bottom: 25px; }
         .login-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #fff; margin-bottom: 5px; }
         .login-subtitle { font-size: 0.85rem; color: #ccc; font-weight: 300; }
@@ -431,29 +421,22 @@
         .btn-confirm.inactive { background: #444; color: #888; box-shadow: none; cursor: default; }
         .address { margin-top: 15px; text-align: center; font-size: 0.75rem; color: var(--text-muted); text-decoration: none; display: block; transition: color 0.2s; }
         .address:hover { color: var(--accent-color); }
-        
-        /* NOVOS ESTILOS PARA BOTOES MAIORES (CLIENTE) */
-        .btn-action { 
-            flex: 1; 
-            padding: 12px 15px; 
-            font-size: 0.9rem; 
-            border-radius: 10px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            border: none; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 8px; 
-            transition: 0.2s; 
-            height: 45px; /* Altura maior */
-        }
-        .btn-edit { background-color: rgba(var(--accent-rgb), 0.15); color: var(--accent-color); border: 1px solid rgba(var(--accent-rgb), 0.3); }
-        .btn-cancel { background-color: rgba(255, 77, 77, 0.15); color: var(--error-color); border: 1px solid rgba(255, 77, 77, 0.3); }
-        
+        .btn-edit { background-color: rgba(var(--accent-rgb), 0.15); color: var(--accent-color); border-color: rgba(var(--accent-rgb), 0.3); }
+        .btn-cancel { background-color: rgba(255, 77, 77, 0.15); color: var(--error-color); border-color: rgba(255, 77, 77, 0.3); }
         .btn-insta { width: 100%; height: 50px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .btn-outline { width: 100%; background: transparent; border: 2px solid var(--accent-color); color: var(--text-main); padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 0.9rem; margin-top: 5px;}
         .closed-msg { grid-column: span 4; text-align: center; color: #ff5555; padding: 10px; background: rgba(255, 85, 85, 0.1); border-radius: 8px; font-size: 0.8rem; }
+        
+        /* OBRIGADO PAGE */
+        #success-content { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 30px; width: 100%; overflow-y: auto; scrollbar-width: none; }
+        .tolerance-box { background: rgba(241, 196, 15, 0.1); border: 1px solid rgba(241, 196, 15, 0.3); color: #f1c40f; padding: 12px; border-radius: 8px; font-size: 0.8rem; margin-bottom: 25px; max-width: 300px; line-height: 1.4; text-align: center; }
+        .success-actions-group { display: flex; flex-direction: column; gap: 15px; width: 100%; margin-bottom: 30px; }
+        .appointments-section { width: 100%; border-top: 1px solid #333; padding-top: 20px; }
+        .appointments-list { width: 100%; margin-top: 15px; }
+        .appt-item { background: #252525; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; }
+        .appt-details { font-size: 0.85rem; color: #fff; margin-bottom: 12px; line-height: 1.4; }
+        .appt-details strong { color: var(--accent-color); display: block; font-size: 1rem; margin-bottom: 4px; }
+        .appt-actions { display: flex; gap: 10px; }
     </style>
 </head>
 <body>
@@ -547,7 +530,6 @@
     </div>
 
     <div class="app-container">
-        
         <header id="public-header">
             <div class="header-top-bar">
                 <div class="icon-area-left">
@@ -675,71 +657,19 @@
             <div id="settings-screen" class="screen">
                 <div class="dashboard-header"><h3 class="dash-title">Configurações</h3></div>
                 <div class="settings-content">
-                    <div class="settings-section">
-                        <p class="settings-title">Personalização</p>
-                        <div class="form-row"><label class="form-label">Cor Principal do App</label><input type="color" id="cfg-color" class="settings-input" value="#d4af37"></div>
-                         <div class="form-row"><label class="form-label">Senha do Painel</label><input type="text" id="cfg-pass" class="settings-input" placeholder="Padrão: 1234"></div>
-                    </div>
-                    <div class="settings-section">
-                        <p class="settings-title">Horário de Funcionamento</p>
-                        <div class="row-split">
-                            <div style="flex:1"><label class="form-label">Abertura</label><input type="time" id="cfg-open" class="settings-input"></div>
-                            <div style="flex:1"><label class="form-label">Fechamento</label><input type="time" id="cfg-close" class="settings-input"></div>
-                        </div>
-                        <div style="margin-top: 15px;"><label class="form-label">Dias de Funcionamento</label><div class="days-wrapper" id="days-selector"></div></div>
-                    </div>
-                    <div class="settings-section">
-                        <p class="settings-title">Dados da Barbearia</p>
-                        <div class="form-row"><label class="form-label">Nome da Barbearia</label><input type="text" id="cfg-nome" class="settings-input"></div>
-                        <div class="form-row"><label class="form-label">Descrição (Aparece no ícone Info)</label><input type="text" id="cfg-desc" class="settings-input"></div>
-                        <div class="form-row"><label class="form-label">Endereço Exibido</label><input type="text" id="cfg-endereco" class="settings-input"></div>
-                        <div class="form-row"><label class="form-label">Link Google Maps (URL)</label><input type="text" id="cfg-maps" class="settings-input"></div>
-                        <div class="form-row"><label class="form-label">WhatsApp da Loja (DDD+Num)</label><input type="text" id="cfg-zap" class="settings-input"></div>
-                        <div class="form-row"><label class="form-label">Instagram (Link Completo)</label><input type="text" id="cfg-insta" class="settings-input"></div>
-                        <div class="form-row"><label class="form-label">URL da Logo (Imgur/Link direto)</label><input type="text" id="cfg-logo" class="settings-input"></div>
-                        <div class="form-row"><label class="form-label">Imagem do Story (URL)</label><input type="text" id="cfg-story" class="settings-input"></div>
-                    </div>
-                    <div class="settings-section">
-                        <p class="settings-title">Equipe</p>
-                        <div id="prof-list-container"></div>
-                        <div class="add-prof-card">
-                            <p style="font-size:0.75rem; color:#888; font-weight:600;">NOVO PROFISSIONAL</p>
-                            <input type="text" id="new-prof-name" placeholder="Nome do Barbeiro">
-                            <input type="text" id="new-prof-img" placeholder="Link da Foto (Imgur, etc)">
-                            <button class="btn-add-full" onclick="addProfissional()"><i class="fas fa-plus-circle"></i> Adicionar Profissional</button>
-                        </div>
-                    </div>
-                    <div class="settings-section">
-                        <button class="btn-outline" style="border-color: #ff4d4d; color: #ff4d4d;" onclick="resetarConfiguracoes()">Restaurar Padrões</button>
-                    </div>
+                    <div class="settings-section"><p class="settings-title">Personalização</p><div class="form-row"><label class="form-label">Cor Principal do App</label><input type="color" id="cfg-color" class="settings-input" value="#d4af37"></div><div class="form-row"><label class="form-label">Senha do Painel</label><input type="text" id="cfg-pass" class="settings-input" placeholder="Padrão: 1234"></div></div>
+                    <div class="settings-section"><p class="settings-title">Horário de Funcionamento</p><div class="row-split"><div style="flex:1"><label class="form-label">Abertura</label><input type="time" id="cfg-open" class="settings-input"></div><div style="flex:1"><label class="form-label">Fechamento</label><input type="time" id="cfg-close" class="settings-input"></div></div><div style="margin-top: 15px;"><label class="form-label">Dias de Funcionamento</label><div class="days-wrapper" id="days-selector"></div></div></div>
+                    <div class="settings-section"><p class="settings-title">Dados da Barbearia</p><div class="form-row"><label class="form-label">Nome da Barbearia</label><input type="text" id="cfg-nome" class="settings-input"></div><div class="form-row"><label class="form-label">Descrição (Aparece no ícone Info)</label><input type="text" id="cfg-desc" class="settings-input"></div><div class="form-row"><label class="form-label">Endereço Exibido</label><input type="text" id="cfg-endereco" class="settings-input"></div><div class="form-row"><label class="form-label">Link Google Maps (URL)</label><input type="text" id="cfg-maps" class="settings-input"></div><div class="form-row"><label class="form-label">WhatsApp da Loja (DDD+Num)</label><input type="text" id="cfg-zap" class="settings-input"></div><div class="form-row"><label class="form-label">Instagram (Link Completo)</label><input type="text" id="cfg-insta" class="settings-input"></div><div class="form-row"><label class="form-label">URL da Logo (Imgur/Link direto)</label><input type="text" id="cfg-logo" class="settings-input"></div><div class="form-row"><label class="form-label">Imagem do Story (URL)</label><input type="text" id="cfg-story" class="settings-input"></div></div>
+                    <div class="settings-section"><p class="settings-title">Equipe</p><div id="prof-list-container"></div><div class="add-prof-card"><p style="font-size:0.75rem; color:#888; font-weight:600;">NOVO PROFISSIONAL</p><input type="text" id="new-prof-name" placeholder="Nome do Barbeiro"><input type="text" id="new-prof-img" placeholder="Link da Foto (Imgur, etc)"><button class="btn-add-full" onclick="addProfissional()"><i class="fas fa-plus-circle"></i> Adicionar Profissional</button></div></div>
+                    <div class="settings-section"><button class="btn-outline" style="border-color: #ff4d4d; color: #ff4d4d;" onclick="resetarConfiguracoes()">Restaurar Padrões</button></div>
                 </div>
-                <div class="settings-footer">
-                    <button class="btn-outline" onclick="trocarTela('admin-screen')">Voltar</button>
-                    <button class="btn-confirm" onclick="salvarConfig()">Salvar</button>
-                </div>
+                <div class="settings-footer"><button class="btn-outline" onclick="trocarTela('admin-screen')">Voltar</button><button class="btn-confirm" onclick="salvarConfig()">Salvar</button></div>
             </div>
 
             <div id="services-screen" class="screen">
                 <div class="dashboard-header"><h3 class="dash-title">Serviços</h3></div>
-                <div class="settings-content">
-                    <div class="settings-section">
-                        <p class="settings-title">Lista de Serviços</p>
-                        <div id="services-list-container"></div>
-                        <div class="add-prof-card">
-                            <p style="font-size:0.75rem; color:#888; font-weight:600;">NOVO SERVIÇO</p>
-                            <input type="text" id="new-service-name" placeholder="Nome (ex: Corte Social)">
-                            <div style="display:flex; gap:10px;">
-                                <input type="number" id="new-service-price" placeholder="Valor (R$)">
-                                <input type="number" id="new-service-time" placeholder="Minutos">
-                            </div>
-                            <button class="btn-add-full" onclick="addService()"><i class="fas fa-plus-circle"></i> Adicionar Serviço</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="settings-footer">
-                    <button class="btn-outline" onclick="trocarTela('admin-screen')">Voltar</button>
-                    <button class="btn-confirm" onclick="salvarConfig()">Salvar</button>
-                </div>
+                <div class="settings-content"><div class="settings-section"><p class="settings-title">Lista de Serviços</p><div id="services-list-container"></div><div class="add-prof-card"><p style="font-size:0.75rem; color:#888; font-weight:600;">NOVO SERVIÇO</p><input type="text" id="new-service-name" placeholder="Nome (ex: Corte Social)"><div style="display:flex; gap:10px;"><input type="number" id="new-service-price" placeholder="Valor (R$)"><input type="number" id="new-service-time" placeholder="Minutos"></div><button class="btn-add-full" onclick="addService()"><i class="fas fa-plus-circle"></i> Adicionar Serviço</button></div></div></div>
+                <div class="settings-footer"><button class="btn-outline" onclick="trocarTela('admin-screen')">Voltar</button><button class="btn-confirm" onclick="salvarConfig()">Salvar</button></div>
             </div>
 
         </div>
@@ -812,7 +742,7 @@
             ]
         };
 
-        // EXPOSE FUNCTIONS
+        // EXPOSE FUNCTIONS (Para o HTML conseguir chamar)
         window.toggleInfo = toggleInfo;
         window.openStory = openStory;
         window.closeStory = closeStory;
@@ -855,7 +785,6 @@
         window.editarAgendamento = editarAgendamento;
         window.cancelarAgendamento = cancelarAgendamento;
         window.executarAcaoConfirmacao = ejecutarAcaoConfirmacao;
-        window.limparExpirados = limparExpirados;
 
         // CALLBACK GLOBAL PARA O MODAL
         let funcaoConfirmacaoAtual = null;
@@ -1098,7 +1027,6 @@
             const btnShare = document.getElementById('btn-share');
             const publicHeader = document.getElementById('public-header');
             
-            // CORREÇÃO: Esconde o cabeçalho se for admin
             if (idTela === 'admin-screen' || idTela === 'settings-screen' || idTela === 'services-screen') {
                 publicHeader.style.display = 'none';
             } else {
@@ -1304,7 +1232,6 @@
             else m.classList.remove('visible');
         }
         
-        // CORREÇÃO: Usa senha padrão caso config não carregue
         function verificarSenhaAdmin() {
             const p = document.getElementById('admin-password');
             const pass = appConfig.adminPass ? appConfig.adminPass : "1234";
@@ -1321,9 +1248,14 @@
         }
         
         function fecharConfirmacao() { document.getElementById('confirm-modal').classList.remove('visible'); funcaoConfirmacaoAtual = null; }
+        
         function abrirConfirmacao(t, d, cb) {
-            document.getElementById('confirm-title').innerText = t; document.getElementById('confirm-desc').innerText = d;
-            document.getElementById('confirm-modal').classList.add('visible'); confirmCallback = cb;
+            document.getElementById('confirm-title').innerText = t; 
+            document.getElementById('confirm-desc').innerText = d;
+            document.getElementById('confirm-modal').classList.add('visible'); 
+            
+            // Define a função que o botão HTML vai chamar
+            funcaoConfirmacaoAtual = cb;
         }
 
         function showToast(m, t='normal') {
@@ -1331,20 +1263,186 @@
             b.innerHTML = t==='error' ? `<i class="fas fa-exclamation-circle"></i> ${m}` : t==='success' ? `<i class="fas fa-check-circle"></i> ${m}` : m;
             b.style.display = 'flex'; setTimeout(()=>b.style.display='none', 3000);
         }
-        
-        function limparExpirados() {
-            const now = new Date();
-            agendamentos.forEach(appt => {
-                if (appt.status === 'pendente') {
-                    const [d, m, y] = appt.data.split('/');
-                    const [hr, mn] = appt.hora.split(':');
-                    const apptDate = new Date(y, m-1, d, hr, mn);
-                    const limitDate = new Date(apptDate.getTime() + 15*60000);
-                    if (now > limitDate) {
-                         // No Firebase, updates são assíncronos, apenas marcamos visualmente aqui
-                         // Para deletar de verdade precisaria chamar deleteDoc no init
-                    }
-                }
+
+        function abrirConfig() {
+            document.getElementById('cfg-nome').value = appConfig.nomeBarbearia;
+            document.getElementById('cfg-desc').value = appConfig.descricao;
+            document.getElementById('cfg-endereco').value = appConfig.endereco;
+            document.getElementById('cfg-maps').value = appConfig.mapsLink;
+            document.getElementById('cfg-zap').value = appConfig.whatsapp;
+            document.getElementById('cfg-insta').value = appConfig.instagram;
+            document.getElementById('cfg-logo').value = appConfig.logoUrl;
+            document.getElementById('cfg-story').value = appConfig.storyUrl;
+            document.getElementById('cfg-color').value = appConfig.themeColor;
+            document.getElementById('cfg-pass').value = appConfig.adminPass;
+            document.getElementById('cfg-open').value = appConfig.openTime;
+            document.getElementById('cfg-close').value = appConfig.closeTime;
+            tempOpenDays = [...(appConfig.openDays || [])];
+            renderDaysSelector(); renderSettingsProfList(); trocarTela('settings-screen');
+        }
+
+        async function salvarConfig() {
+            appConfig.nomeBarbearia = document.getElementById('cfg-nome').value || defaultConfig.nomeBarbearia;
+            appConfig.descricao = document.getElementById('cfg-desc').value || defaultConfig.descricao;
+            appConfig.endereco = document.getElementById('cfg-endereco').value || defaultConfig.endereco;
+            appConfig.mapsLink = document.getElementById('cfg-maps').value || defaultConfig.mapsLink;
+            appConfig.whatsapp = document.getElementById('cfg-zap').value || defaultConfig.whatsapp;
+            appConfig.instagram = document.getElementById('cfg-insta').value || defaultConfig.instagram;
+            appConfig.logoUrl = document.getElementById('cfg-logo').value || defaultConfig.logoUrl;
+            appConfig.storyUrl = document.getElementById('cfg-story').value || defaultConfig.storyUrl;
+            appConfig.themeColor = document.getElementById('cfg-color').value;
+            appConfig.adminPass = document.getElementById('cfg-pass').value || "1234";
+            appConfig.openTime = document.getElementById('cfg-open').value || "08:00";
+            appConfig.closeTime = document.getElementById('cfg-close').value || "20:00";
+            appConfig.openDays = tempOpenDays;
+
+            await setDoc(doc(db, "config", "loja"), appConfig);
+            showToast("Salvo com sucesso!", "success");
+            trocarTela('admin-screen');
+        }
+
+        function resetarConfiguracoes() {
+            abrirConfirmacao("Resetar Tudo?", "Irreversível.", async () => {
+                await setDoc(doc(db, "config", "loja"), defaultConfig);
+                location.reload(); 
+            });
+        }
+
+        function renderDaysSelector() {
+            const container = document.getElementById('days-selector'); container.innerHTML = '';
+            const dias = [{i:0,t:'Dom'},{i:1,t:'Seg'},{i:2,t:'Ter'},{i:3,t:'Qua'},{i:4,t:'Qui'},{i:5,t:'Sex'},{i:6,t:'Sáb'}];
+            dias.forEach(d => {
+                const btn = document.createElement('div');
+                btn.className = tempOpenDays.includes(d.i) ? 'day-btn active' : 'day-btn';
+                btn.innerText = d.t; btn.onclick = () => toggleDay(d.i); container.appendChild(btn);
+            });
+        }
+        function toggleDay(i) {
+            if(tempOpenDays.includes(i)) tempOpenDays = tempOpenDays.filter(d => d !== i); else tempOpenDays.push(i);
+            renderDaysSelector();
+        }
+
+        // PROFISSIONAIS
+        function renderSettingsProfList() {
+            const list = document.getElementById('prof-list-container'); list.innerHTML = '';
+            appConfig.profissionais.forEach((prof, idx) => {
+                const item = document.createElement('div'); item.className = 'prof-list-item';
+                item.innerHTML = `<div class="prof-info"><img src="${prof.foto}" class="prof-img-mini"><span style="font-size:0.85rem;">${prof.nome}</span></div><div><button class="btn-icon-action btn-edit-prof" onclick="openEditProf(${idx})"><i class="fas fa-pen"></i></button><button class="btn-icon-action btn-del-prof" onclick="removeProfissional(${idx})"><i class="fas fa-trash"></i></button></div>`;
+                list.appendChild(item);
+            });
+        }
+        function addProfissional() {
+            const name = document.getElementById('new-prof-name').value; let img = document.getElementById('new-prof-img').value;
+            if(!name) return showToast("Digite o nome!", "error");
+            if(!img) img = "https://placehold.co/150/444444/FFF?text=" + name.charAt(0);
+            appConfig.profissionais.push({ id: Date.now(), nome: name, foto: img });
+            document.getElementById('new-prof-name').value = ''; document.getElementById('new-prof-img').value = '';
+            renderSettingsProfList();
+        }
+        function removeProfissional(idx) {
+            abrirConfirmacao("Remover?", "Irreversível.", () => { appConfig.profissionais.splice(idx, 1); renderSettingsProfList(); });
+        }
+        function openEditProf(idx) {
+            currentEditingIndex = idx; const p = appConfig.profissionais[idx];
+            document.getElementById('edit-prof-name').value = p.nome; document.getElementById('edit-prof-img').value = p.foto;
+            document.getElementById('edit-prof-modal').classList.add('visible');
+        }
+        function closeEditProf() { document.getElementById('edit-prof-modal').classList.remove('visible'); currentEditingIndex = -1; }
+        function saveEditProf() {
+            if (currentEditingIndex === -1) return;
+            const n = document.getElementById('edit-prof-name').value; const i = document.getElementById('edit-prof-img').value;
+            if(!n) return showToast("Nome vazio", "error");
+            appConfig.profissionais[currentEditingIndex].nome = n; appConfig.profissionais[currentEditingIndex].foto = i || `https://placehold.co/150/444444/FFF?text=${n.charAt(0)}`;
+            renderSettingsProfList(); closeEditProf();
+        }
+
+        // SERVICOS
+        function abrirServicos() { renderServicesList(); trocarTela('services-screen'); }
+        function renderServicesList() {
+            const list = document.getElementById('services-list-container'); list.innerHTML = '';
+            appConfig.servicos.forEach((srv, idx) => {
+                const item = document.createElement('div'); item.className = 'prof-list-item';
+                item.innerHTML = `<div style="display:flex; flex-direction:column;"><span style="font-size:0.9rem; font-weight:600;">${srv.nome}</span><span class="service-meta"><span class="service-price-tag">R$ ${srv.preco}</span> • ${srv.tempo} min</span></div><div><button class="btn-icon-action btn-edit-prof" onclick="openEditService(${idx})"><i class="fas fa-pen"></i></button><button class="btn-icon-action btn-del-prof" onclick="removeService(${idx})"><i class="fas fa-trash"></i></button></div>`;
+                list.appendChild(item);
+            });
+        }
+        function addService() {
+            const n = document.getElementById('new-service-name').value; const p = document.getElementById('new-service-price').value; const t = document.getElementById('new-service-time').value;
+            if(!n || !p || !t) return showToast("Preencha tudo!", "error");
+            appConfig.servicos.push({ id: Date.now(), nome: n, preco: parseInt(p), tempo: parseInt(t) });
+            document.getElementById('new-service-name').value = ''; document.getElementById('new-service-price').value = ''; document.getElementById('new-service-time').value = '';
+            renderServicesList();
+        }
+        function removeService(idx) {
+            abrirConfirmacao("Remover?", "Sairá da lista.", () => { appConfig.servicos.splice(idx, 1); renderServicesList(); });
+        }
+        function openEditService(idx) {
+            currentEditingServiceIndex = idx; const s = appConfig.servicos[idx];
+            document.getElementById('edit-service-name').value = s.nome; document.getElementById('edit-service-price').value = s.preco; document.getElementById('edit-service-time').value = s.tempo;
+            document.getElementById('edit-service-modal').classList.add('visible');
+        }
+        function closeEditService() { document.getElementById('edit-service-modal').classList.remove('visible'); currentEditingServiceIndex = -1; }
+        function saveEditService() {
+            if (currentEditingServiceIndex === -1) return;
+            const n = document.getElementById('edit-service-name').value; const p = document.getElementById('edit-service-price').value; const t = document.getElementById('edit-service-time').value;
+            if(!n || !p || !t) return showToast("Preencha tudo", "error");
+            appConfig.servicos[currentEditingServiceIndex] = { id: appConfig.servicos[currentEditingServiceIndex].id, nome: n, preco: parseInt(p), tempo: parseInt(t) };
+            renderServicesList(); closeEditService();
+        }
+
+        // ADMIN PANEL
+        function filtrarAdmin(tipo, el) {
+            adminFiltro = tipo;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            if(tipo !== 'data') el.classList.add('active'); else adminDataCustom = el.value;
+            document.getElementById('list-label').innerText = tipo === 'hoje' ? 'Lista de Hoje' : tipo === 'amanha' ? 'Lista de Amanhã' : 'Todos os Agendamentos';
+            renderizarPainel();
+        }
+
+        function renderizarPainel() {
+            const container = document.getElementById('admin-list'); const filtroBarbeiro = document.getElementById('admin-barber-filter').value;
+            container.innerHTML = "";
+            let totalCount = 0; let aReceber = 0; let emCaixa = 0; let totalValueAll = 0;
+            const hoje = new Date().toISOString().split('T')[0];
+            const amanha = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0];
+
+            let listaFiltrada = agendamentos.filter(appt => {
+                if(appt.status === 'cancelado_auto') return false; 
+                const d = appt.data.split('/'); const dIso = `${d[2]}-${d[1]}-${d[0]}`;
+                let matchData = (adminFiltro === 'hoje' && dIso === hoje) || (adminFiltro === 'amanha' && dIso === amanha) || (adminFiltro === 'data' && dIso === adminDataCustom) || (adminFiltro === 'todos');
+                let matchBarber = (filtroBarbeiro === 'todos') || (appt.barbeiro === filtroBarbeiro);
+                return matchData && matchBarber;
+            }).sort((a, b) => a.hora.localeCompare(b.hora));
+
+            if (listaFiltrada.length === 0) container.innerHTML = '<p style="color:#666; text-align:center; margin-top:20px">Nenhum corte encontrado.</p>';
+            let proximoEncontrado = false;
+
+            listaFiltrada.forEach(appt => {
+                let precoMatch = appt.servico.match(/R\$\s*(\d+)/); let valor = precoMatch ? parseInt(precoMatch[1]) : 0;
+                if(valor === 0) { const s = appConfig.servicos.find(s => appt.servico.includes(s.nome)); if(s) valor = s.preco; }
+                const valorTexto = `R$ ${valor},00`; const sL = appt.servico.split('(')[0];
+                totalValueAll += valor; if(appt.status === 'concluido') emCaixa += valor; else { totalCount++; aReceber += valor; }
+                const isPago = appt.status === 'concluido';
+                const div = document.createElement('div'); div.className = isPago ? 'admin-item pago' : 'admin-item';
+                let nextBadge = (!isPago && !proximoEncontrado) ? '<span class="next-client-badge">PRÓXIMO</span>' : ''; if(nextBadge) proximoEncontrado = true;
+                
+                div.innerHTML = `<div class="timeline-date">${appt.hora}</div>${nextBadge}<div class="item-top"><h4 style="color:white; flex:1; ${isPago ? 'text-decoration:line-through; opacity:0.7' : ''}">${appt.cliente}</h4><div class="service-price">${valorTexto}</div></div><span class="service-name">${sL}</span><span class="barber-info"><i class="fas fa-cut"></i> ${appt.barbeiro}</span>${!isPago ? `<div class="item-actions"><button class="btn-adm btn-adm-zap" onclick="window.open('https://wa.me/55${appt.zapUsuario ? appt.zapUsuario.replace(/\D/g, "") : ""}', '_blank')"><i class="fab fa-whatsapp"></i></button><button class="btn-adm btn-adm-check" onclick="adminConfirmar('${appt.firebaseId}')"><i class="fas fa-check"></i></button><button class="btn-adm btn-adm-trash" onclick="adminDeletar('${appt.firebaseId}')"><i class="fas fa-trash"></i></button></div>` : `<div class="item-actions"><button class="btn-adm btn-adm-trash" onclick="adminDeletar('${appt.firebaseId}')"><i class="fas fa-trash"></i></button></div>`}`;
+                container.appendChild(div);
+            });
+            document.getElementById('total-cortes').innerText = totalCount; document.getElementById('total-pendente').innerText = `R$ ${aReceber}`; document.getElementById('total-caixa').innerText = `R$ ${emCaixa}`;
+            const tm = listaFiltrada.length > 0 ? Math.round(totalValueAll / listaFiltrada.length) : 0; document.getElementById('ticket-medio').innerText = `R$ ${tm}`;
+        }
+
+        async function adminConfirmar(id) {
+            abrirConfirmacao('Pago?', 'Confirmar pagamento.', async () => {
+                await updateDoc(doc(db, "agendamentos", id), { status: 'concluido' });
+                showToast("Confirmado!", "success");
+            });
+        }
+        async function adminDeletar(id) {
+            abrirConfirmacao('Excluir?', 'Remover da lista.', async () => {
+                await deleteDoc(doc(db, "agendamentos", id));
+                showToast("Removido.");
             });
         }
     </script>

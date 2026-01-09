@@ -1,4 +1,4 @@
-<!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -105,7 +105,7 @@
         .icon-btn:hover { color: var(--accent-color); }
         
         #btn-voltar { display: none; }
-        #btn-share { display: block; }
+        #btn-share { display: block; } 
 
         /* --- LOGO BARBEARIA CIRCULAR COM EFEITO DINAMICO --- */
         @keyframes pulseGlow {
@@ -204,7 +204,7 @@
 
         /* --- TELAS --- */
         .screen-container { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; }
-        .screen { display: none; flex: 1; flex-direction: column; height: 100%; animation: fadeIn 0.4s ease-out; }
+        .screen { display: none; flex: 1; flex-direction: column; height: 100%; animation: fadeIn 0.4s ease-out; width: 100%; max-width: 100%; }
         .screen.active { display: flex; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -274,13 +274,16 @@
         .btn-adm-trash { background: transparent; color: #ff4d4d; border: 1px solid rgba(255,77,77,0.2); max-width: 40px; }
 
         /* --- SETTINGS & SERVICE SCREENS --- */
-        #settings-screen, #services-screen { background: #151515; overflow-x: hidden; }
-        .settings-content { padding: 20px; overflow-y: auto; flex: 1; padding-bottom: 80px; width: 100%; box-sizing: border-box; }
+        #settings-screen, #services-screen { background: #151515; overflow-x: hidden !important; width: 100%; }
+        .settings-content { 
+            padding: 20px; overflow-y: auto; flex: 1; padding-bottom: 80px; 
+            width: 100%; max-width: 100%; box-sizing: border-box; overflow-x: hidden;
+        }
         
         .settings-section { margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 20px; width: 100%; }
         .settings-section:last-child { border: none; }
         .settings-title { font-size: 0.9rem; color: var(--accent-color); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
-        .form-row { margin-bottom: 15px; }
+        .form-row { margin-bottom: 15px; width: 100%; }
         .form-label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 5px; }
         .settings-input { width: 100%; background: #252525; border: 1px solid #444; color: white; padding: 10px; border-radius: 8px; font-family: 'Poppins'; }
         .settings-input:focus { border-color: var(--accent-color); outline: none; }
@@ -293,15 +296,15 @@
         input[type="color"]::-webkit-color-swatch { border: none; border-radius: 6px; }
 
         /* Day Selector */
-        .days-wrapper { display: flex; gap: 5px; margin-top: 5px; justify-content: space-between; }
+        .days-wrapper { display: flex; gap: 5px; margin-top: 5px; justify-content: space-between; width: 100%; }
         .day-btn { 
-            width: 35px; height: 35px; border-radius: 8px; background: #2a2a2a; border: 1px solid #444; 
+            flex: 1; height: 35px; border-radius: 8px; background: #2a2a2a; border: 1px solid #444; 
             color: #777; font-size: 0.7rem; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;
         }
         .day-btn.active { background: var(--accent-color); color: #000; border-color: var(--accent-color); }
 
         /* List Items (Profs & Services) */
-        .prof-list-item { background: #252525; border-bottom: 1px solid #333; padding: 12px 5px; display: flex; justify-content: space-between; align-items: center; }
+        .prof-list-item { background: #252525; border-bottom: 1px solid #333; padding: 12px 5px; display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .prof-info { display: flex; align-items: center; gap: 12px; }
         .prof-img-mini { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; background: #444; }
         .btn-icon-action { background: transparent; border: none; opacity: 0.7; cursor: pointer; transition: 0.2s; font-size: 0.9rem; margin-left: 5px; }
@@ -379,12 +382,11 @@
         <div class="modal-card">
             <h3 class="modal-title"><i class="fas fa-cut"></i> Acesso Restrito</h3>
             <p style="font-size:0.8rem; color:#888; margin-bottom:20px;">Área exclusiva da equipe</p>
-            <input type="password" id="admin-password" class="modal-input" placeholder="****" maxlength="4" inputmode="numeric" oninput="this.value = this.value.replace(/\D/g, '')">
+            <input type="password" id="admin-password" class="modal-input" placeholder="****" maxlength="4" inputmode="numeric" oninput="this.value = this.value.replace(/\D/g, ''); if(this.value.length === 4) verificarSenhaAdmin();">
             <span id="password-error" class="error-message-text"><i class="fas fa-times-circle"></i> Senha incorreta</span>
             
             <div class="modal-actions">
                 <button class="btn-modal btn-modal-cancel" onclick="toggleAdminModal(false)">Cancelar</button>
-                <button class="btn-modal btn-modal-confirm" onclick="verificarSenhaAdmin()">Acessar</button>
             </div>
         </div>
     </div>
@@ -1382,6 +1384,7 @@
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(idTela).classList.add('active');
             const btnVoltar = document.getElementById('btn-voltar');
+            const btnShare = document.getElementById('btn-share');
             
             // Lógica do Header Publico
             const publicHeader = document.getElementById('public-header');
@@ -1393,8 +1396,17 @@
 
             if(idTela === 'success-screen') document.getElementById('success-content').scrollTop = 0;
 
-            if (idTela === 'login-screen' || idTela === 'admin-screen' || idTela === 'settings-screen' || idTela === 'services-screen') btnVoltar.style.display = 'none'; 
-            else btnVoltar.style.display = 'block';
+            // Logica Botões Topo
+            if (idTela === 'login-screen') {
+                btnVoltar.style.display = 'none';
+                btnShare.style.display = 'block';
+            } else if (idTela === 'admin-screen' || idTela === 'settings-screen' || idTela === 'services-screen') {
+                btnVoltar.style.display = 'none';
+                btnShare.style.display = 'none';
+            } else {
+                btnVoltar.style.display = 'block';
+                btnShare.style.display = 'none';
+            }
         }
         function voltarParaLogin() {
             const telaAtual = document.querySelector('.screen.active').id;

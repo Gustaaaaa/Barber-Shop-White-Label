@@ -32,7 +32,7 @@
             color: var(--text-main);
             height: 100dvh; 
             width: 100vw;
-            overflow: hidden; 
+            overflow: hidden; /* Trava scroll global */
             display: flex;
             justify-content: center;
         }
@@ -126,7 +126,7 @@
         .logo-container-login {
             position: relative;
             display: inline-block;
-            margin-top: 10px;
+            margin-top: 15px; 
             margin-bottom: 15px;
             cursor: pointer;
             transition: transform 0.2s;
@@ -237,7 +237,7 @@
         /* --- MARCA D'ÁGUA (FOOTER) --- */
         .watermark {
             font-size: 0.6rem; color: var(--text-muted); opacity: 0.3; 
-            margin-top: 25px; /* Mais afastado do botão */
+            margin-top: 30px; /* Mais afastado do botão */
             text-transform: uppercase; letter-spacing: 1px; font-weight: 300; transition: opacity 0.3s;
         }
         .watermark:hover { opacity: 0.8; color: var(--accent-color); }
@@ -308,8 +308,12 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* LOGIN */
-        #login-screen { background: transparent; }
-        .login-wrapper { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 20px 40px 25px 40px; text-align: center; margin-top: 0; }
+        #login-screen { background: transparent; overflow-y: auto; } /* Permitir scroll se tela muito pequena */
+        .login-wrapper { 
+            flex: 1; display: flex; flex-direction: column; justify-content: center; 
+            padding: 20px 40px 40px 40px; text-align: center; margin-top: 0; 
+            min-height: 100%; /* Garantir altura */
+        }
         .login-logo-area { margin-bottom: 25px; }
         .login-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #fff; margin-bottom: 5px; }
         .login-subtitle { font-size: 0.85rem; color: #ccc; font-weight: 300; }
@@ -318,7 +322,7 @@
         .login-input:focus { border-color: var(--accent-color); }
         .valid-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--success-color); opacity: 0; transition: 0.3s; pointer-events: none; font-size: 1rem; }
         .valid-icon.show { opacity: 1; transform: translateY(-50%) scale(1.1); }
-        .btn-barber-login { background: transparent; border: 1px solid #333; color: #666; padding: 10px; border-radius: 8px; width: 100%; margin-top: 15px; cursor: pointer; font-size: 0.8rem; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 15px; }
+        .btn-barber-login { background: transparent; border: 1px solid #333; color: #666; padding: 10px; border-radius: 8px; width: 100%; margin-top: 15px; cursor: pointer; font-size: 0.8rem; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 5px; }
         .btn-barber-login:hover { border-color: var(--accent-color); color: var(--accent-color); }
 
         /* DASHBOARD */
@@ -372,6 +376,10 @@
         .settings-title { font-size: 0.9rem; color: var(--accent-color); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
         .form-row { margin-bottom: 15px; width: 100%; }
         .form-label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 5px; }
+        /* PASSWORD TOGGLE CONTAINER */
+        .password-container { position: relative; }
+        .password-toggle-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #888; cursor: pointer; font-size: 1rem; }
+        
         .settings-input { width: 100%; background: #252525; border: 1px solid #444; color: white; padding: 10px; border-radius: 8px; font-family: 'Poppins'; }
         .settings-input:focus { border-color: var(--accent-color); outline: none; }
         input[type="color"] { -webkit-appearance: none; border: none; width: 100%; height: 40px; border-radius: 8px; cursor: pointer; padding: 2px; background: #333; }
@@ -426,17 +434,6 @@
         .btn-insta { width: 100%; height: 50px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .btn-outline { width: 100%; background: transparent; border: 2px solid var(--accent-color); color: var(--text-main); padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 0.9rem; margin-top: 5px;}
         .closed-msg { grid-column: span 4; text-align: center; color: #ff5555; padding: 10px; background: rgba(255, 85, 85, 0.1); border-radius: 8px; font-size: 0.8rem; }
-        
-        /* OBRIGADO PAGE */
-        #success-content { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 30px; width: 100%; overflow-y: auto; scrollbar-width: none; }
-        .tolerance-box { background: rgba(241, 196, 15, 0.1); border: 1px solid rgba(241, 196, 15, 0.3); color: #f1c40f; padding: 12px; border-radius: 8px; font-size: 0.8rem; margin-bottom: 25px; max-width: 300px; line-height: 1.4; text-align: center; }
-        .success-actions-group { display: flex; flex-direction: column; gap: 15px; width: 100%; margin-bottom: 30px; }
-        .appointments-section { width: 100%; border-top: 1px solid #333; padding-top: 20px; }
-        .appointments-list { width: 100%; margin-top: 15px; }
-        .appt-item { background: #252525; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; }
-        .appt-details { font-size: 0.85rem; color: #fff; margin-bottom: 12px; line-height: 1.4; }
-        .appt-details strong { color: var(--accent-color); display: block; font-size: 1rem; margin-bottom: 4px; }
-        .appt-actions { display: flex; gap: 10px; }
     </style>
 </head>
 <body>
@@ -530,6 +527,7 @@
     </div>
 
     <div class="app-container">
+        
         <header id="public-header">
             <div class="header-top-bar">
                 <div class="icon-area-left">
@@ -657,19 +655,81 @@
             <div id="settings-screen" class="screen">
                 <div class="dashboard-header"><h3 class="dash-title">Configurações</h3></div>
                 <div class="settings-content">
-                    <div class="settings-section"><p class="settings-title">Personalização</p><div class="form-row"><label class="form-label">Cor Principal do App</label><input type="color" id="cfg-color" class="settings-input" value="#d4af37"></div><div class="form-row"><label class="form-label">Senha do Painel</label><input type="text" id="cfg-pass" class="settings-input" placeholder="Padrão: 1234"></div></div>
-                    <div class="settings-section"><p class="settings-title">Horário de Funcionamento</p><div class="row-split"><div style="flex:1"><label class="form-label">Abertura</label><input type="time" id="cfg-open" class="settings-input"></div><div style="flex:1"><label class="form-label">Fechamento</label><input type="time" id="cfg-close" class="settings-input"></div></div><div style="margin-top: 15px;"><label class="form-label">Dias de Funcionamento</label><div class="days-wrapper" id="days-selector"></div></div></div>
-                    <div class="settings-section"><p class="settings-title">Dados da Barbearia</p><div class="form-row"><label class="form-label">Nome da Barbearia</label><input type="text" id="cfg-nome" class="settings-input"></div><div class="form-row"><label class="form-label">Descrição (Aparece no ícone Info)</label><input type="text" id="cfg-desc" class="settings-input"></div><div class="form-row"><label class="form-label">Endereço Exibido</label><input type="text" id="cfg-endereco" class="settings-input"></div><div class="form-row"><label class="form-label">Link Google Maps (URL)</label><input type="text" id="cfg-maps" class="settings-input"></div><div class="form-row"><label class="form-label">WhatsApp da Loja (DDD+Num)</label><input type="text" id="cfg-zap" class="settings-input"></div><div class="form-row"><label class="form-label">Instagram (Link Completo)</label><input type="text" id="cfg-insta" class="settings-input"></div><div class="form-row"><label class="form-label">URL da Logo (Imgur/Link direto)</label><input type="text" id="cfg-logo" class="settings-input"></div><div class="form-row"><label class="form-label">Imagem do Story (URL)</label><input type="text" id="cfg-story" class="settings-input"></div></div>
-                    <div class="settings-section"><p class="settings-title">Equipe</p><div id="prof-list-container"></div><div class="add-prof-card"><p style="font-size:0.75rem; color:#888; font-weight:600;">NOVO PROFISSIONAL</p><input type="text" id="new-prof-name" placeholder="Nome do Barbeiro"><input type="text" id="new-prof-img" placeholder="Link da Foto (Imgur, etc)"><button class="btn-add-full" onclick="addProfissional()"><i class="fas fa-plus-circle"></i> Adicionar Profissional</button></div></div>
-                    <div class="settings-section"><button class="btn-outline" style="border-color: #ff4d4d; color: #ff4d4d;" onclick="resetarConfiguracoes()">Restaurar Padrões</button></div>
+                    <div class="settings-section">
+                        <p class="settings-title">Personalização</p>
+                        <div class="form-row"><label class="form-label">Cor Principal do App</label><input type="color" id="cfg-color" class="settings-input" value="#d4af37"></div>
+                         <div class="form-row"><label class="form-label">Senha do Painel</label>
+                            <div class="password-container">
+                                <input type="password" id="cfg-pass" class="settings-input" placeholder="Padrão: 1234" maxlength="4" inputmode="numeric">
+                                <button class="password-toggle-btn" onclick="toggleConfigPassword()"><i class="fas fa-eye"></i></button>
+                            </div>
+                        </div>
+                        <div class="form-row"><label class="form-label">Subtítulo (Tela Inicial)</label><input type="text" id="cfg-subtitulo" class="settings-input" placeholder="Agende seu estilo em segundos"></div>
+                    </div>
+                    <div class="settings-section">
+                        <p class="settings-title">Horário de Funcionamento</p>
+                        <div class="row-split">
+                            <div style="flex:1"><label class="form-label">Abertura</label><input type="time" id="cfg-open" class="settings-input"></div>
+                            <div style="flex:1"><label class="form-label">Fechamento</label><input type="time" id="cfg-close" class="settings-input"></div>
+                        </div>
+                        <div class="row-split" style="margin-top:10px;">
+                            <div style="flex:1"><label class="form-label">Início Intervalo</label><input type="time" id="cfg-break-start" class="settings-input"></div>
+                            <div style="flex:1"><label class="form-label">Fim Intervalo</label><input type="time" id="cfg-break-end" class="settings-input"></div>
+                        </div>
+                        <div style="margin-top: 15px;"><label class="form-label">Dias de Funcionamento</label><div class="days-wrapper" id="days-selector"></div></div>
+                    </div>
+                    <div class="settings-section">
+                        <p class="settings-title">Dados da Barbearia</p>
+                        <div class="form-row"><label class="form-label">Nome da Barbearia</label><input type="text" id="cfg-nome" class="settings-input"></div>
+                        <div class="form-row"><label class="form-label">Descrição (Aparece no ícone Info)</label><input type="text" id="cfg-desc" class="settings-input"></div>
+                        <div class="form-row"><label class="form-label">Endereço Exibido</label><input type="text" id="cfg-endereco" class="settings-input"></div>
+                        <div class="form-row"><label class="form-label">Link Google Maps (URL)</label><input type="text" id="cfg-maps" class="settings-input"></div>
+                        <div class="form-row"><label class="form-label">WhatsApp da Loja (DDD+Num)</label><input type="text" id="cfg-zap" class="settings-input"></div>
+                        <div class="form-row"><label class="form-label">Instagram (Link Completo)</label><input type="text" id="cfg-insta" class="settings-input"></div>
+                        <div class="form-row"><label class="form-label">URL da Logo (Imgur/Link direto)</label><input type="text" id="cfg-logo" class="settings-input"></div>
+                        <div class="form-row"><label class="form-label">Imagem do Story (URL)</label><input type="text" id="cfg-story" class="settings-input"></div>
+                    </div>
+                    <div class="settings-section">
+                        <p class="settings-title">Equipe</p>
+                        <div id="prof-list-container"></div>
+                        <div class="add-prof-card">
+                            <p style="font-size:0.75rem; color:#888; font-weight:600;">NOVO PROFISSIONAL</p>
+                            <input type="text" id="new-prof-name" placeholder="Nome do Barbeiro">
+                            <input type="text" id="new-prof-img" placeholder="Link da Foto (Imgur, etc)">
+                            <button class="btn-add-full" onclick="addProfissional()"><i class="fas fa-plus-circle"></i> Adicionar Profissional</button>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <button class="btn-outline" style="border-color: #ff4d4d; color: #ff4d4d;" onclick="resetarConfiguracoes()">Restaurar Padrões</button>
+                    </div>
                 </div>
-                <div class="settings-footer"><button class="btn-outline" onclick="trocarTela('admin-screen')">Voltar</button><button class="btn-confirm" onclick="salvarConfig()">Salvar</button></div>
+                <div class="settings-footer">
+                    <button class="btn-outline" onclick="trocarTela('admin-screen')">Voltar</button>
+                    <button class="btn-confirm" onclick="salvarConfig()">Salvar</button>
+                </div>
             </div>
 
             <div id="services-screen" class="screen">
                 <div class="dashboard-header"><h3 class="dash-title">Serviços</h3></div>
-                <div class="settings-content"><div class="settings-section"><p class="settings-title">Lista de Serviços</p><div id="services-list-container"></div><div class="add-prof-card"><p style="font-size:0.75rem; color:#888; font-weight:600;">NOVO SERVIÇO</p><input type="text" id="new-service-name" placeholder="Nome (ex: Corte Social)"><div style="display:flex; gap:10px;"><input type="number" id="new-service-price" placeholder="Valor (R$)"><input type="number" id="new-service-time" placeholder="Minutos"></div><button class="btn-add-full" onclick="addService()"><i class="fas fa-plus-circle"></i> Adicionar Serviço</button></div></div></div>
-                <div class="settings-footer"><button class="btn-outline" onclick="trocarTela('admin-screen')">Voltar</button><button class="btn-confirm" onclick="salvarConfig()">Salvar</button></div>
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <p class="settings-title">Lista de Serviços</p>
+                        <div id="services-list-container"></div>
+                        <div class="add-prof-card">
+                            <p style="font-size:0.75rem; color:#888; font-weight:600;">NOVO SERVIÇO</p>
+                            <input type="text" id="new-service-name" placeholder="Nome (ex: Corte Social)">
+                            <div style="display:flex; gap:10px;">
+                                <input type="number" id="new-service-price" placeholder="Valor (R$)">
+                                <input type="number" id="new-service-time" placeholder="Minutos">
+                            </div>
+                            <button class="btn-add-full" onclick="addService()"><i class="fas fa-plus-circle"></i> Adicionar Serviço</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-footer">
+                    <button class="btn-outline" onclick="trocarTela('admin-screen')">Voltar</button>
+                    <button class="btn-confirm" onclick="salvarConfig()">Salvar</button>
+                </div>
             </div>
 
         </div>
@@ -720,6 +780,7 @@
         // Configuração Padrão (Fallback)
         const defaultConfig = {
             nomeBarbearia: "Barbearia",
+            subtitulo: "Agende seu estilo em segundos",
             descricao: "Cortes modernos e clássicos.",
             endereco: "Seu Endereço Aqui",
             mapsLink: "#",
@@ -731,6 +792,8 @@
             adminPass: "1234",
             openTime: "08:00",
             closeTime: "20:00",
+            breakStart: "",
+            breakEnd: "",
             openDays: [1, 2, 3, 4, 5, 6], 
             profissionais: [
                 { id: 1, nome: "Profissional 1", foto: "https://placehold.co/150/444444/FFF?text=P1" },
@@ -742,7 +805,7 @@
             ]
         };
 
-        // EXPOSE FUNCTIONS (Para o HTML conseguir chamar)
+        // EXPOSE FUNCTIONS
         window.toggleInfo = toggleInfo;
         window.openStory = openStory;
         window.closeStory = closeStory;
@@ -785,16 +848,11 @@
         window.editarAgendamento = editarAgendamento;
         window.cancelarAgendamento = cancelarAgendamento;
         window.executarAcaoConfirmacao = ejecutarAcaoConfirmacao;
+        window.toggleConfigPassword = toggleConfigPassword;
 
-        // CALLBACK GLOBAL PARA O MODAL
+        // CALLBACK GLOBAL
         let funcaoConfirmacaoAtual = null;
-
-        function ejecutarAcaoConfirmacao() {
-            if (funcaoConfirmacaoAtual) {
-                funcaoConfirmacaoAtual();
-            }
-            fecharConfirmacao();
-        }
+        function ejecutarAcaoConfirmacao() { if (funcaoConfirmacaoAtual) funcaoConfirmacaoAtual(); fecharConfirmacao(); }
 
         // INICIALIZA O APP
         initApp();
@@ -812,7 +870,7 @@
             }, 2000);
 
             try {
-                // 1. ESCUTA CONFIGURAÇÕES EM TEMPO REAL
+                // 1. CONFIG
                 onSnapshot(doc(db, "config", "loja"), (snapshot) => {
                     if (snapshot.exists()) {
                         appConfig = { ...defaultConfig, ...snapshot.data() };
@@ -821,28 +879,23 @@
                     }
                     applyConfigToUI();
                     verificarStatus();
-                }, (error) => {
-                    console.warn("Sem permissão ou offline (Config):", error);
-                });
+                }, (error) => console.warn("Erro Config:", error));
 
-                // 2. ESCUTA AGENDAMENTOS EM TEMPO REAL
+                // 2. AGENDAMENTOS
                 const q = query(collection(db, "agendamentos"), orderBy("id", "desc"));
                 onSnapshot(q, (snapshot) => {
                     agendamentos = snapshot.docs.map(d => ({ firebaseId: d.id, ...d.data() }));
-                    
                     if(usuario.nome) renderizarLista();
                     if(document.getElementById('admin-screen').classList.contains('active')) renderizarPainel();
                     atualizarHorarios();
-                }, (error) => {
-                    console.warn("Sem permissão ou offline (Agendamentos):", error);
-                });
+                }, (error) => console.warn("Erro Agendamentos:", error));
 
             } catch (e) {
                 console.error("Erro fatal init:", e);
             }
         }
 
-        // --- FUNÇÕES DE UI E LÓGICA ---
+        // --- FUNÇÕES ---
 
         function toggleInfo(show) {
             const modal = document.getElementById('info-modal');
@@ -854,6 +907,18 @@
                 modal.classList.add('visible');
             } else {
                 modal.classList.remove('visible');
+            }
+        }
+
+        function toggleConfigPassword() {
+            const input = document.getElementById('cfg-pass');
+            const btn = document.querySelector('.password-toggle-btn i');
+            if (input.type === "password") {
+                input.type = "text";
+                btn.className = "fas fa-eye-slash";
+            } else {
+                input.type = "password";
+                btn.className = "fas fa-eye";
             }
         }
 
@@ -932,6 +997,14 @@
                     aberto = true;
                 }
             }
+            // Break time logic for status
+            if (appConfig.breakStart && appConfig.breakEnd) {
+                const [bh, bm] = appConfig.breakStart.split(':').map(Number);
+                const [eh, em] = appConfig.breakEnd.split(':').map(Number);
+                const bStart = bh*60+bm;
+                const bEnd = eh*60+em;
+                if(currentTimeVal >= bStart && currentTimeVal < bEnd) aberto = false;
+            }
 
             if (aberto) {
                 statusDiv.className = 'status-badge status-open';
@@ -956,6 +1029,7 @@
 
             document.getElementById('display-address').innerText = appConfig.endereco;
             document.getElementById('header-barber-name').innerText = appConfig.nomeBarbearia;
+            document.querySelector('.login-subtitle').innerText = appConfig.subtitulo || "Agende seu estilo em segundos";
             document.getElementById('login-logo-img').src = appConfig.logoUrl;
             document.getElementById('btn-maps-link').href = appConfig.mapsLink || "#";
             
@@ -1027,6 +1101,7 @@
             const btnShare = document.getElementById('btn-share');
             const publicHeader = document.getElementById('public-header');
             
+            // CORREÇÃO: Esconde o cabeçalho se for admin
             if (idTela === 'admin-screen' || idTela === 'settings-screen' || idTela === 'services-screen') {
                 publicHeader.style.display = 'none';
             } else {
@@ -1110,6 +1185,16 @@
             const [ch, cm] = appConfig.closeTime.split(':').map(Number);
             const start = oh*60 + om; const end = ch*60 + cm;
             
+            let breakStartMin = -1;
+            let breakEndMin = -1;
+
+            if (appConfig.breakStart && appConfig.breakEnd) {
+                const [bh, bm] = appConfig.breakStart.split(':').map(Number);
+                const [eh, em] = appConfig.breakEnd.split(':').map(Number);
+                breakStartMin = bh * 60 + bm;
+                breakEndMin = eh * 60 + em;
+            }
+            
             let step = 30;
             const sOpt = document.getElementById('servico').options[document.getElementById('servico').selectedIndex];
             if(sOpt && sOpt.dataset.tempo) step = parseInt(sOpt.dataset.tempo);
@@ -1121,6 +1206,9 @@
             let count = 0;
             for(let t=start; t<end; t+=30) {
                 if(isToday && t < nowMin) continue;
+                // Interval Logic
+                if (breakStartMin !== -1 && t >= breakStartMin && t < breakEndMin) continue;
+
                 const hh = Math.floor(t/60); const mm = t%60;
                 const hStr = `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
                 if(occupied.includes(hStr)) continue;
@@ -1234,12 +1322,17 @@
         
         function verificarSenhaAdmin() {
             const p = document.getElementById('admin-password');
-            const pass = appConfig.adminPass ? appConfig.adminPass : "1234";
+            const pass = (appConfig && appConfig.adminPass) ? appConfig.adminPass : "1234";
             
             if(p.value === pass) {
                 toggleAdminModal(false); 
-                // limparExpirados(); // Removemos para evitar erro se não existir
-                trocarTela('admin-screen'); 
+                // AQUI ESTAVA O BUG: Forçamos a troca de tela e removemos qualquer outra classe ativa
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                document.getElementById('admin-screen').classList.add('active');
+                
+                // Esconde header público
+                document.getElementById('public-header').style.display = 'none';
+                
                 renderizarPainel();
             } else {
                 p.classList.add('input-error'); document.getElementById('password-error').classList.add('visible');
@@ -1277,12 +1370,17 @@
             document.getElementById('cfg-pass').value = appConfig.adminPass;
             document.getElementById('cfg-open').value = appConfig.openTime;
             document.getElementById('cfg-close').value = appConfig.closeTime;
+            document.getElementById('cfg-subtitulo').value = appConfig.subtitulo || "";
+            document.getElementById('cfg-break-start').value = appConfig.breakStart || "";
+            document.getElementById('cfg-break-end').value = appConfig.breakEnd || "";
+
             tempOpenDays = [...(appConfig.openDays || [])];
             renderDaysSelector(); renderSettingsProfList(); trocarTela('settings-screen');
         }
 
         async function salvarConfig() {
             appConfig.nomeBarbearia = document.getElementById('cfg-nome').value || defaultConfig.nomeBarbearia;
+            appConfig.subtitulo = document.getElementById('cfg-subtitulo').value;
             appConfig.descricao = document.getElementById('cfg-desc').value || defaultConfig.descricao;
             appConfig.endereco = document.getElementById('cfg-endereco').value || defaultConfig.endereco;
             appConfig.mapsLink = document.getElementById('cfg-maps').value || defaultConfig.mapsLink;
@@ -1294,6 +1392,8 @@
             appConfig.adminPass = document.getElementById('cfg-pass').value || "1234";
             appConfig.openTime = document.getElementById('cfg-open').value || "08:00";
             appConfig.closeTime = document.getElementById('cfg-close').value || "20:00";
+            appConfig.breakStart = document.getElementById('cfg-break-start').value;
+            appConfig.breakEnd = document.getElementById('cfg-break-end').value;
             appConfig.openDays = tempOpenDays;
 
             await setDoc(doc(db, "config", "loja"), appConfig);

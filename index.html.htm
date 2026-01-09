@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -103,7 +103,9 @@
             transition: color 0.3s;
         }
         .icon-btn:hover { color: var(--accent-color); }
+        
         #btn-voltar { display: none; }
+        #btn-share { display: block; }
 
         /* --- LOGO BARBEARIA CIRCULAR COM EFEITO DINAMICO --- */
         @keyframes pulseGlow {
@@ -377,7 +379,7 @@
         <div class="modal-card">
             <h3 class="modal-title"><i class="fas fa-cut"></i> Acesso Restrito</h3>
             <p style="font-size:0.8rem; color:#888; margin-bottom:20px;">Área exclusiva da equipe</p>
-            <input type="password" id="admin-password" class="modal-input" placeholder="****" maxlength="4">
+            <input type="password" id="admin-password" class="modal-input" placeholder="****" maxlength="4" inputmode="numeric" oninput="this.value = this.value.replace(/\D/g, '')">
             <span id="password-error" class="error-message-text"><i class="fas fa-times-circle"></i> Senha incorreta</span>
             
             <div class="modal-actions">
@@ -463,7 +465,10 @@
         
         <header id="public-header">
             <div class="header-icons">
-                <div id="btn-voltar" class="icon-btn" onclick="voltarParaLogin()"><i class="fas fa-arrow-left"></i></div>
+                <div style="display:flex; gap:10px;">
+                    <div id="btn-voltar" class="icon-btn" onclick="voltarParaLogin()"><i class="fas fa-arrow-left"></i></div>
+                    <div id="btn-share" class="icon-btn" onclick="compartilharLink()"><i class="fas fa-share-alt"></i></div>
+                </div>
                 <div class="icon-btn" onclick="toggleInfo(true)" style="margin-left: auto;"><i class="fas fa-info-circle"></i></div>
             </div>
             
@@ -807,6 +812,21 @@
                 if (event.target.id === 'edit-prof-modal') closeEditProf();
                 if (event.target.id === 'edit-service-modal') closeEditService();
                 if (event.target.id === 'confirm-modal') fecharConfirmacao();
+            }
+        }
+
+        function compartilharLink() {
+            const url = window.location.href;
+            if (navigator.share) {
+                navigator.share({
+                    title: appConfig.nomeBarbearia,
+                    text: 'Agende seu horário aqui!',
+                    url: url
+                }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(url).then(() => {
+                    showToast("Link copiado!", "success");
+                });
             }
         }
 

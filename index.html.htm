@@ -7,6 +7,7 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
@@ -380,7 +381,7 @@
         .btn-adm-trash { background: transparent; color: #ff4d4d; border: 1px solid rgba(255,77,77,0.2); max-width: 40px; }
 
         /* SETTINGS & SERVICES */
-        #settings-screen, #services-screen { background: #151515; overflow-x: hidden !important; width: 100%; }
+        #settings-screen, #services-screen, #reports-screen { background: #151515; overflow-x: hidden !important; width: 100%; }
         .settings-content { padding: 20px; overflow-y: auto; flex: 1; padding-bottom: 80px; width: 100%; max-width: 100%; box-sizing: border-box; overflow-x: hidden; }
         .settings-section { margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 20px; width: 100%; }
         .settings-section:last-child { border: none; }
@@ -459,8 +460,11 @@
         .row-split { display: flex; gap: 10px; }
         .time-section { flex: 1; display: flex; flex-direction: column; min-height: 80px; }
         .time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding-right: 5px; overflow-y: auto; max-height: 100%; }
-        .time-btn { height: 38px; display: flex; align-items: center; justify-content: center; background: var(--input-bg); border: 1px solid #333; border-radius: 8px; font-size: 0.8rem; cursor: pointer; }
+        .time-btn { height: 38px; display: flex; align-items: center; justify-content: center; background: var(--input-bg); border: 1px solid #333; border-radius: 8px; font-size: 0.8rem; cursor: pointer; position: relative; }
         .time-btn.selected { background: var(--accent-color); color: #000; font-weight: 700; border-color: var(--accent-color); }
+        .promo-slot { border-color: var(--warning-color); color: var(--warning-color); }
+        .promo-slot::after { content: 'PROMO'; position: absolute; top: -5px; right: -5px; background: var(--warning-color); color: #000; font-size: 0.5rem; padding: 2px 4px; border-radius: 4px; font-weight: 700; }
+        
         .footer-form { flex-shrink: 0; padding: 5px 20px 20px; background: var(--card-bg); border-top: 1px solid #333; z-index: 10; }
         #msg-erro { color: var(--error-color); font-size: 0.75rem; text-align: center; margin-bottom: 10px; display: none; font-weight: 500; animation: fadeIn 0.3s; }
         .btn-confirm { width: 100%; height: 52px; background: var(--accent-color); color: #000; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(var(--accent-rgb), 0.4); transition: all 0.3s ease; }
@@ -472,6 +476,7 @@
         .btn-insta { width: 100%; height: 50px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .btn-outline { width: 100%; background: transparent; border: 2px solid var(--accent-color); color: var(--text-main); padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 0.9rem; margin-top: 5px;}
         .closed-msg { grid-column: span 4; text-align: center; color: #ff5555; padding: 10px; background: rgba(255, 85, 85, 0.1); border-radius: 8px; font-size: 0.8rem; }
+        .btn-calendar { width: 100%; background: #fff; color: #000; border: none; padding: 12px; border-radius: 12px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; }
         
         /* OBRIGADO PAGE */
         #success-content { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 30px; width: 100%; overflow-y: auto; scrollbar-width: none; }
@@ -483,6 +488,9 @@
         .appt-details { font-size: 0.85rem; color: #fff; margin-bottom: 12px; line-height: 1.4; }
         .appt-details strong { color: var(--accent-color); display: block; font-size: 1rem; margin-bottom: 4px; }
         .appt-actions { display: flex; gap: 10px; }
+        
+        /* CHART CONTAINER */
+        .chart-container { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; padding: 15px; margin-bottom: 20px; }
         
         /* SPINNER OVERLAY for Uploads */
         .spinner-overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; border-radius:inherit; }
@@ -533,7 +541,7 @@
                 <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width:18px;">
                 <span>4.9</span> <div style="display:flex; gap:2px;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
             </div>
-            <div class="watermark-popup">Produzido por BARBERLABEL 2026</div>
+            <div class="watermark-popup">Produzido por GSTDESIGN 2026</div>
         </div>
     </div>
 
@@ -622,7 +630,7 @@
                     </div>
                     <button class="btn-confirm" onclick="fazerLogin()" style="margin-top: 10px;">Entrar</button>
                     <button class="btn-barber-login" onclick="toggleAdminModal(true)"><i class="fas fa-scissors"></i> Sou Barbeiro</button>
-                    <div class="watermark">Produzido por BARBERLABEL 2026</div>
+                    <div class="watermark">Produzido por GSTDESIGN 2026</div>
                 </div>
             </div>
 
@@ -667,6 +675,8 @@
                     </div>
                     <div class="success-actions-group">
                         <button class="btn-confirm" onclick="reabrirZap()"><i class="fab fa-whatsapp"></i> Confirmar no WhatsApp</button>
+                        <button class="btn-calendar" onclick="adicionarAoCalendario('google')"><i class="fab fa-google"></i> Adicionar ao Google Agenda</button>
+                        <button class="btn-calendar" onclick="adicionarAoCalendario('apple')"><i class="fas fa-calendar-plus"></i> Baixar Convite (Outlook/iPhone)</button>
                         <button class="btn-insta" id="btn-insta-link" onclick=""><i class="fab fa-instagram"></i> Siga nosso Instagram</button>
                         <button class="btn-outline" onclick="abrirMaps()"><i class="fas fa-map-marked-alt"></i> Rota no Google Maps</button>
                         <button class="btn-outline" onclick="novoAgendamento()"><i class="fas fa-plus"></i> Fazer Novo Agendamento</button>
@@ -683,6 +693,7 @@
                     <div class="dash-top-row">
                         <h3 class="dash-title">Dashboard</h3>
                         <div class="btn-icon-group">
+                            <button class="btn-config" onclick="abrirRelatorios()" title="Relatórios"><i class="fas fa-chart-pie"></i></button>
                             <button class="btn-config" onclick="abrirServicos()" title="Serviços"><i class="fas fa-cut"></i></button>
                             <button class="btn-config" onclick="abrirConfig()" title="Configurações"><i class="fas fa-cog"></i></button>
                         </div>
@@ -715,6 +726,25 @@
                 <div class="footer-form"><button class="btn-outline" onclick="trocarTela('login-screen')">Sair do Painel</button></div>
             </div>
 
+            <div id="reports-screen" class="screen">
+                <div class="dashboard-header"><h3 class="dash-title">Relatórios</h3></div>
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <p class="settings-title">Faturamento (7 Dias)</p>
+                        <div class="chart-container">
+                            <canvas id="chart-revenue"></canvas>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <p class="settings-title">Serviços Populares</p>
+                        <div class="chart-container">
+                            <canvas id="chart-services"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-footer"><button class="btn-outline" onclick="trocarTela('admin-screen')">Voltar</button></div>
+            </div>
+
             <div id="settings-screen" class="screen">
                 <div class="dashboard-header"><h3 class="dash-title">Configurações</h3></div>
                 <div class="settings-content">
@@ -742,6 +772,19 @@
                             <div style="flex:1"><label class="form-label">Fim Intervalo</label><input type="time" id="cfg-break-end" class="settings-input"></div>
                         </div>
                         <div style="margin-top: 15px;"><label class="form-label">Dias de Funcionamento</label><div class="days-wrapper" id="days-selector"></div></div>
+                    </div>
+
+                    <div class="settings-section">
+                        <p class="settings-title">Happy Hour / Promoção</p>
+                        <div class="row-split">
+                            <div style="flex:1"><label class="form-label">Início</label><input type="time" id="cfg-happy-start" class="settings-input"></div>
+                            <div style="flex:1"><label class="form-label">Fim</label><input type="time" id="cfg-happy-end" class="settings-input"></div>
+                        </div>
+                        <div class="form-row" style="margin-top:10px;">
+                            <label class="form-label">Desconto no Serviço (R$)</label>
+                            <input type="number" id="cfg-happy-val" class="settings-input" placeholder="Ex: 5">
+                        </div>
+                        <div style="margin-top: 10px;"><label class="form-label">Dias da Promoção</label><div class="days-wrapper" id="happy-days-selector"></div></div>
                     </div>
 
                     <div class="settings-section">
@@ -835,9 +878,12 @@
         let confirmCallback = null; 
         
         let tempOpenDays = [];
+        let tempHappyDays = []; // Variável para dias da promo
         let currentEditingIndex = -1;
         let currentEditingServiceIndex = -1;
         let storyTimer = null;
+        let chartInstances = {}; // Guardar gráficos para destruir antes de recriar
+        let precoFinalAtual = 0; // Guardar preço calculado com promo
 
         const dateInput = document.getElementById('data');
         dateInput.valueAsDate = new Date();
@@ -859,6 +905,10 @@
             closeTime: "20:00",
             breakStart: "", 
             breakEnd: "",   
+            happyStart: "", // Happy Hour Start
+            happyEnd: "",   // Happy Hour End
+            happyDiscount: 0, // Valor desconto
+            happyDays: [], // Dias da promo
             openDays: [1, 2, 3, 4, 5, 6], 
             profissionais: [
                 { id: 1, nome: "Profissional 1", foto: "https://placehold.co/150/444444/FFF?text=P1" },
@@ -889,6 +939,7 @@
         window.novoAgendamento = novoAgendamento;
         window.abrirMaps = abrirMaps;
         window.abrirServicos = abrirServicos;
+        window.abrirRelatorios = abrirRelatorios; // NOVO
         window.abrirConfig = abrirConfig;
         window.filtrarAdmin = filtrarAdmin;
         window.filtrarStatus = filtrarStatus; 
@@ -899,6 +950,7 @@
         window.salvarConfig = salvarConfig;
         window.resetarConfiguracoes = resetarConfiguracoes;
         window.toggleDay = toggleDay;
+        window.toggleHappyDay = toggleHappyDay; // NOVO
         window.addProfissional = addProfissional;
         window.removeProfissional = removeProfissional;
         window.openEditProf = openEditProf;
@@ -916,6 +968,7 @@
         window.executarAcaoConfirmacao = ejecutarAcaoConfirmacao;
         window.togglePasswordVisibility = togglePasswordVisibility;
         window.limparImagem = limparImagem;
+        window.adicionarAoCalendario = adicionarAoCalendario; // NOVO
 
         let funcaoConfirmacaoAtual = null;
 
@@ -1076,9 +1129,7 @@
             if(sessionStorage.getItem('story_seen')) document.getElementById('logo-container').classList.add('seen');
         }
         function openStory() {
-            // TRAVA SCROLL NO BODY
             document.body.style.overflow = 'hidden'; 
-            
             const overlay = document.getElementById('story-overlay');
             overlay.classList.add('active'); overlay.style.transform = '';
             sessionStorage.setItem('story_seen', 'true');
@@ -1092,9 +1143,7 @@
             clearTimeout(storyTimer); storyTimer = setTimeout(closeStory, 5000);
         }
         function closeStory() {
-            // DESTRAVA SCROLL NO BODY
             document.body.style.overflow = ''; 
-
             const overlay = document.getElementById('story-overlay');
             overlay.classList.remove('active'); overlay.style.transform = '';
             clearTimeout(storyTimer);
@@ -1198,7 +1247,9 @@
             appConfig.servicos.forEach(srv => {
                 const opt = document.createElement('option');
                 opt.value = srv.nome; opt.innerText = `${srv.nome} (R$ ${srv.preco} • ${srv.tempo}min)`;
-                opt.dataset.tempo = srv.tempo; select.appendChild(opt);
+                opt.dataset.tempo = srv.tempo; 
+                opt.dataset.preco = srv.preco; // Store base price
+                select.appendChild(opt);
             });
         }
 
@@ -1237,7 +1288,7 @@
             const btnShare = document.getElementById('btn-share');
             const publicHeader = document.getElementById('public-header');
             
-            if (idTela === 'admin-screen' || idTela === 'settings-screen' || idTela === 'services-screen') {
+            if (idTela === 'admin-screen' || idTela === 'settings-screen' || idTela === 'services-screen' || idTela === 'reports-screen') {
                 publicHeader.style.display = 'none';
             } else {
                 publicHeader.style.display = 'block';
@@ -1248,7 +1299,7 @@
             if (idTela === 'login-screen') {
                 btnVoltar.style.display = 'none';
                 btnShare.style.display = 'flex';
-            } else if (idTela === 'admin-screen' || idTela === 'settings-screen' || idTela === 'services-screen') {
+            } else if (idTela === 'admin-screen' || idTela === 'settings-screen' || idTela === 'services-screen' || idTela === 'reports-screen') {
                 btnVoltar.style.display = 'none';
                 btnShare.style.display = 'none';
             } else {
@@ -1287,7 +1338,21 @@
         function checarValidade() {
             const d = document.getElementById('data').value; const h = document.getElementById('horaSelecionada').value; const s = document.getElementById('servico').value;
             const btn = document.getElementById('btn-agendar'); const msg = document.getElementById('msg-erro');
-            if(d && h && s) { btn.classList.remove('inactive'); msg.style.display = 'none'; } else { btn.classList.add('inactive'); }
+            
+            // Atualizar o texto do botão com o preço se selecionado
+            if(d && h && s) { 
+                btn.classList.remove('inactive'); 
+                msg.style.display = 'none'; 
+                // Se tiver preço final calculado (promo ou normal)
+                if(precoFinalAtual > 0) {
+                    btn.innerText = `CONFIRMAR (R$ ${precoFinalAtual})`;
+                } else {
+                    btn.innerText = "CONFIRMAR AGENDAMENTO";
+                }
+            } else { 
+                btn.classList.add('inactive'); 
+                btn.innerText = "Confirmar Agendamento";
+            }
         }
 
         function atualizarHorarios() {
@@ -1320,8 +1385,8 @@
             const [ch, cm] = appConfig.closeTime.split(':').map(Number);
             const start = oh*60 + om; const end = ch*60 + cm;
             
-            let breakStartVal = -1;
-            let breakEndVal = -1;
+            // Intervalo
+            let breakStartVal = -1, breakEndVal = -1;
             if (appConfig.breakStart && appConfig.breakEnd) {
                 const [bsh, bsm] = appConfig.breakStart.split(':').map(Number);
                 const [beh, bem] = appConfig.breakEnd.split(':').map(Number);
@@ -1329,9 +1394,23 @@
                 breakEndVal = beh * 60 + bem;
             }
 
+            // Happy Hour Logic
+            let happyStartVal = -1, happyEndVal = -1;
+            let isHappyDay = appConfig.happyDays && appConfig.happyDays.includes(diaSem);
+            if (isHappyDay && appConfig.happyStart && appConfig.happyEnd) {
+                const [hsh, hsm] = appConfig.happyStart.split(':').map(Number);
+                const [heh, hem] = appConfig.happyEnd.split(':').map(Number);
+                happyStartVal = hsh * 60 + hsm;
+                happyEndVal = heh * 60 + hem;
+            }
+
             let step = 30;
             const sOpt = document.getElementById('servico').options[document.getElementById('servico').selectedIndex];
-            if(sOpt && sOpt.dataset.tempo) step = parseInt(sOpt.dataset.tempo);
+            let basePrice = 0;
+            if(sOpt) {
+                if(sOpt.dataset.tempo) step = parseInt(sOpt.dataset.tempo);
+                if(sOpt.dataset.preco) basePrice = parseInt(sOpt.dataset.preco);
+            }
 
             const fmtDate = val.split('-').reverse().join('/');
             const barb = document.getElementById('barbeiroSelecionado').value;
@@ -1351,9 +1430,21 @@
                 
                 count++;
                 const btn = document.createElement('div'); btn.className = 'time-btn'; btn.innerText = hStr;
+                
+                // Check Promo
+                let currentPrice = basePrice;
+                if (isHappyDay && t >= happyStartVal && t < happyEndVal) {
+                    btn.classList.add('promo-slot');
+                    currentPrice = Math.max(0, basePrice - (appConfig.happyDiscount || 0));
+                }
+
                 btn.onclick = () => {
                     document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
-                    btn.classList.add('selected'); input.value = hStr; if(navigator.vibrate) navigator.vibrate(40); checarValidade();
+                    btn.classList.add('selected'); 
+                    input.value = hStr; 
+                    precoFinalAtual = currentPrice;
+                    if(navigator.vibrate) navigator.vibrate(40); 
+                    checarValidade();
                 };
                 grid.appendChild(btn);
             }
@@ -1385,14 +1476,19 @@
                 if(navigator.vibrate) navigator.vibrate([100,50,100]); setTimeout(()=>btn.classList.remove('shake-anim'), 500); return;
             }
             const sTxt = sSel.options[sSel.selectedIndex].text;
+            // Pega apenas o nome do serviço limpo para o banco
+            const serviceNameClean = sTxt.split('(')[0].trim();
             const d = document.getElementById('data').value.split('-').reverse().join('/');
             const b = document.getElementById('barbeiroSelecionado').value;
             
+            // Salva com o preço calculado (promo ou normal)
+            const serviceStringFinal = `${serviceNameClean} (R$ ${precoFinalAtual})`;
+
             await addDoc(collection(db, "agendamentos"), {
-                id: Date.now(), data: d, hora: h, servico: sTxt, barbeiro: b, cliente: usuario.nome, zapUsuario: usuario.zap, status: 'pendente'
+                id: Date.now(), data: d, hora: h, servico: serviceStringFinal, barbeiro: b, cliente: usuario.nome, zapUsuario: usuario.zap, status: 'pendente'
             });
 
-            const msg = `Olá, sou *${usuario.nome}*.\n\nGostaria de agendar:\n✂️ *${sTxt}*\n💈 Com: ${b}\n📅 Dia: ${d}\n⏰ Hora: ${h}\n📞 Contato: ${usuario.zap}`;
+            const msg = `Olá, sou *${usuario.nome}*.\n\nGostaria de agendar:\n✂️ *${serviceNameClean}*\n💈 Com: ${b}\n📅 Dia: ${d}\n⏰ Hora: ${h}\n💰 Valor: R$ ${precoFinalAtual}\n📞 Contato: ${usuario.zap}`;
             linkZap = `https://wa.me/${appConfig.whatsapp}?text=${encodeURIComponent(msg)}`;
             window.open(linkZap, '_blank');
             celebrarAgendamento(); renderizarLista(); trocarTela('success-screen');
@@ -1408,6 +1504,39 @@
                 confetti.style.animationDuration = (Math.random() * 2 + 3) + 's';
                 document.body.appendChild(confetti);
                 setTimeout(() => { confetti.remove(); }, 5000);
+            }
+        }
+        
+        // CALENDAR FUNCTION
+        function adicionarAoCalendario(type) {
+            const appt = agendamentos.find(a => a.cliente === usuario.nome && a.status === 'pendente');
+            if(!appt) return showToast("Nenhum agendamento encontrado.");
+            
+            const [d, m, y] = appt.data.split('/');
+            const [hh, mm] = appt.hora.split(':');
+            
+            const startDate = new Date(y, m-1, d, hh, mm);
+            const endDate = new Date(startDate.getTime() + 30*60000); // Assume 30 min default
+            
+            const title = encodeURIComponent(`Corte na ${appConfig.nomeBarbearia}`);
+            const details = encodeURIComponent(`Agendamento com ${appt.barbeiro} - ${appt.servico}`);
+            const location = encodeURIComponent(appConfig.endereco);
+            
+            if(type === 'google') {
+                const startISO = startDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
+                const endISO = endDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
+                const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startISO}/${endISO}&details=${details}&location=${location}`;
+                window.open(url, '_blank');
+            } else {
+                // Generate ICS for Apple/Outlook
+                const icsContent = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:${decodeURIComponent(title)}\nDTSTART:${startDate.toISOString().replace(/-|:|\.\d\d\d/g, "")}\nDTEND:${endDate.toISOString().replace(/-|:|\.\d\d\d/g, "")}\nDESCRIPTION:${decodeURIComponent(details)}\nLOCATION:${decodeURIComponent(location)}\nEND:VEVENT\nEND:VCALENDAR`;
+                const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.setAttribute('download', 'agendamento.ics');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             }
         }
         
@@ -1506,7 +1635,14 @@
             document.getElementById('cfg-close').value = appConfig.closeTime;
             document.getElementById('cfg-break-start').value = appConfig.breakStart || "";
             document.getElementById('cfg-break-end').value = appConfig.breakEnd || "";
+            
+            // Happy Hour
+            document.getElementById('cfg-happy-start').value = appConfig.happyStart || "";
+            document.getElementById('cfg-happy-end').value = appConfig.happyEnd || "";
+            document.getElementById('cfg-happy-val').value = appConfig.happyDiscount || 0;
+            
             tempOpenDays = [...(appConfig.openDays || [])];
+            tempHappyDays = [...(appConfig.happyDays || [])];
             renderDaysSelector(); renderSettingsProfList(); trocarTela('settings-screen');
         }
 
@@ -1542,7 +1678,13 @@
             appConfig.closeTime = document.getElementById('cfg-close').value || "20:00";
             appConfig.breakStart = document.getElementById('cfg-break-start').value;
             appConfig.breakEnd = document.getElementById('cfg-break-end').value;
+            
+            appConfig.happyStart = document.getElementById('cfg-happy-start').value;
+            appConfig.happyEnd = document.getElementById('cfg-happy-end').value;
+            appConfig.happyDiscount = parseFloat(document.getElementById('cfg-happy-val').value) || 0;
+            
             appConfig.openDays = tempOpenDays;
+            appConfig.happyDays = tempHappyDays;
 
             await setDoc(doc(db, "config", "loja"), appConfig);
             showToast("Salvo com sucesso!", "success");
@@ -1560,15 +1702,28 @@
 
         function renderDaysSelector() {
             const container = document.getElementById('days-selector'); container.innerHTML = '';
+            const happyContainer = document.getElementById('happy-days-selector'); happyContainer.innerHTML = '';
+            
             const dias = [{i:0,t:'Dom'},{i:1,t:'Seg'},{i:2,t:'Ter'},{i:3,t:'Qua'},{i:4,t:'Qui'},{i:5,t:'Sex'},{i:6,t:'Sáb'}];
+            
             dias.forEach(d => {
+                // Open Days
                 const btn = document.createElement('div');
                 btn.className = tempOpenDays.includes(d.i) ? 'day-btn active' : 'day-btn';
                 btn.innerText = d.t; btn.onclick = () => toggleDay(d.i); container.appendChild(btn);
+                
+                // Happy Days
+                const hBtn = document.createElement('div');
+                hBtn.className = tempHappyDays.includes(d.i) ? 'day-btn active' : 'day-btn';
+                hBtn.innerText = d.t; hBtn.onclick = () => toggleHappyDay(d.i); happyContainer.appendChild(hBtn);
             });
         }
         function toggleDay(i) {
             if(tempOpenDays.includes(i)) tempOpenDays = tempOpenDays.filter(d => d !== i); else tempOpenDays.push(i);
+            renderDaysSelector();
+        }
+        function toggleHappyDay(i) {
+            if(tempHappyDays.includes(i)) tempHappyDays = tempHappyDays.filter(d => d !== i); else tempHappyDays.push(i);
             renderDaysSelector();
         }
 
@@ -1671,6 +1826,76 @@
             renderServicesList(); closeEditService();
         }
 
+        // CHARTS & REPORTS
+        function abrirRelatorios() {
+            trocarTela('reports-screen');
+            renderizarGraficos();
+        }
+
+        function renderizarGraficos() {
+            // Faturamento 7 dias
+            const ctxRev = document.getElementById('chart-revenue').getContext('2d');
+            const ctxServ = document.getElementById('chart-services').getContext('2d');
+            
+            // Destroy old charts
+            if(chartInstances.rev) chartInstances.rev.destroy();
+            if(chartInstances.serv) chartInstances.serv.destroy();
+
+            // Prepare Data Revenue
+            const labelsRev = []; const dataRev = [];
+            const hoje = new Date();
+            for(let i=6; i>=0; i--) {
+                const d = new Date(); d.setDate(hoje.getDate() - i);
+                const dStr = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
+                labelsRev.push(dStr);
+                
+                // Sum revenue for this day (only completed)
+                const rev = agendamentos.filter(a => a.status === 'concluido' && a.data.includes(dStr + '/' + d.getFullYear()))
+                    .reduce((sum, a) => {
+                        let precoMatch = a.servico.match(/R\$\s*(\d+)/); 
+                        let val = precoMatch ? parseInt(precoMatch[1]) : 0;
+                        return sum + val;
+                    }, 0);
+                dataRev.push(rev);
+            }
+
+            chartInstances.rev = new Chart(ctxRev, {
+                type: 'line',
+                data: {
+                    labels: labelsRev,
+                    datasets: [{
+                        label: 'Faturamento (R$)',
+                        data: dataRev,
+                        borderColor: appConfig.themeColor,
+                        backgroundColor: 'rgba(212, 175, 55, 0.2)',
+                        fill: true
+                    }]
+                },
+                options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#333' } }, x: { grid: { display: false } } } }
+            });
+
+            // Prepare Data Services
+            const servCounts = {};
+            agendamentos.forEach(a => {
+                if(a.status === 'concluido') {
+                    const name = a.servico.split('(')[0].trim();
+                    servCounts[name] = (servCounts[name] || 0) + 1;
+                }
+            });
+            
+            chartInstances.serv = new Chart(ctxServ, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(servCounts),
+                    datasets: [{
+                        data: Object.values(servCounts),
+                        backgroundColor: [appConfig.themeColor, '#f1c40f', '#e67e22', '#ecf0f1']
+                    }]
+                },
+                options: { plugins: { legend: { position: 'bottom', labels: { color: '#fff' } } }, cutout: '70%' }
+            });
+        }
+
         // ADMIN PANEL FILTERS
         function filtrarStatus(status, el) {
             adminStatusFilter = status;
@@ -1678,13 +1903,10 @@
             el.classList.add('active');
             
             const label = document.getElementById('list-label');
-            if(status === 'pendente') label.innerText = label.innerText.replace('(Concluídos)', '(Agendados)');
-            else label.innerText = label.innerText.replace('(Agendados)', '(Concluídos)');
+            const newSuffix = status === 'pendente' ? ' (Agendados)' : ' (Concluídos)';
             
-            // Garantir que a lógica de texto esteja correta mesmo na primeira troca
-            if(!label.innerText.includes('(')) {
-                 label.innerText = label.innerText + (status === 'pendente' ? ' (Agendados)' : ' (Concluídos)');
-            }
+            // Remove qualquer texto entre parenteses antigo e adiciona o novo
+            label.innerText = label.innerText.replace(/\s*\(.*?\)/, "") + newSuffix;
             
             renderizarPainel();
         }

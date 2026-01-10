@@ -741,6 +741,12 @@
                             <canvas id="chart-services"></canvas>
                         </div>
                     </div>
+                    <div class="settings-section">
+                        <p class="settings-title">Disputa: Top Profissionais</p>
+                        <div class="chart-container">
+                            <canvas id="chart-barbers"></canvas>
+                        </div>
+                    </div>
                 </div>
                 <div class="settings-footer"><button class="btn-outline" onclick="trocarTela('admin-screen')">Voltar</button></div>
             </div>
@@ -1581,251 +1587,6 @@
             showToast("Dados carregados. Escolha o novo horário.", "success");
         }
 
-        // --- ADMIN & SETTINGS ---
-        function toggleAdminModal(show) {
-            const m = document.getElementById('admin-modal'); const p = document.getElementById('admin-password');
-            if(show) { m.classList.add('visible'); p.value=''; p.classList.remove('input-error'); document.getElementById('password-error').classList.remove('visible'); setTimeout(()=>p.focus(), 100); }
-            else m.classList.remove('visible');
-        }
-        
-        function verificarSenhaAdmin() {
-            const p = document.getElementById('admin-password');
-            const pass = appConfig.adminPass ? appConfig.adminPass : "1234";
-            
-            if(p.value === pass) {
-                toggleAdminModal(false); 
-                trocarTela('admin-screen'); 
-                renderizarPainel();
-            } else {
-                p.classList.add('input-error'); document.getElementById('password-error').classList.add('visible');
-                if(navigator.vibrate) navigator.vibrate(200); setTimeout(()=>{ p.classList.remove('input-error'); p.value=''; }, 400);
-            }
-        }
-        
-        function fecharConfirmacao() { document.getElementById('confirm-modal').classList.remove('visible'); funcaoConfirmacaoAtual = null; }
-        
-        function abrirConfirmacao(t, d, cb) {
-            document.getElementById('confirm-title').innerText = t; 
-            document.getElementById('confirm-desc').innerText = d;
-            document.getElementById('confirm-modal').classList.add('visible'); 
-            funcaoConfirmacaoAtual = cb;
-        }
-
-        function showToast(m, t='normal') {
-            const b = document.getElementById('toast-box'); b.className=''; if(t==='error') b.classList.add('error'); if(t==='success') b.classList.add('success');
-            b.innerHTML = t==='error' ? `<i class="fas fa-exclamation-circle"></i> ${m}` : t==='success' ? `<i class="fas fa-check-circle"></i> ${m}` : m;
-            b.style.display = 'flex'; setTimeout(()=>b.style.display='none', 3000);
-        }
-
-        function abrirConfig() {
-            document.getElementById('cfg-nome').value = appConfig.nomeBarbearia;
-            document.getElementById('cfg-subtitle').value = appConfig.loginSubtitle || "Agende seu estilo em segundos";
-            document.getElementById('cfg-desc').value = appConfig.descricao;
-            document.getElementById('cfg-endereco').value = appConfig.endereco;
-            document.getElementById('cfg-maps').value = appConfig.mapsLink;
-            document.getElementById('cfg-zap').value = appConfig.whatsapp;
-            document.getElementById('cfg-insta').value = appConfig.instagram;
-            
-            // Files don't need value set, just keep UI simple
-            // document.getElementById('cfg-logo').value = appConfig.logoUrl; 
-            
-            document.getElementById('cfg-color').value = appConfig.themeColor;
-            document.getElementById('cfg-pass').value = appConfig.adminPass;
-            document.getElementById('cfg-open').value = appConfig.openTime;
-            document.getElementById('cfg-close').value = appConfig.closeTime;
-            document.getElementById('cfg-break-start').value = appConfig.breakStart || "";
-            document.getElementById('cfg-break-end').value = appConfig.breakEnd || "";
-            
-            // Happy Hour
-            document.getElementById('cfg-happy-start').value = appConfig.happyStart || "";
-            document.getElementById('cfg-happy-end').value = appConfig.happyEnd || "";
-            document.getElementById('cfg-happy-val').value = appConfig.happyDiscount || 0;
-            
-            tempOpenDays = [...(appConfig.openDays || [])];
-            tempHappyDays = [...(appConfig.happyDays || [])];
-            renderDaysSelector(); renderSettingsProfList(); trocarTela('settings-screen');
-        }
-
-        async function salvarConfig() {
-            const btn = document.getElementById('btn-save-config');
-            const originalText = btn.innerText;
-            btn.innerText = "Salvando..."; btn.disabled = true;
-
-            // Upload Files if selected
-            let newLogoUrl = appConfig.logoUrl;
-            let newStoryUrl = appConfig.storyUrl;
-
-            const logoUrl = await uploadToImgBB('cfg-logo-file');
-            if(logoUrl) newLogoUrl = logoUrl;
-
-            const storyUrl = await uploadToImgBB('cfg-story-file');
-            if(storyUrl) newStoryUrl = storyUrl;
-
-            appConfig.nomeBarbearia = document.getElementById('cfg-nome').value || defaultConfig.nomeBarbearia;
-            appConfig.loginSubtitle = document.getElementById('cfg-subtitle').value || defaultConfig.loginSubtitle;
-            appConfig.descricao = document.getElementById('cfg-desc').value || defaultConfig.descricao;
-            appConfig.endereco = document.getElementById('cfg-endereco').value || defaultConfig.endereco;
-            appConfig.mapsLink = document.getElementById('cfg-maps').value || defaultConfig.mapsLink;
-            appConfig.whatsapp = document.getElementById('cfg-zap').value || defaultConfig.whatsapp;
-            appConfig.instagram = document.getElementById('cfg-insta').value || defaultConfig.instagram;
-            
-            appConfig.logoUrl = newLogoUrl;
-            appConfig.storyUrl = newStoryUrl;
-            
-            appConfig.themeColor = document.getElementById('cfg-color').value;
-            appConfig.adminPass = document.getElementById('cfg-pass').value || "1234";
-            appConfig.openTime = document.getElementById('cfg-open').value || "08:00";
-            appConfig.closeTime = document.getElementById('cfg-close').value || "20:00";
-            appConfig.breakStart = document.getElementById('cfg-break-start').value;
-            appConfig.breakEnd = document.getElementById('cfg-break-end').value;
-            
-            appConfig.happyStart = document.getElementById('cfg-happy-start').value;
-            appConfig.happyEnd = document.getElementById('cfg-happy-end').value;
-            appConfig.happyDiscount = parseFloat(document.getElementById('cfg-happy-val').value) || 0;
-            
-            appConfig.openDays = tempOpenDays;
-            appConfig.happyDays = tempHappyDays;
-
-            await setDoc(doc(db, "config", "loja"), appConfig);
-            showToast("Salvo com sucesso!", "success");
-            
-            btn.innerText = originalText; btn.disabled = false;
-            trocarTela('admin-screen');
-        }
-
-        function resetarConfiguracoes() {
-            abrirConfirmacao("Resetar Tudo?", "Irreversível.", async () => {
-                await setDoc(doc(db, "config", "loja"), defaultConfig);
-                location.reload(); 
-            });
-        }
-
-        function renderDaysSelector() {
-            const container = document.getElementById('days-selector'); container.innerHTML = '';
-            const happyContainer = document.getElementById('happy-days-selector'); happyContainer.innerHTML = '';
-            
-            const dias = [{i:0,t:'Dom'},{i:1,t:'Seg'},{i:2,t:'Ter'},{i:3,t:'Qua'},{i:4,t:'Qui'},{i:5,t:'Sex'},{i:6,t:'Sáb'}];
-            
-            dias.forEach(d => {
-                // Open Days
-                const btn = document.createElement('div');
-                btn.className = tempOpenDays.includes(d.i) ? 'day-btn active' : 'day-btn';
-                btn.innerText = d.t; btn.onclick = () => toggleDay(d.i); container.appendChild(btn);
-                
-                // Happy Days
-                const hBtn = document.createElement('div');
-                hBtn.className = tempHappyDays.includes(d.i) ? 'day-btn active' : 'day-btn';
-                hBtn.innerText = d.t; hBtn.onclick = () => toggleHappyDay(d.i); happyContainer.appendChild(hBtn);
-            });
-        }
-        function toggleDay(i) {
-            if(tempOpenDays.includes(i)) tempOpenDays = tempOpenDays.filter(d => d !== i); else tempOpenDays.push(i);
-            renderDaysSelector();
-        }
-        function toggleHappyDay(i) {
-            if(tempHappyDays.includes(i)) tempHappyDays = tempHappyDays.filter(d => d !== i); else tempHappyDays.push(i);
-            renderDaysSelector();
-        }
-
-        // PROFISSIONAIS
-        function renderSettingsProfList() {
-            const list = document.getElementById('prof-list-container'); list.innerHTML = '';
-            appConfig.profissionais.forEach((prof, idx) => {
-                const item = document.createElement('div'); item.className = 'prof-list-item';
-                item.innerHTML = `<div class="prof-info"><img src="${prof.foto}" class="prof-img-mini"><span style="font-size:0.85rem;">${prof.nome}</span></div><div><button class="btn-icon-action btn-edit-prof" onclick="openEditProf(${idx})"><i class="fas fa-pen"></i></button><button class="btn-icon-action btn-del-prof" onclick="removeProfissional(${idx})"><i class="fas fa-trash"></i></button></div>`;
-                list.appendChild(item);
-            });
-        }
-        async function addProfissional() {
-            const btn = document.getElementById('btn-add-prof');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i>"; btn.disabled = true;
-
-            const name = document.getElementById('new-prof-name').value; 
-            let img = "https://placehold.co/150/444444/FFF?text=" + name.charAt(0);
-            
-            // Upload Image ImgBB
-            const uploadedUrl = await uploadToImgBB('new-prof-img-file');
-            if(uploadedUrl) img = uploadedUrl;
-
-            if(!name) {
-                btn.innerHTML = originalText; btn.disabled = false;
-                return showToast("Digite o nome!", "error");
-            }
-            
-            appConfig.profissionais.push({ id: Date.now(), nome: name, foto: img });
-            document.getElementById('new-prof-name').value = ''; 
-            document.getElementById('new-prof-img-file').value = ''; 
-            renderSettingsProfList();
-            
-            btn.innerHTML = originalText; btn.disabled = false;
-        }
-        function removeProfissional(idx) {
-            abrirConfirmacao("Remover?", "Irreversível.", () => { appConfig.profissionais.splice(idx, 1); renderSettingsProfList(); });
-        }
-        function openEditProf(idx) {
-            currentEditingIndex = idx; const p = appConfig.profissionais[idx];
-            document.getElementById('edit-prof-name').value = p.nome; 
-            document.getElementById('edit-prof-modal').classList.add('visible');
-        }
-        function closeEditProf() { document.getElementById('edit-prof-modal').classList.remove('visible'); currentEditingIndex = -1; }
-        
-        async function saveEditProf() {
-            if (currentEditingIndex === -1) return;
-            const btn = document.getElementById('btn-save-prof');
-            btn.innerText = "..."; btn.disabled = true;
-
-            const n = document.getElementById('edit-prof-name').value; 
-            
-            let img = appConfig.profissionais[currentEditingIndex].foto;
-            const uploadedUrl = await uploadToImgBB('edit-prof-img-file');
-            if(uploadedUrl) img = uploadedUrl;
-
-            if(!n) {
-                btn.innerText = "Salvar"; btn.disabled = false;
-                return showToast("Nome vazio", "error");
-            }
-            appConfig.profissionais[currentEditingIndex].nome = n; 
-            appConfig.profissionais[currentEditingIndex].foto = img;
-            
-            renderSettingsProfList(); closeEditProf();
-            btn.innerText = "Salvar"; btn.disabled = false;
-        }
-
-        // SERVICOS
-        function abrirServicos() { renderServicesList(); trocarTela('services-screen'); }
-        function renderServicesList() {
-            const list = document.getElementById('services-list-container'); list.innerHTML = '';
-            appConfig.servicos.forEach((srv, idx) => {
-                const item = document.createElement('div'); item.className = 'prof-list-item';
-                item.innerHTML = `<div style="display:flex; flex-direction:column;"><span style="font-size:0.9rem; font-weight:600;">${srv.nome}</span><span class="service-meta"><span class="service-price-tag">R$ ${srv.preco}</span> • ${srv.tempo} min</span></div><div><button class="btn-icon-action btn-edit-prof" onclick="openEditService(${idx})"><i class="fas fa-pen"></i></button><button class="btn-icon-action btn-del-prof" onclick="removeService(${idx})"><i class="fas fa-trash"></i></button></div>`;
-                list.appendChild(item);
-            });
-        }
-        function addService() {
-            const n = document.getElementById('new-service-name').value; const p = document.getElementById('new-service-price').value; const t = document.getElementById('new-service-time').value;
-            if(!n || !p || !t) return showToast("Preencha tudo!", "error");
-            appConfig.servicos.push({ id: Date.now(), nome: n, preco: parseInt(p), tempo: parseInt(t) });
-            document.getElementById('new-service-name').value = ''; document.getElementById('new-service-price').value = ''; document.getElementById('new-service-time').value = '';
-            renderServicesList();
-        }
-        function removeService(idx) {
-            abrirConfirmacao("Remover?", "Sairá da lista.", () => { appConfig.servicos.splice(idx, 1); renderServicesList(); });
-        }
-        function openEditService(idx) {
-            currentEditingServiceIndex = idx; const s = appConfig.servicos[idx];
-            document.getElementById('edit-service-name').value = s.nome; document.getElementById('edit-service-price').value = s.preco; document.getElementById('edit-service-time').value = s.tempo;
-            document.getElementById('edit-service-modal').classList.add('visible');
-        }
-        function closeEditService() { document.getElementById('edit-service-modal').classList.remove('visible'); currentEditingServiceIndex = -1; }
-        function saveEditService() {
-            if (currentEditingServiceIndex === -1) return;
-            const n = document.getElementById('edit-service-name').value; const p = document.getElementById('edit-service-price').value; const t = document.getElementById('edit-service-time').value;
-            if(!n || !p || !t) return showToast("Preencha tudo", "error");
-            appConfig.servicos[currentEditingServiceIndex] = { id: appConfig.servicos[currentEditingServiceIndex].id, nome: n, preco: parseInt(p), tempo: parseInt(t) };
-            renderServicesList(); closeEditService();
-        }
-
         // CHARTS & REPORTS
         function abrirRelatorios() {
             trocarTela('reports-screen');
@@ -1836,10 +1597,12 @@
             // Faturamento 7 dias
             const ctxRev = document.getElementById('chart-revenue').getContext('2d');
             const ctxServ = document.getElementById('chart-services').getContext('2d');
+            const ctxBarber = document.getElementById('chart-barbers').getContext('2d');
             
             // Destroy old charts
             if(chartInstances.rev) chartInstances.rev.destroy();
             if(chartInstances.serv) chartInstances.serv.destroy();
+            if(chartInstances.barbers) chartInstances.barbers.destroy();
 
             // Prepare Data Revenue
             const labelsRev = []; const dataRev = [];
@@ -1894,6 +1657,37 @@
                 },
                 options: { plugins: { legend: { position: 'bottom', labels: { color: '#fff' } } }, cutout: '70%' }
             });
+
+            // Prepare Data Barbers (Fight)
+            const barberSales = {};
+            agendamentos.forEach(a => {
+                if(a.status === 'concluido') {
+                    const name = a.barbeiro;
+                    let val = 0;
+                    let match = a.servico.match(/R\$\s*(\d+)/);
+                    if(match) val = parseInt(match[1]);
+                    barberSales[name] = (barberSales[name] || 0) + val;
+                }
+            });
+            const sortedBarbers = Object.entries(barberSales).sort((a,b) => b[1] - a[1]);
+            
+            chartInstances.barbers = new Chart(ctxBarber, {
+                type: 'bar',
+                data: {
+                    labels: sortedBarbers.map(k => k[0]),
+                    datasets: [{
+                        label: 'Total Vendido (R$)',
+                        data: sortedBarbers.map(k => k[1]),
+                        backgroundColor: sortedBarbers.map((_, i) => i === 0 ? '#f1c40f' : '#444'), // Winner is Gold
+                        borderRadius: 5
+                    }]
+                },
+                options: { 
+                    indexAxis: 'y',
+                    plugins: { legend: { display: false } }, 
+                    scales: { x: { grid: { display:false } }, y: { grid: { display:false }, ticks: { color: 'white' } } } 
+                }
+            });
         }
 
         // ADMIN PANEL FILTERS
@@ -1903,10 +1697,13 @@
             el.classList.add('active');
             
             const label = document.getElementById('list-label');
-            const newSuffix = status === 'pendente' ? ' (Agendados)' : ' (Concluídos)';
-            
-            // Remove qualquer texto entre parenteses antigo e adiciona o novo
-            label.innerText = label.innerText.replace(/\s*\(.*?\)/, "") + newSuffix;
+            // Logic to update label dynamically
+            let currentText = label.innerText;
+            // Remove existing parenthesis part if exists
+            if(currentText.includes('(')) {
+                currentText = currentText.split('(')[0].trim();
+            }
+            label.innerText = currentText + (status === 'pendente' ? ' (Agendados)' : ' (Concluídos)');
             
             renderizarPainel();
         }

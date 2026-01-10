@@ -308,11 +308,10 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* LOGIN */
-        /* --- ADIÇÃO: NÃO SCROLLAR NO MOBILE --- */
         #login-screen { 
             background: transparent; 
             overflow: hidden !important; 
-            touch-action: none; /* Previne scroll nativo */
+            touch-action: none; 
         }
         .login-wrapper { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 20px 40px 25px 40px; text-align: center; margin-top: 0; }
         .login-logo-area { margin-bottom: 25px; }
@@ -334,10 +333,15 @@
         .btn-icon-group { display: flex; gap: 10px; }
         .btn-config { background: transparent; border: 1px solid #444; color: #888; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
         .btn-config:hover { color: var(--accent-color); border-color: var(--accent-color); }
-        .barber-filter-select { width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: white; margin-bottom: 15px; font-family: 'Poppins', sans-serif; outline: none; }
-        .filter-row { display: flex; gap: 8px; margin-bottom: 15px; background: #252525; padding: 5px; border-radius: 10px; overflow-x: auto; }
+        .barber-filter-select { width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: white; margin-bottom: 10px; font-family: 'Poppins', sans-serif; outline: none; }
+        
+        .filter-row { display: flex; gap: 8px; margin-bottom: 10px; background: #252525; padding: 5px; border-radius: 10px; overflow-x: auto; }
         .filter-btn { flex: 1; background: transparent; border: none; color: #888; padding: 8px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; font-weight: 600; transition: 0.2s; white-space: nowrap; }
         .filter-btn.active { background: var(--accent-color); color: #000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        
+        /* Specific styles for status buttons */
+        .status-filter-btn.active { background: #fff !important; color: #000 !important; }
+
         .date-picker-container { position: relative; flex: 0 0 40px; display: flex; align-items: center; justify-content: center; background: #333; border-radius: 6px; cursor: pointer; }
         .date-picker-input { position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
         .date-picker-icon { color: white; font-size: 1rem; }
@@ -379,6 +383,23 @@
         .form-label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 5px; }
         .settings-input { width: 100%; background: #252525; border: 1px solid #444; color: white; padding: 10px; border-radius: 8px; font-family: 'Poppins'; }
         .settings-input:focus { border-color: var(--accent-color); outline: none; }
+        
+        /* FILE INPUT STYLE */
+        input[type="file"] {
+            padding: 8px;
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+        input[type="file"]::-webkit-file-upload-button {
+            background: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
         input[type="color"] { -webkit-appearance: none; border: none; width: 100%; height: 40px; border-radius: 8px; cursor: pointer; padding: 2px; background: #333; }
         input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
         input[type="color"]::-webkit-color-swatch { border: none; border-radius: 6px; }
@@ -400,7 +421,6 @@
         .btn-add-full { background: var(--accent-color); color: #000; font-weight: bold; border: none; padding: 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; }
         .settings-footer { position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px 20px 20px; background: #1e1e1e; border-top: 1px solid #333; display: flex; gap: 10px; z-index: 20; }
         
-        /* WRAPPER PARA SENHA E OLHO */
         .password-wrapper { position: relative; width: 100%; }
         .password-toggle {
             position: absolute;
@@ -453,6 +473,10 @@
         .appt-details { font-size: 0.85rem; color: #fff; margin-bottom: 12px; line-height: 1.4; }
         .appt-details strong { color: var(--accent-color); display: block; font-size: 1rem; margin-bottom: 4px; }
         .appt-actions { display: flex; gap: 10px; }
+        
+        /* SPINNER OVERLAY for Uploads */
+        .spinner-overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; border-radius:inherit; }
+        .fa-spinner { animation: spin 1s infinite linear; }
     </style>
 </head>
 <body>
@@ -508,11 +532,12 @@
             <h3 class="modal-title">Editar Barbeiro</h3>
             <div style="margin-bottom: 15px;">
                 <input type="text" id="edit-prof-name" class="modal-input" placeholder="Nome">
-                <input type="text" id="edit-prof-img" class="modal-input" placeholder="Link da Foto">
+                <label style="font-size:0.75rem; color:#aaa; display:block; margin-top:10px; text-align:left;">Nova Foto (Opcional)</label>
+                <input type="file" id="edit-prof-img-file" class="settings-input" accept="image/*">
             </div>
             <div class="modal-actions">
                 <button class="btn-modal btn-modal-cancel" onclick="closeEditProf()">Cancelar</button>
-                <button class="btn-modal btn-modal-confirm" onclick="saveEditProf()">Salvar</button>
+                <button class="btn-modal btn-modal-confirm" id="btn-save-prof" onclick="saveEditProf()">Salvar</button>
             </div>
         </div>
     </div>
@@ -649,7 +674,14 @@
                             <button class="btn-config" onclick="abrirConfig()" title="Configurações"><i class="fas fa-cog"></i></button>
                         </div>
                     </div>
+                    
+                    <div class="filter-row" style="margin-bottom: 5px;">
+                        <button class="filter-btn status-filter-btn active" onclick="filtrarStatus('pendente', this)">AGENDADOS</button>
+                        <button class="filter-btn status-filter-btn" onclick="filtrarStatus('concluido', this)">PAGOS</button>
+                    </div>
+
                     <select id="admin-barber-filter" class="barber-filter-select" onchange="renderizarPainel()"><option value="todos">Todos os Profissionais</option></select>
+                    
                     <div class="filter-row">
                         <button class="filter-btn active" onclick="filtrarAdmin('hoje', this)">Hoje</button>
                         <button class="filter-btn" onclick="filtrarAdmin('amanha', this)">Amanhã</button>
@@ -666,7 +698,7 @@
                         <div class="stat-card"><i class="fas fa-chart-line"></i><span class="stat-number" id="ticket-medio">R$ 0</span><span class="stat-label">Ticket Médio</span></div>
                     </div>
                 </div>
-                <div class="admin-list-container"><span class="label" id="list-label" style="margin-left:35px;">Lista de Hoje</span><div id="admin-list"></div></div>
+                <div class="admin-list-container"><span class="label" id="list-label" style="margin-left:35px;">Lista de Hoje (Agendados)</span><div id="admin-list"></div></div>
                 <div class="footer-form"><button class="btn-outline" onclick="trocarTela('login-screen')">Sair do Painel</button></div>
             </div>
 
@@ -708,19 +740,32 @@
                         <div class="form-row"><label class="form-label">Link Google Maps (URL)</label><input type="text" id="cfg-maps" class="settings-input"></div>
                         <div class="form-row"><label class="form-label">WhatsApp da Loja (DDD+Num)</label><input type="text" id="cfg-zap" class="settings-input"></div>
                         <div class="form-row"><label class="form-label">Instagram (Link Completo)</label><input type="text" id="cfg-insta" class="settings-input"></div>
-                        <div class="form-row"><label class="form-label">URL da Logo (Imgur/Link direto)</label><input type="text" id="cfg-logo" class="settings-input"></div>
-                        <div class="form-row"><label class="form-label">Imagem do Story (URL)</label><input type="text" id="cfg-story" class="settings-input"></div>
+                        
+                        <div class="form-row">
+                            <label class="form-label">Logo da Barbearia (Upload)</label>
+                            <input type="file" id="cfg-logo-file" class="settings-input" accept="image/*">
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Imagem do Story (Upload)</label>
+                            <input type="file" id="cfg-story-file" class="settings-input" accept="image/*">
+                        </div>
                     </div>
                     
                     <div class="settings-section">
                         <p class="settings-title">Equipe</p>
                         <div id="prof-list-container"></div>
-                        <div class="add-prof-card"><p style="font-size:0.75rem; color:#888; font-weight:600;">NOVO PROFISSIONAL</p><input type="text" id="new-prof-name" placeholder="Nome do Barbeiro"><input type="text" id="new-prof-img" placeholder="Link da Foto (Imgur, etc)"><button class="btn-add-full" onclick="addProfissional()"><i class="fas fa-plus-circle"></i> Adicionar Profissional</button></div>
+                        <div class="add-prof-card">
+                            <p style="font-size:0.75rem; color:#888; font-weight:600;">NOVO PROFISSIONAL</p>
+                            <input type="text" id="new-prof-name" placeholder="Nome do Barbeiro">
+                            <label style="font-size:0.75rem; color:#aaa; display:block; margin-top:5px; text-align:left;">Foto (Upload)</label>
+                            <input type="file" id="new-prof-img-file" class="settings-input" accept="image/*">
+                            <button class="btn-add-full" id="btn-add-prof" onclick="addProfissional()"><i class="fas fa-plus-circle"></i> Adicionar Profissional</button>
+                        </div>
                     </div>
                     
                     <div class="settings-section"><button class="btn-outline" style="border-color: #ff4d4d; color: #ff4d4d;" onclick="resetarConfiguracoes()">Restaurar Padrões</button></div>
                 </div>
-                <div class="settings-footer"><button class="btn-outline" onclick="trocarTela('admin-screen')">Voltar</button><button class="btn-confirm" onclick="salvarConfig()">Salvar</button></div>
+                <div class="settings-footer"><button class="btn-outline" onclick="trocarTela('admin-screen')">Voltar</button><button class="btn-confirm" id="btn-save-config" onclick="salvarConfig()">Salvar</button></div>
             </div>
 
             <div id="services-screen" class="screen">
@@ -735,6 +780,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, getDoc, setDoc, updateDoc, deleteDoc, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
         // --- CONFIGURAÇÃO DO FIREBASE ---
         const firebaseConfig = {
@@ -748,10 +794,11 @@
         };
 
         // Inicialização Segura
-        let app, db;
+        let app, db, storage;
         try {
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
+            storage = getStorage(app);
             console.log("Firebase conectado.");
         } catch (e) {
             console.error("Erro Firebase:", e);
@@ -763,6 +810,7 @@
         let usuario = { nome: "", zap: "" };
         let linkZap = "";
         let adminFiltro = 'hoje';
+        let adminStatusFilter = 'pendente'; // NOVO: 'pendente' (Agendados) ou 'concluido' (Pagos)
         let adminDataCustom = '';
         let confirmCallback = null; 
         
@@ -778,7 +826,7 @@
         const defaultConfig = {
             nomeBarbearia: "Barbearia",
             descricao: "Cortes modernos e clássicos.",
-            loginSubtitle: "Agende seu estilo em segundos", // ADICIONADO
+            loginSubtitle: "Agende seu estilo em segundos", 
             endereco: "Seu Endereço Aqui",
             mapsLink: "#",
             whatsapp: "5500000000000",
@@ -789,8 +837,8 @@
             adminPass: "1234",
             openTime: "08:00",
             closeTime: "20:00",
-            breakStart: "", // ADICIONADO: Inicio Intervalo
-            breakEnd: "",   // ADICIONADO: Fim Intervalo
+            breakStart: "", 
+            breakEnd: "",   
             openDays: [1, 2, 3, 4, 5, 6], 
             profissionais: [
                 { id: 1, nome: "Profissional 1", foto: "https://placehold.co/150/444444/FFF?text=P1" },
@@ -802,7 +850,7 @@
             ]
         };
 
-        // EXPOSE FUNCTIONS (Para o HTML conseguir chamar)
+        // EXPOSE FUNCTIONS
         window.toggleInfo = toggleInfo;
         window.openStory = openStory;
         window.closeStory = closeStory;
@@ -823,6 +871,7 @@
         window.abrirServicos = abrirServicos;
         window.abrirConfig = abrirConfig;
         window.filtrarAdmin = filtrarAdmin;
+        window.filtrarStatus = filtrarStatus; // NOVO
         window.renderizarPainel = renderizarPainel;
         window.trocarTela = trocarTela;
         window.voltarParaLogin = voltarParaLogin;
@@ -845,9 +894,8 @@
         window.editarAgendamento = editarAgendamento;
         window.cancelarAgendamento = cancelarAgendamento;
         window.executarAcaoConfirmacao = ejecutarAcaoConfirmacao;
-        window.togglePasswordVisibility = togglePasswordVisibility; // NOVA
+        window.togglePasswordVisibility = togglePasswordVisibility;
 
-        // CALLBACK GLOBAL PARA O MODAL
         let funcaoConfirmacaoAtual = null;
 
         function ejecutarAcaoConfirmacao() {
@@ -857,7 +905,6 @@
             fecharConfirmacao();
         }
         
-        // NOVA FUNCAO PARA MOSTRAR SENHA
         function togglePasswordVisibility(idInput) {
             const input = document.getElementById(idInput);
             if (input.type === "password") {
@@ -867,15 +914,32 @@
             }
         }
 
+        // --- UPLOAD HELPER FUNCTION ---
+        async function uploadImageToFirebase(fileInputId, pathName) {
+            const fileInput = document.getElementById(fileInputId);
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const storageRef = ref(storage, pathName + '_' + Date.now());
+                try {
+                    const snapshot = await uploadBytes(storageRef, file);
+                    const url = await getDownloadURL(snapshot.ref);
+                    return url;
+                } catch (error) {
+                    console.error("Erro upload:", error);
+                    showToast("Erro ao enviar imagem. Verifique o console.", "error");
+                    return null;
+                }
+            }
+            return null;
+        }
+
         // INICIALIZA O APP
         initApp();
 
         async function initApp() {
-            // Carrega padrão primeiro para não travar
             appConfig = defaultConfig;
             applyConfigToUI();
 
-            // Timeout de segurança
             setTimeout(() => {
                 if(document.getElementById('display-address').innerText === 'Carregando...') {
                     applyConfigToUI();
@@ -883,7 +947,6 @@
             }, 2000);
 
             try {
-                // 1. ESCUTA CONFIGURAÇÕES EM TEMPO REAL
                 onSnapshot(doc(db, "config", "loja"), (snapshot) => {
                     if (snapshot.exists()) {
                         appConfig = { ...defaultConfig, ...snapshot.data() };
@@ -896,7 +959,6 @@
                     console.warn("Sem permissão ou offline (Config):", error);
                 });
 
-                // 2. ESCUTA AGENDAMENTOS EM TEMPO REAL
                 const q = query(collection(db, "agendamentos"), orderBy("id", "desc"));
                 onSnapshot(q, (snapshot) => {
                     agendamentos = snapshot.docs.map(d => ({ firebaseId: d.id, ...d.data() }));
@@ -1001,7 +1063,6 @@
             if (appConfig.openDays && appConfig.openDays.includes(diaSemana)) {
                 if (currentTimeVal >= openTimeVal && currentTimeVal < closeTimeVal) {
                     aberto = true;
-                    // Checa intervalo se existir
                     if(appConfig.breakStart && appConfig.breakEnd) {
                          const [bsh, bsm] = appConfig.breakStart.split(':').map(Number);
                          const [beh, bem] = appConfig.breakEnd.split(':').map(Number);
@@ -1041,7 +1102,6 @@
             document.getElementById('login-logo-img').src = appConfig.logoUrl;
             document.getElementById('btn-maps-link').href = appConfig.mapsLink || "#";
             
-            // ATUALIZA O SUBTITULO DO LOGIN
             const subtitleEl = document.getElementById('login-msg-subtitle');
             if(appConfig.loginSubtitle) subtitleEl.innerText = appConfig.loginSubtitle;
             
@@ -1196,7 +1256,6 @@
             const [ch, cm] = appConfig.closeTime.split(':').map(Number);
             const start = oh*60 + om; const end = ch*60 + cm;
             
-            // --- LOGICA DE INTERVALO (NOVA) ---
             let breakStartVal = -1;
             let breakEndVal = -1;
             if (appConfig.breakStart && appConfig.breakEnd) {
@@ -1218,7 +1277,6 @@
             for(let t=start; t<end; t+=30) {
                 if(isToday && t < nowMin) continue;
                 
-                // Pular se estiver no intervalo
                 if (breakStartVal !== -1 && breakEndVal !== -1) {
                     if (t >= breakStartVal && t < breakEndVal) continue;
                 }
@@ -1343,7 +1401,6 @@
             
             if(p.value === pass) {
                 toggleAdminModal(false); 
-                // limparExpirados(); // Removemos para evitar erro se não existir
                 trocarTela('admin-screen'); 
                 renderizarPainel();
             } else {
@@ -1358,8 +1415,6 @@
             document.getElementById('confirm-title').innerText = t; 
             document.getElementById('confirm-desc').innerText = d;
             document.getElementById('confirm-modal').classList.add('visible'); 
-            
-            // Define a função que o botão HTML vai chamar
             funcaoConfirmacaoAtual = cb;
         }
 
@@ -1377,8 +1432,10 @@
             document.getElementById('cfg-maps').value = appConfig.mapsLink;
             document.getElementById('cfg-zap').value = appConfig.whatsapp;
             document.getElementById('cfg-insta').value = appConfig.instagram;
-            document.getElementById('cfg-logo').value = appConfig.logoUrl;
-            document.getElementById('cfg-story').value = appConfig.storyUrl;
+            
+            // Files don't need value set, just keep UI simple
+            // document.getElementById('cfg-logo').value = appConfig.logoUrl; 
+            
             document.getElementById('cfg-color').value = appConfig.themeColor;
             document.getElementById('cfg-pass').value = appConfig.adminPass;
             document.getElementById('cfg-open').value = appConfig.openTime;
@@ -1390,6 +1447,20 @@
         }
 
         async function salvarConfig() {
+            const btn = document.getElementById('btn-save-config');
+            const originalText = btn.innerText;
+            btn.innerText = "Salvando..."; btn.disabled = true;
+
+            // Upload Files if selected
+            let newLogoUrl = appConfig.logoUrl;
+            let newStoryUrl = appConfig.storyUrl;
+
+            const logoUrl = await uploadImageToFirebase('cfg-logo-file', 'logos/logo');
+            if(logoUrl) newLogoUrl = logoUrl;
+
+            const storyUrl = await uploadImageToFirebase('cfg-story-file', 'stories/story');
+            if(storyUrl) newStoryUrl = storyUrl;
+
             appConfig.nomeBarbearia = document.getElementById('cfg-nome').value || defaultConfig.nomeBarbearia;
             appConfig.loginSubtitle = document.getElementById('cfg-subtitle').value || defaultConfig.loginSubtitle;
             appConfig.descricao = document.getElementById('cfg-desc').value || defaultConfig.descricao;
@@ -1397,8 +1468,10 @@
             appConfig.mapsLink = document.getElementById('cfg-maps').value || defaultConfig.mapsLink;
             appConfig.whatsapp = document.getElementById('cfg-zap').value || defaultConfig.whatsapp;
             appConfig.instagram = document.getElementById('cfg-insta').value || defaultConfig.instagram;
-            appConfig.logoUrl = document.getElementById('cfg-logo').value || defaultConfig.logoUrl;
-            appConfig.storyUrl = document.getElementById('cfg-story').value || defaultConfig.storyUrl;
+            
+            appConfig.logoUrl = newLogoUrl;
+            appConfig.storyUrl = newStoryUrl;
+            
             appConfig.themeColor = document.getElementById('cfg-color').value;
             appConfig.adminPass = document.getElementById('cfg-pass').value || "1234";
             appConfig.openTime = document.getElementById('cfg-open').value || "08:00";
@@ -1409,6 +1482,8 @@
 
             await setDoc(doc(db, "config", "loja"), appConfig);
             showToast("Salvo com sucesso!", "success");
+            
+            btn.innerText = originalText; btn.disabled = false;
             trocarTela('admin-screen');
         }
 
@@ -1442,29 +1517,61 @@
                 list.appendChild(item);
             });
         }
-        function addProfissional() {
-            const name = document.getElementById('new-prof-name').value; let img = document.getElementById('new-prof-img').value;
-            if(!name) return showToast("Digite o nome!", "error");
-            if(!img) img = "https://placehold.co/150/444444/FFF?text=" + name.charAt(0);
+        async function addProfissional() {
+            const btn = document.getElementById('btn-add-prof');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i>"; btn.disabled = true;
+
+            const name = document.getElementById('new-prof-name').value; 
+            let img = "https://placehold.co/150/444444/FFF?text=" + name.charAt(0);
+            
+            // Upload Image
+            const uploadedUrl = await uploadImageToFirebase('new-prof-img-file', 'profissionais/' + name);
+            if(uploadedUrl) img = uploadedUrl;
+
+            if(!name) {
+                btn.innerHTML = originalText; btn.disabled = false;
+                return showToast("Digite o nome!", "error");
+            }
+            
             appConfig.profissionais.push({ id: Date.now(), nome: name, foto: img });
-            document.getElementById('new-prof-name').value = ''; document.getElementById('new-prof-img').value = '';
+            document.getElementById('new-prof-name').value = ''; 
+            document.getElementById('new-prof-img-file').value = ''; // Reset file input
             renderSettingsProfList();
+            
+            btn.innerHTML = originalText; btn.disabled = false;
         }
         function removeProfissional(idx) {
             abrirConfirmacao("Remover?", "Irreversível.", () => { appConfig.profissionais.splice(idx, 1); renderSettingsProfList(); });
         }
         function openEditProf(idx) {
             currentEditingIndex = idx; const p = appConfig.profissionais[idx];
-            document.getElementById('edit-prof-name').value = p.nome; document.getElementById('edit-prof-img').value = p.foto;
+            document.getElementById('edit-prof-name').value = p.nome; 
+            // document.getElementById('edit-prof-img').value = p.foto; // Removed url input
             document.getElementById('edit-prof-modal').classList.add('visible');
         }
         function closeEditProf() { document.getElementById('edit-prof-modal').classList.remove('visible'); currentEditingIndex = -1; }
-        function saveEditProf() {
+        
+        async function saveEditProf() {
             if (currentEditingIndex === -1) return;
-            const n = document.getElementById('edit-prof-name').value; const i = document.getElementById('edit-prof-img').value;
-            if(!n) return showToast("Nome vazio", "error");
-            appConfig.profissionais[currentEditingIndex].nome = n; appConfig.profissionais[currentEditingIndex].foto = i || `https://placehold.co/150/444444/FFF?text=${n.charAt(0)}`;
+            const btn = document.getElementById('btn-save-prof');
+            btn.innerText = "..."; btn.disabled = true;
+
+            const n = document.getElementById('edit-prof-name').value; 
+            
+            let img = appConfig.profissionais[currentEditingIndex].foto;
+            const uploadedUrl = await uploadImageToFirebase('edit-prof-img-file', 'profissionais/' + n);
+            if(uploadedUrl) img = uploadedUrl;
+
+            if(!n) {
+                btn.innerText = "Salvar"; btn.disabled = false;
+                return showToast("Nome vazio", "error");
+            }
+            appConfig.profissionais[currentEditingIndex].nome = n; 
+            appConfig.profissionais[currentEditingIndex].foto = img;
+            
             renderSettingsProfList(); closeEditProf();
+            btn.innerText = "Salvar"; btn.disabled = false;
         }
 
         // SERVICOS
@@ -1501,12 +1608,28 @@
             renderServicesList(); closeEditService();
         }
 
-        // ADMIN PANEL
+        // ADMIN PANEL FILTERS
+        function filtrarStatus(status, el) {
+            adminStatusFilter = status;
+            document.querySelectorAll('.status-filter-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            
+            const label = document.getElementById('list-label');
+            if(status === 'pendente') label.innerText = label.innerText.replace('Concluídos', 'Agendados');
+            else label.innerText = label.innerText.replace('Agendados', 'Concluídos');
+            
+            renderizarPainel();
+        }
+
         function filtrarAdmin(tipo, el) {
             adminFiltro = tipo;
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.filter-btn:not(.status-filter-btn)').forEach(b => b.classList.remove('active'));
             if(tipo !== 'data') el.classList.add('active'); else adminDataCustom = el.value;
-            document.getElementById('list-label').innerText = tipo === 'hoje' ? 'Lista de Hoje' : tipo === 'amanha' ? 'Lista de Amanhã' : 'Todos os Agendamentos';
+            
+            const baseText = tipo === 'hoje' ? 'Lista de Hoje' : tipo === 'amanha' ? 'Lista de Amanhã' : 'Todos os Agendamentos';
+            const suffix = adminStatusFilter === 'pendente' ? ' (Agendados)' : ' (Concluídos)';
+            document.getElementById('list-label').innerText = baseText + suffix;
+            
             renderizarPainel();
         }
 
@@ -1519,11 +1642,37 @@
 
             let listaFiltrada = agendamentos.filter(appt => {
                 if(appt.status === 'cancelado_auto') return false; 
+                
+                // FILTER 1: STATUS (NEW)
+                if (appt.status !== adminStatusFilter) return false;
+
+                // FILTER 2: DATE
                 const d = appt.data.split('/'); const dIso = `${d[2]}-${d[1]}-${d[0]}`;
                 let matchData = (adminFiltro === 'hoje' && dIso === hoje) || (adminFiltro === 'amanha' && dIso === amanha) || (adminFiltro === 'data' && dIso === adminDataCustom) || (adminFiltro === 'todos');
+                
+                // FILTER 3: BARBER
                 let matchBarber = (filtroBarbeiro === 'todos') || (appt.barbeiro === filtroBarbeiro);
+                
                 return matchData && matchBarber;
             }).sort((a, b) => a.hora.localeCompare(b.hora));
+
+            // CALCULATE STATS (Based on ALL data to show overview, or just filtered? Usually dashboard stats show overview of the day/selection)
+            // Let's calculate stats based on the DATE filter, ignoring the status filter, so the admin sees the totals regardless of which tab (Agendados/Pagos) is active.
+            let statsList = agendamentos.filter(appt => {
+                if(appt.status === 'cancelado_auto') return false;
+                const d = appt.data.split('/'); const dIso = `${d[2]}-${d[1]}-${d[0]}`;
+                let matchData = (adminFiltro === 'hoje' && dIso === hoje) || (adminFiltro === 'amanha' && dIso === amanha) || (adminFiltro === 'data' && dIso === adminDataCustom) || (adminFiltro === 'todos');
+                 let matchBarber = (filtroBarbeiro === 'todos') || (appt.barbeiro === filtroBarbeiro);
+                return matchData && matchBarber;
+            });
+
+            statsList.forEach(appt => {
+                let precoMatch = appt.servico.match(/R\$\s*(\d+)/); let valor = precoMatch ? parseInt(precoMatch[1]) : 0;
+                if(valor === 0) { const s = appConfig.servicos.find(s => appt.servico.includes(s.nome)); if(s) valor = s.preco; }
+                totalValueAll += valor; 
+                if(appt.status === 'concluido') emCaixa += valor; 
+                else { totalCount++; aReceber += valor; }
+            });
 
             if (listaFiltrada.length === 0) container.innerHTML = '<p style="color:#666; text-align:center; margin-top:20px">Nenhum corte encontrado.</p>';
             let proximoEncontrado = false;
@@ -1532,7 +1681,7 @@
                 let precoMatch = appt.servico.match(/R\$\s*(\d+)/); let valor = precoMatch ? parseInt(precoMatch[1]) : 0;
                 if(valor === 0) { const s = appConfig.servicos.find(s => appt.servico.includes(s.nome)); if(s) valor = s.preco; }
                 const valorTexto = `R$ ${valor},00`; const sL = appt.servico.split('(')[0];
-                totalValueAll += valor; if(appt.status === 'concluido') emCaixa += valor; else { totalCount++; aReceber += valor; }
+                
                 const isPago = appt.status === 'concluido';
                 const div = document.createElement('div'); div.className = isPago ? 'admin-item pago' : 'admin-item';
                 let nextBadge = (!isPago && !proximoEncontrado) ? '<span class="next-client-badge">PRÓXIMO</span>' : ''; if(nextBadge) proximoEncontrado = true;
@@ -1541,7 +1690,7 @@
                 container.appendChild(div);
             });
             document.getElementById('total-cortes').innerText = totalCount; document.getElementById('total-pendente').innerText = `R$ ${aReceber}`; document.getElementById('total-caixa').innerText = `R$ ${emCaixa}`;
-            const tm = listaFiltrada.length > 0 ? Math.round(totalValueAll / listaFiltrada.length) : 0; document.getElementById('ticket-medio').innerText = `R$ ${tm}`;
+            const tm = statsList.length > 0 ? Math.round(totalValueAll / statsList.length) : 0; document.getElementById('ticket-medio').innerText = `R$ ${tm}`;
         }
 
         async function adminConfirmar(id) {

@@ -185,7 +185,7 @@
             display: none; flex-direction: column;
             border-radius: inherit; 
             transition: transform 0.3s ease-out;
-            overscroll-behavior: contain; /* Trava scroll extra */
+            overscroll-behavior: contain;
         }
         .story-overlay.active { display: flex; animation: fadeIn 0.3s; }
         .story-overlay.dragging { transition: none; }
@@ -334,14 +334,19 @@
         .btn-icon-group { display: flex; gap: 10px; }
         .btn-config { background: transparent; border: 1px solid #444; color: #888; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
         .btn-config:hover { color: var(--accent-color); border-color: var(--accent-color); }
-        .barber-filter-select { width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: white; margin-bottom: 5px; font-family: 'Poppins', sans-serif; outline: none; }
+        .barber-filter-select { width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: white; margin-bottom: 10px; font-family: 'Poppins', sans-serif; outline: none; }
         
         .filter-row { display: flex; gap: 8px; margin-bottom: 10px; background: #252525; padding: 5px; border-radius: 10px; overflow-x: auto; }
         .filter-btn { flex: 1; background: transparent; border: none; color: #888; padding: 8px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; font-weight: 600; transition: 0.2s; white-space: nowrap; }
         .filter-btn.active { background: var(--accent-color); color: #000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         
-        /* Specific styles for status buttons */
-        .status-filter-btn.active { background: #fff !important; color: #000 !important; }
+        /* Updated Status Buttons with Dynamic Color */
+        .status-filter-btn.active { 
+            background: var(--accent-color) !important; 
+            color: #000 !important; 
+            border-color: var(--accent-color) !important;
+            font-weight: 700;
+        }
 
         .date-picker-container { position: relative; flex: 0 0 40px; display: flex; align-items: center; justify-content: center; background: #333; border-radius: 6px; cursor: pointer; }
         .date-picker-input { position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
@@ -390,6 +395,7 @@
             padding: 8px;
             font-size: 0.8rem;
             color: #ccc;
+            flex: 1;
         }
         input[type="file"]::-webkit-file-upload-button {
             background: #333;
@@ -400,6 +406,9 @@
             cursor: pointer;
             margin-right: 10px;
         }
+        .file-input-wrapper { display: flex; align-items: center; gap: 10px; width: 100%; }
+        .btn-trash-img { background: transparent; border: 1px solid #ff4d4d; color: #ff4d4d; border-radius: 8px; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .btn-trash-img:hover { background: rgba(255, 77, 77, 0.1); }
         
         input[type="color"] { -webkit-appearance: none; border: none; width: 100%; height: 40px; border-radius: 8px; cursor: pointer; padding: 2px; background: #333; }
         input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
@@ -524,7 +533,7 @@
                 <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width:18px;">
                 <span>4.9</span> <div style="display:flex; gap:2px;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
             </div>
-            <div class="watermark-popup">Produzido por GSTDESIGN 2026</div>
+            <div class="watermark-popup">Produzido por BARBERLABEL 2026</div>
         </div>
     </div>
 
@@ -534,7 +543,10 @@
             <div style="margin-bottom: 15px;">
                 <input type="text" id="edit-prof-name" class="modal-input" placeholder="Nome">
                 <label style="font-size:0.75rem; color:#aaa; display:block; margin-top:10px; text-align:left;">Nova Foto (Opcional)</label>
-                <input type="file" id="edit-prof-img-file" class="settings-input" accept="image/*">
+                <div class="file-input-wrapper">
+                    <input type="file" id="edit-prof-img-file" class="settings-input" accept="image/*">
+                    <button class="btn-trash-img" onclick="limparImagem('prof')"><i class="fas fa-trash"></i></button>
+                </div>
             </div>
             <div class="modal-actions">
                 <button class="btn-modal btn-modal-cancel" onclick="closeEditProf()">Cancelar</button>
@@ -610,7 +622,7 @@
                     </div>
                     <button class="btn-confirm" onclick="fazerLogin()" style="margin-top: 10px;">Entrar</button>
                     <button class="btn-barber-login" onclick="toggleAdminModal(true)"><i class="fas fa-scissors"></i> Sou Barbeiro</button>
-                    <div class="watermark">Produzido por GSTDESIGN 2026</div>
+                    <div class="watermark">Produzido por BARBERLABEL 2026</div>
                 </div>
             </div>
 
@@ -744,11 +756,17 @@
                         
                         <div class="form-row">
                             <label class="form-label">Logo da Barbearia (Upload)</label>
-                            <input type="file" id="cfg-logo-file" class="settings-input" accept="image/*">
+                            <div class="file-input-wrapper">
+                                <input type="file" id="cfg-logo-file" class="settings-input" accept="image/*">
+                                <button class="btn-trash-img" onclick="limparImagem('logo')"><i class="fas fa-trash"></i></button>
+                            </div>
                         </div>
                         <div class="form-row">
                             <label class="form-label">Imagem do Story (Upload)</label>
-                            <input type="file" id="cfg-story-file" class="settings-input" accept="image/*">
+                            <div class="file-input-wrapper">
+                                <input type="file" id="cfg-story-file" class="settings-input" accept="image/*">
+                                <button class="btn-trash-img" onclick="limparImagem('story')"><i class="fas fa-trash"></i></button>
+                            </div>
                         </div>
                     </div>
                     
@@ -897,6 +915,7 @@
         window.cancelarAgendamento = cancelarAgendamento;
         window.executarAcaoConfirmacao = ejecutarAcaoConfirmacao;
         window.togglePasswordVisibility = togglePasswordVisibility;
+        window.limparImagem = limparImagem;
 
         let funcaoConfirmacaoAtual = null;
 
@@ -944,6 +963,32 @@
                 }
             }
             return null;
+        }
+
+        // --- FUNÇÃO PARA LIMPAR IMAGEM (SIMULAR DELETE) ---
+        function limparImagem(tipo) {
+            abrirConfirmacao('Remover Imagem?', 'Isso limpará a imagem do aplicativo.', async () => {
+                if(tipo === 'logo') {
+                    appConfig.logoUrl = defaultConfig.logoUrl;
+                    document.getElementById('cfg-logo-file').value = "";
+                } else if(tipo === 'story') {
+                    appConfig.storyUrl = defaultConfig.storyUrl;
+                    document.getElementById('cfg-story-file').value = "";
+                } else if(tipo === 'prof') {
+                    if(currentEditingIndex > -1) {
+                        appConfig.profissionais[currentEditingIndex].foto = "https://placehold.co/150/444444/FFF?text=" + appConfig.profissionais[currentEditingIndex].nome.charAt(0);
+                        document.getElementById('edit-prof-img-file').value = "";
+                    }
+                }
+                
+                // Se for logo/story, salva direto. Se for prof, precisa clicar em Salvar no modal depois
+                if(tipo !== 'prof') {
+                    await setDoc(doc(db, "config", "loja"), appConfig);
+                    showToast("Imagem removida.");
+                } else {
+                    showToast("Imagem limpa. Clique em Salvar.");
+                }
+            });
         }
 
         // INICIALIZA O APP
@@ -1633,8 +1678,13 @@
             el.classList.add('active');
             
             const label = document.getElementById('list-label');
-            if(status === 'pendente') label.innerText = label.innerText.replace('Concluídos', 'Agendados');
-            else label.innerText = label.innerText.replace('Agendados', 'Concluídos');
+            if(status === 'pendente') label.innerText = label.innerText.replace('(Concluídos)', '(Agendados)');
+            else label.innerText = label.innerText.replace('(Agendados)', '(Concluídos)');
+            
+            // Garantir que a lógica de texto esteja correta mesmo na primeira troca
+            if(!label.innerText.includes('(')) {
+                 label.innerText = label.innerText + (status === 'pendente' ? ' (Agendados)' : ' (Concluídos)');
+            }
             
             renderizarPainel();
         }

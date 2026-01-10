@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Setup - BarberLabel</title>
+    <title>Painel Master - BarberLabel</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -31,7 +31,7 @@
 
         .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             background: var(--card-bg);
             border: 1px solid #333;
             border-radius: 20px;
@@ -40,165 +40,158 @@
             position: relative;
         }
 
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 5px;
-            background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
-        }
-
-        header { text-align: center; margin-bottom: 40px; }
-        h1 { font-family: 'Playfair Display', serif; color: var(--accent-color); font-size: 2.5rem; }
-        p.subtitle { color: #999; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
-
-        .form-section { margin-bottom: 30px; padding-bottom: 30px; border-bottom: 1px solid #333; }
-        .section-title { display: flex; align-items: center; gap: 10px; color: #fff; font-size: 1.2rem; margin-bottom: 20px; font-family: 'Playfair Display', serif; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { font-family: 'Playfair Display', serif; color: var(--accent-color); font-size: 2rem; }
+        
+        .form-section { margin-bottom: 25px; padding: 20px; border: 1px solid #333; border-radius: 12px; background: #181818; }
+        .section-title { color: #fff; font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
         .section-title i { color: var(--accent-color); }
 
-        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px; }
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         @media (max-width: 600px) { .row { grid-template-columns: 1fr; } }
 
-        .input-group { margin-bottom: 15px; }
-        label { display: block; font-size: 0.8rem; color: #999; margin-bottom: 8px; }
+        label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
         
-        input, select {
+        input[type="text"], input[type="time"], input[type="url"], input[type="password"] {
             width: 100%; background: var(--input-bg); border: 1px solid #444; color: #fff;
-            padding: 12px 15px; border-radius: 8px; font-family: 'Poppins'; outline: none; transition: 0.3s;
+            padding: 10px; border-radius: 6px; outline: none; transition: 0.3s;
         }
         input:focus { border-color: var(--accent-color); }
 
-        /* Color Picker */
-        .color-wrapper { display: flex; align-items: center; gap: 10px; background: var(--input-bg); padding: 5px 10px; border-radius: 8px; border: 1px solid #444; }
-        input[type="color"] { border: none; width: 40px; height: 40px; padding: 0; background: none; cursor: pointer; }
+        /* UPLOAD PERSONALIZADO */
+        .file-upload-wrapper {
+            position: relative;
+            background: var(--input-bg);
+            border: 1px dashed #555;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: 0.3s;
+        }
+        .file-upload-wrapper:hover { border-color: var(--accent-color); }
+        input[type="file"] { width: 100%; font-size: 0.8rem; color: #ccc; }
+        .current-img-preview {
+            width: 50px; height: 50px; object-fit: cover; border-radius: 50%; border: 2px solid var(--accent-color);
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            display: none;
+        }
 
-        /* Dias da Semana */
+        /* PROFISSIONAIS */
+        .prof-list { display: flex; flex-direction: column; gap: 10px; }
+        .prof-item {
+            display: flex; gap: 10px; align-items: center; background: #222; padding: 10px; border-radius: 8px; border: 1px solid #333;
+        }
+        .prof-inputs { flex: 1; display: flex; gap: 10px; align-items: center; }
+        .btn-remove { background: #ff4d4d; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; }
+        .btn-add { background: transparent; border: 1px dashed var(--accent-color); color: var(--accent-color); width: 100%; padding: 10px; margin-top: 10px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .btn-add:hover { background: rgba(212, 175, 55, 0.1); }
+
+        /* Dias */
         .days-grid { display: flex; gap: 5px; flex-wrap: wrap; }
         .day-check { display: none; }
         .day-label {
-            flex: 1; text-align: center; padding: 10px; background: var(--input-bg); border: 1px solid #444;
-            border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 0.8rem; min-width: 40px;
+            flex: 1; text-align: center; padding: 8px; background: #222; border: 1px solid #444;
+            border-radius: 6px; cursor: pointer; font-size: 0.75rem; min-width: 35px; color: #777;
         }
-        .day-check:checked + .day-label { background: var(--accent-color); color: #000; border-color: var(--accent-color); font-weight: bold; }
+        .day-check:checked + .day-label { background: var(--accent-color); color: #000; font-weight: bold; }
 
         /* Botão Salvar */
         .btn-save {
             width: 100%; padding: 15px; background: var(--accent-color); color: #000;
-            font-weight: bold; font-size: 1.1rem; border: none; border-radius: 10px;
-            cursor: pointer; transition: 0.3s; margin-top: 20px; text-transform: uppercase;
-            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3); display: flex; align-items: center; justify-content: center; gap: 10px;
+            font-weight: bold; font-size: 1rem; border: none; border-radius: 10px;
+            cursor: pointer; margin-top: 20px; text-transform: uppercase;
         }
-        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4); }
-        .btn-save:disabled { background: #444; color: #888; cursor: not-allowed; box-shadow: none; transform: none; }
-
-        /* Status Toast */
-        #status-msg {
-            position: fixed; top: 20px; right: 20px; padding: 15px 25px; border-radius: 8px;
-            background: #2ecc71; color: #fff; font-weight: 600; display: none; animation: slideIn 0.3s; z-index: 1000;
-        }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        .btn-save:hover { opacity: 0.9; }
+        .btn-save:disabled { background: #444; cursor: wait; }
 
     </style>
 </head>
 <body>
 
-    <div id="status-msg"><i class="fas fa-check-circle"></i> Site Atualizado com Sucesso!</div>
-
     <div class="container">
         <header>
-            <h1>Setup BarberLabel</h1>
-            <p class="subtitle">Alteração em Tempo Real</p>
+            <h1>Painel Master</h1>
+            <p style="color:#666; font-size:0.8rem;">Setup via ImgBB + Firebase</p>
         </header>
 
-        <form id="setupForm">
+        <form id="masterForm">
             
             <div class="form-section">
-                <div class="section-title"><i class="fas fa-paint-brush"></i> Identidade Visual</div>
-                <div class="input-group">
+                <div class="section-title"><i class="fas fa-image"></i> Identidade Visual</div>
+                <div class="input-group" style="margin-bottom:15px;">
                     <label>Nome da Barbearia</label>
-                    <input type="text" id="nomeBarbearia" placeholder="Ex: Barbearia Imperial" required>
+                    <input type="text" id="nomeBarbearia">
                 </div>
+                
                 <div class="row">
-                    <div class="input-group">
-                        <label>Cor do Tema</label>
-                        <div class="color-wrapper">
-                            <input type="color" id="themeColor" value="#d4af37">
-                            <span style="font-size:0.8rem; color:#888;">Cor Principal</span>
+                    <div>
+                        <label>Logo (Upload)</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="logoFile" accept="image/*">
+                            <img id="preview-logo" class="current-img-preview">
                         </div>
                     </div>
-                    <div class="input-group">
-                        <label>Subtítulo (Tela de Login)</label>
-                        <input type="text" id="loginSubtitle" placeholder="Agende seu estilo">
+                    <div>
+                        <label>Imagem Capa/Story (Upload)</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="storyFile" accept="image/*">
+                            <img id="preview-story" class="current-img-preview">
+                        </div>
                     </div>
                 </div>
-                <div class="input-group">
-                    <label>Link da Logo (URL)</label>
-                    <input type="url" id="logoUrl" placeholder="https://...">
+
+                <div class="row">
+                    <div>
+                        <label>Cor do Tema</label>
+                        <input type="color" id="themeColor" value="#d4af37" style="width:100%; height:40px; border:none; background:transparent;">
+                    </div>
+                    <div>
+                        <label>Frase Login</label>
+                        <input type="text" id="loginSubtitle">
+                    </div>
                 </div>
             </div>
 
             <div class="form-section">
-                <div class="section-title"><i class="fas fa-map-marker-alt"></i> Contato</div>
+                <div class="section-title"><i class="fas fa-users"></i> Equipe (Personalizável)</div>
+                <div id="prof-list" class="prof-list"></div>
+                <button type="button" class="btn-add" onclick="adicionarCampoProfissional()"><i class="fas fa-plus"></i> Adicionar Barbeiro</button>
+            </div>
+
+            <div class="form-section">
+                <div class="section-title"><i class="fas fa-map-marker-alt"></i> Dados de Contato</div>
                 <div class="row">
-                    <div class="input-group">
-                        <label>WhatsApp (Somente Números com DDD)</label>
-                        <input type="text" id="whatsapp" placeholder="5511999999999" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Instagram</label>
-                        <input type="url" id="instagram" placeholder="https://instagram.com/...">
-                    </div>
+                    <div><label>WhatsApp (DDD+Num)</label><input type="text" id="whatsapp"></div>
+                    <div><label>Instagram (Link)</label><input type="text" id="instagram"></div>
                 </div>
-                <div class="input-group">
-                    <label>Endereço</label>
-                    <input type="text" id="endereco" placeholder="Rua Exemplo, 123">
+                <div style="margin-bottom:10px;"><label>Endereço</label><input type="text" id="endereco"></div>
+                <div><label>Link Maps</label><input type="text" id="mapsLink"></div>
+            </div>
+
+            <div class="form-section">
+                <div class="section-title"><i class="fas fa-clock"></i> Horários</div>
+                <div class="row">
+                    <div><label>Abre</label><input type="time" id="openTime"></div>
+                    <div><label>Fecha</label><input type="time" id="closeTime"></div>
                 </div>
-                <div class="input-group">
-                    <label>Link do Maps</label>
-                    <input type="url" id="mapsLink" placeholder="Link do Google Maps">
+                <label>Dias de Funcionamento</label>
+                <div class="days-grid">
+                    <input type="checkbox" id="dom" value="0" class="day-check"><label for="dom" class="day-label">Dom</label>
+                    <input type="checkbox" id="seg" value="1" class="day-check"><label for="seg" class="day-label">Seg</label>
+                    <input type="checkbox" id="ter" value="2" class="day-check"><label for="ter" class="day-label">Ter</label>
+                    <input type="checkbox" id="qua" value="3" class="day-check"><label for="qua" class="day-label">Qua</label>
+                    <input type="checkbox" id="qui" value="4" class="day-check"><label for="qui" class="day-label">Qui</label>
+                    <input type="checkbox" id="sex" value="5" class="day-check"><label for="sex" class="day-label">Sex</label>
+                    <input type="checkbox" id="sab" value="6" class="day-check"><label for="sab" class="day-label">Sáb</label>
                 </div>
             </div>
 
             <div class="form-section">
-                <div class="section-title"><i class="fas fa-clock"></i> Funcionamento</div>
-                <div class="row">
-                    <div class="input-group">
-                        <label>Abertura</label>
-                        <input type="time" id="openTime" value="09:00">
-                    </div>
-                    <div class="input-group">
-                        <label>Fechamento</label>
-                        <input type="time" id="closeTime" value="19:00">
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label>Dias Abertos</label>
-                    <div class="days-grid">
-                        <input type="checkbox" id="dom" value="0" class="day-check"><label for="dom" class="day-label">Dom</label>
-                        <input type="checkbox" id="seg" value="1" class="day-check" checked><label for="seg" class="day-label">Seg</label>
-                        <input type="checkbox" id="ter" value="2" class="day-check" checked><label for="ter" class="day-label">Ter</label>
-                        <input type="checkbox" id="qua" value="3" class="day-check" checked><label for="qua" class="day-label">Qua</label>
-                        <input type="checkbox" id="qui" value="4" class="day-check" checked><label for="qui" class="day-label">Qui</label>
-                        <input type="checkbox" id="sex" value="5" class="day-check" checked><label for="sex" class="day-label">Sex</label>
-                        <input type="checkbox" id="sab" value="6" class="day-check" checked><label for="sab" class="day-label">Sáb</label>
-                    </div>
-                </div>
+                <div class="section-title"><i class="fas fa-lock"></i> Senha do Painel</div>
+                <input type="text" id="adminPass" placeholder="Senha para o cliente entrar no painel">
             </div>
 
-            <div class="form-section" style="border-bottom: none;">
-                <div class="section-title"><i class="fas fa-lock"></i> Senha do Painel (App)</div>
-                <div class="input-group">
-                    <label>Senha de 4 dígitos para o barbeiro acessar o painel</label>
-                    <input type="text" id="adminPass" placeholder="1234" maxlength="4" required>
-                </div>
-            </div>
-
-            <button type="submit" id="btn-submit" class="btn-save">
-                <i class="fas fa-cloud-upload-alt"></i> Salvar e Atualizar Site
-            </button>
-            <p style="text-align: center; color: #666; font-size: 0.75rem; margin-top: 10px;">
-                As alterações aparecem instantaneamente no app.
-            </p>
-
+            <button type="submit" id="btn-submit" class="btn-save">SALVAR TUDO</button>
         </form>
     </div>
 
@@ -206,7 +199,9 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // SUAS CREDENCIAIS DO APP PRINCIPAL
+        // SUA CHAVE IMGBB (DO CÓDIGO ORIGINAL)
+        const IMG_BB_KEY = "fde585c6f206d65b90271edd2d43b65e";
+
         const firebaseConfig = {
             apiKey: "AIzaSyCdidGqRySr382mykhZd3G7TqVRwJycsX4",
             authDomain: "app-barbearia-de86f.firebaseapp.com",
@@ -220,98 +215,197 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Carregar dados atuais ao abrir a página
-        async function loadCurrentConfig() {
+        // VARIÁVEIS GLOBAIS
+        let currentConfig = {};
+
+        // --- FUNÇÃO DE UPLOAD IMGBB ---
+        async function uploadToImgBB(file) {
+            if (!file) return null;
+            
+            const formData = new FormData();
+            formData.append("image", file);
+
             try {
-                const docRef = doc(db, "config", "loja");
-                const docSnap = await getDoc(docRef);
-
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    
-                    // Preencher campos
-                    document.getElementById('nomeBarbearia').value = data.nomeBarbearia || '';
-                    document.getElementById('themeColor').value = data.themeColor || '#d4af37';
-                    document.getElementById('loginSubtitle').value = data.loginSubtitle || '';
-                    document.getElementById('logoUrl').value = data.logoUrl || '';
-                    document.getElementById('whatsapp').value = data.whatsapp || '';
-                    document.getElementById('instagram').value = data.instagram || '';
-                    document.getElementById('endereco').value = data.endereco || '';
-                    document.getElementById('mapsLink').value = data.mapsLink || '';
-                    document.getElementById('openTime').value = data.openTime || '09:00';
-                    document.getElementById('closeTime').value = data.closeTime || '19:00';
-                    document.getElementById('adminPass').value = data.adminPass || '';
-
-                    // Preencher dias
-                    if (data.openDays) {
-                        document.querySelectorAll('.day-check').forEach(chk => {
-                            chk.checked = data.openDays.includes(parseInt(chk.value));
-                        });
-                    }
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMG_BB_KEY}`, {
+                    method: "POST",
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.success) {
+                    return data.data.url;
+                } else {
+                    console.error("Erro ImgBB:", data);
+                    alert("Erro ao subir imagem para ImgBB.");
+                    return null;
                 }
             } catch (error) {
-                console.error("Erro ao carregar dados:", error);
+                console.error("Erro Conexão ImgBB:", error);
+                return null;
             }
         }
 
-        // Executar carregamento inicial
-        loadCurrentConfig();
+        // --- GESTÃO DE PROFISSIONAIS ---
+        window.adicionarCampoProfissional = (nome = "", fotoUrl = "") => {
+            const container = document.getElementById('prof-list');
+            const div = document.createElement('div');
+            div.className = 'prof-item';
+            div.innerHTML = `
+                <div class="prof-inputs">
+                    <input type="text" class="prof-name-input" placeholder="Nome" value="${nome}">
+                    <div style="flex:1;">
+                        <input type="file" class="prof-file-input" accept="image/*">
+                        <input type="hidden" class="prof-url-hidden" value="${fotoUrl}">
+                        ${fotoUrl ? `<small style="color:var(--accent-color)">Foto atual salva</small>` : ''}
+                    </div>
+                </div>
+                <button type="button" class="btn-remove" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
+            `;
+            container.appendChild(div);
+        }
 
-        // Função de Salvar
-        document.getElementById('setupForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const btn = document.getElementById('btn-submit');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
-            btn.disabled = true;
-
-            const openDays = [];
-            document.querySelectorAll('.day-check:checked').forEach(chk => {
-                openDays.push(parseInt(chk.value));
-            });
-
-            // Recupera configuração existente para não apagar serviços/profissionais que não estão neste form
-            let existingData = {};
+        // --- CARREGAR DADOS ---
+        async function loadData() {
             try {
                 const docSnap = await getDoc(doc(db, "config", "loja"));
-                if(docSnap.exists()) existingData = docSnap.data();
-            } catch(err) { console.log("Criando nova config..."); }
+                if (docSnap.exists()) {
+                    currentConfig = docSnap.data();
+                    
+                    // Preencher campos (nenhum obrigatório)
+                    if(document.getElementById('nomeBarbearia')) document.getElementById('nomeBarbearia').value = currentConfig.nomeBarbearia || "";
+                    if(document.getElementById('themeColor')) document.getElementById('themeColor').value = currentConfig.themeColor || "#d4af37";
+                    if(document.getElementById('loginSubtitle')) document.getElementById('loginSubtitle').value = currentConfig.loginSubtitle || "";
+                    if(document.getElementById('whatsapp')) document.getElementById('whatsapp').value = currentConfig.whatsapp || "";
+                    if(document.getElementById('instagram')) document.getElementById('instagram').value = currentConfig.instagram || "";
+                    if(document.getElementById('endereco')) document.getElementById('endereco').value = currentConfig.endereco || "";
+                    if(document.getElementById('mapsLink')) document.getElementById('mapsLink').value = currentConfig.mapsLink || "";
+                    if(document.getElementById('openTime')) document.getElementById('openTime').value = currentConfig.openTime || "";
+                    if(document.getElementById('closeTime')) document.getElementById('closeTime').value = currentConfig.closeTime || "";
+                    if(document.getElementById('adminPass')) document.getElementById('adminPass').value = currentConfig.adminPass || "";
 
-            const newConfig = {
-                ...existingData, // Mantém dados antigos (profissionais, serviços, story)
-                nomeBarbearia: document.getElementById('nomeBarbearia').value,
-                loginSubtitle: document.getElementById('loginSubtitle').value,
-                themeColor: document.getElementById('themeColor').value,
-                logoUrl: document.getElementById('logoUrl').value,
-                whatsapp: document.getElementById('whatsapp').value,
-                instagram: document.getElementById('instagram').value,
-                endereco: document.getElementById('endereco').value,
-                mapsLink: document.getElementById('mapsLink').value,
-                openTime: document.getElementById('openTime').value,
-                closeTime: document.getElementById('closeTime').value,
-                adminPass: document.getElementById('adminPass').value,
-                openDays: openDays
-            };
+                    // Previews Imagens
+                    if(currentConfig.logoUrl) {
+                        const img = document.getElementById('preview-logo');
+                        img.src = currentConfig.logoUrl; img.style.display = 'block';
+                    }
+                    if(currentConfig.storyUrl) {
+                        const img = document.getElementById('preview-story');
+                        img.src = currentConfig.storyUrl; img.style.display = 'block';
+                    }
+
+                    // Dias
+                    if(currentConfig.openDays) {
+                        document.querySelectorAll('.day-check').forEach(chk => {
+                            chk.checked = currentConfig.openDays.includes(parseInt(chk.value));
+                        });
+                    }
+
+                    // Profissionais
+                    const profs = currentConfig.profissionais || [];
+                    document.getElementById('prof-list').innerHTML = ''; 
+                    if(profs.length > 0) {
+                        profs.forEach(p => adicionarCampoProfissional(p.nome, p.foto));
+                    } else {
+                        adicionarCampoProfissional();
+                    }
+                } else {
+                    adicionarCampoProfissional();
+                }
+            } catch (e) {
+                console.error(e);
+                adicionarCampoProfissional();
+            }
+        }
+
+        loadData();
+
+        // --- SALVAR TUDO ---
+        document.getElementById('masterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ENVIANDO PARA IMGBB...';
+            btn.disabled = true;
 
             try {
-                // SALVA NO FIREBASE
-                await setDoc(doc(db, "config", "loja"), newConfig);
+                // 1. Upload Logo (se tiver novo arquivo)
+                const logoFile = document.getElementById('logoFile').files[0];
+                let finalLogoUrl = currentConfig.logoUrl || "";
+                if (logoFile) {
+                    finalLogoUrl = await uploadToImgBB(logoFile);
+                }
+
+                // 2. Upload Story (se tiver novo arquivo)
+                const storyFile = document.getElementById('storyFile').files[0];
+                let finalStoryUrl = currentConfig.storyUrl || "";
+                if (storyFile) {
+                    finalStoryUrl = await uploadToImgBB(storyFile);
+                }
+
+                // 3. Processar Profissionais
+                const profItems = document.querySelectorAll('.prof-item');
+                let finalProfissionais = [];
                 
-                // Feedback Visual
-                const toast = document.getElementById('status-msg');
-                toast.style.display = 'block';
-                setTimeout(() => { toast.style.display = 'none'; }, 3000);
+                for (const item of profItems) {
+                    const nome = item.querySelector('.prof-name-input').value;
+                    const fileInput = item.querySelector('.prof-file-input');
+                    const hiddenUrl = item.querySelector('.prof-url-hidden');
+                    
+                    let fotoUrl = hiddenUrl.value; 
+                    
+                    if (fileInput.files.length > 0) {
+                        // Upload para ImgBB
+                        const newUrl = await uploadToImgBB(fileInput.files[0]);
+                        if(newUrl) fotoUrl = newUrl;
+                    } else if (!fotoUrl) {
+                        fotoUrl = "https://placehold.co/150/333/FFF?text=" + (nome.charAt(0) || "B");
+                    }
+
+                    if (nome) {
+                        finalProfissionais.push({
+                            id: Date.now() + Math.random(),
+                            nome: nome,
+                            foto: fotoUrl
+                        });
+                    }
+                }
+
+                // 4. Dias
+                const openDays = [];
+                document.querySelectorAll('.day-check:checked').forEach(chk => openDays.push(parseInt(chk.value)));
+
+                // 5. Montar Objeto Final
+                const newConfig = {
+                    ...currentConfig,
+                    nomeBarbearia: document.getElementById('nomeBarbearia').value,
+                    themeColor: document.getElementById('themeColor').value,
+                    loginSubtitle: document.getElementById('loginSubtitle').value,
+                    logoUrl: finalLogoUrl,
+                    storyUrl: finalStoryUrl,
+                    whatsapp: document.getElementById('whatsapp').value,
+                    instagram: document.getElementById('instagram').value,
+                    endereco: document.getElementById('endereco').value,
+                    mapsLink: document.getElementById('mapsLink').value,
+                    openTime: document.getElementById('openTime').value,
+                    closeTime: document.getElementById('closeTime').value,
+                    adminPass: document.getElementById('adminPass').value,
+                    openDays: openDays,
+                    profissionais: finalProfissionais
+                };
+
+                // 6. Gravar no Firestore
+                await setDoc(doc(db, "config", "loja"), newConfig);
+
+                alert("✅ Configuração Salva! Site atualizado.");
+                loadData(); // Recarrega visuais
 
             } catch (error) {
-                console.error("Erro ao salvar:", error);
-                alert("Erro ao conectar com o servidor.");
+                console.error("Erro fatal:", error);
+                alert("Erro ao salvar. Verifique o console.");
             } finally {
-                btn.innerHTML = originalText;
+                btn.innerHTML = 'SALVAR TUDO';
                 btn.disabled = false;
             }
         });
-    </script>
 
+    </script>
 </body>
 </html>

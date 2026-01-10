@@ -185,6 +185,7 @@
             display: none; flex-direction: column;
             border-radius: inherit; 
             transition: transform 0.3s ease-out;
+            overscroll-behavior: contain; /* Trava scroll extra */
         }
         .story-overlay.active { display: flex; animation: fadeIn 0.3s; }
         .story-overlay.dragging { transition: none; }
@@ -333,7 +334,7 @@
         .btn-icon-group { display: flex; gap: 10px; }
         .btn-config { background: transparent; border: 1px solid #444; color: #888; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
         .btn-config:hover { color: var(--accent-color); border-color: var(--accent-color); }
-        .barber-filter-select { width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: white; margin-bottom: 10px; font-family: 'Poppins', sans-serif; outline: none; }
+        .barber-filter-select { width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: white; margin-bottom: 5px; font-family: 'Poppins', sans-serif; outline: none; }
         
         .filter-row { display: flex; gap: 8px; margin-bottom: 10px; background: #252525; padding: 5px; border-radius: 10px; overflow-x: auto; }
         .filter-btn { flex: 1; background: transparent; border: none; color: #888; padding: 8px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; font-weight: 600; transition: 0.2s; white-space: nowrap; }
@@ -675,12 +676,12 @@
                         </div>
                     </div>
                     
+                    <select id="admin-barber-filter" class="barber-filter-select" onchange="renderizarPainel()"><option value="todos">Todos os Profissionais</option></select>
+
                     <div class="filter-row" style="margin-bottom: 5px;">
                         <button class="filter-btn status-filter-btn active" onclick="filtrarStatus('pendente', this)">AGENDADOS</button>
                         <button class="filter-btn status-filter-btn" onclick="filtrarStatus('concluido', this)">PAGOS</button>
                     </div>
-
-                    <select id="admin-barber-filter" class="barber-filter-select" onchange="renderizarPainel()"><option value="todos">Todos os Profissionais</option></select>
                     
                     <div class="filter-row">
                         <button class="filter-btn active" onclick="filtrarAdmin('hoje', this)">Hoje</button>
@@ -780,8 +781,10 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, getDoc, setDoc, updateDoc, deleteDoc, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-
+        
+        // --- COLOQUE SUA CHAVE DO IMGBB AQUI ---
+        const IMG_BB_KEY = "fde585c6f206d65b90271edd2d43b65e"; 
+        
         // --- CONFIGURAÇÃO DO FIREBASE ---
         const firebaseConfig = {
             apiKey: "AIzaSyCdidGqRySr382mykhZd3G7TqVRwJycsX4",
@@ -794,11 +797,10 @@
         };
 
         // Inicialização Segura
-        let app, db, storage;
+        let app, db;
         try {
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
-            storage = getStorage(app);
             console.log("Firebase conectado.");
         } catch (e) {
             console.error("Erro Firebase:", e);
@@ -810,7 +812,7 @@
         let usuario = { nome: "", zap: "" };
         let linkZap = "";
         let adminFiltro = 'hoje';
-        let adminStatusFilter = 'pendente'; // NOVO: 'pendente' (Agendados) ou 'concluido' (Pagos)
+        let adminStatusFilter = 'pendente'; 
         let adminDataCustom = '';
         let confirmCallback = null; 
         
@@ -871,7 +873,7 @@
         window.abrirServicos = abrirServicos;
         window.abrirConfig = abrirConfig;
         window.filtrarAdmin = filtrarAdmin;
-        window.filtrarStatus = filtrarStatus; // NOVO
+        window.filtrarStatus = filtrarStatus; 
         window.renderizarPainel = renderizarPainel;
         window.trocarTela = trocarTela;
         window.voltarParaLogin = voltarParaLogin;
@@ -914,19 +916,30 @@
             }
         }
 
-        // --- UPLOAD HELPER FUNCTION ---
-        async function uploadImageToFirebase(fileInputId, pathName) {
+        // --- UPLOAD HELPER FUNCTION (IMGBB) ---
+        async function uploadToImgBB(fileInputId) {
             const fileInput = document.getElementById(fileInputId);
             if (fileInput.files && fileInput.files[0]) {
                 const file = fileInput.files[0];
-                const storageRef = ref(storage, pathName + '_' + Date.now());
+                const formData = new FormData();
+                formData.append("image", file);
+                
                 try {
-                    const snapshot = await uploadBytes(storageRef, file);
-                    const url = await getDownloadURL(snapshot.ref);
-                    return url;
+                    const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMG_BB_KEY}`, {
+                        method: "POST",
+                        body: formData
+                    });
+                    const data = await response.json();
+                    if(data.success) {
+                        return data.data.url;
+                    } else {
+                        console.error("Erro ImgBB:", data);
+                        showToast("Erro ao enviar imagem (API).", "error");
+                        return null;
+                    }
                 } catch (error) {
                     console.error("Erro upload:", error);
-                    showToast("Erro ao enviar imagem. Verifique o console.", "error");
+                    showToast("Erro de conexão ao enviar imagem.", "error");
                     return null;
                 }
             }
@@ -1018,6 +1031,9 @@
             if(sessionStorage.getItem('story_seen')) document.getElementById('logo-container').classList.add('seen');
         }
         function openStory() {
+            // TRAVA SCROLL NO BODY
+            document.body.style.overflow = 'hidden'; 
+            
             const overlay = document.getElementById('story-overlay');
             overlay.classList.add('active'); overlay.style.transform = '';
             sessionStorage.setItem('story_seen', 'true');
@@ -1031,6 +1047,9 @@
             clearTimeout(storyTimer); storyTimer = setTimeout(closeStory, 5000);
         }
         function closeStory() {
+            // DESTRAVA SCROLL NO BODY
+            document.body.style.overflow = ''; 
+
             const overlay = document.getElementById('story-overlay');
             overlay.classList.remove('active'); overlay.style.transform = '';
             clearTimeout(storyTimer);
@@ -1455,10 +1474,10 @@
             let newLogoUrl = appConfig.logoUrl;
             let newStoryUrl = appConfig.storyUrl;
 
-            const logoUrl = await uploadImageToFirebase('cfg-logo-file', 'logos/logo');
+            const logoUrl = await uploadToImgBB('cfg-logo-file');
             if(logoUrl) newLogoUrl = logoUrl;
 
-            const storyUrl = await uploadImageToFirebase('cfg-story-file', 'stories/story');
+            const storyUrl = await uploadToImgBB('cfg-story-file');
             if(storyUrl) newStoryUrl = storyUrl;
 
             appConfig.nomeBarbearia = document.getElementById('cfg-nome').value || defaultConfig.nomeBarbearia;
@@ -1525,8 +1544,8 @@
             const name = document.getElementById('new-prof-name').value; 
             let img = "https://placehold.co/150/444444/FFF?text=" + name.charAt(0);
             
-            // Upload Image
-            const uploadedUrl = await uploadImageToFirebase('new-prof-img-file', 'profissionais/' + name);
+            // Upload Image ImgBB
+            const uploadedUrl = await uploadToImgBB('new-prof-img-file');
             if(uploadedUrl) img = uploadedUrl;
 
             if(!name) {
@@ -1536,7 +1555,7 @@
             
             appConfig.profissionais.push({ id: Date.now(), nome: name, foto: img });
             document.getElementById('new-prof-name').value = ''; 
-            document.getElementById('new-prof-img-file').value = ''; // Reset file input
+            document.getElementById('new-prof-img-file').value = ''; 
             renderSettingsProfList();
             
             btn.innerHTML = originalText; btn.disabled = false;
@@ -1547,7 +1566,6 @@
         function openEditProf(idx) {
             currentEditingIndex = idx; const p = appConfig.profissionais[idx];
             document.getElementById('edit-prof-name').value = p.nome; 
-            // document.getElementById('edit-prof-img').value = p.foto; // Removed url input
             document.getElementById('edit-prof-modal').classList.add('visible');
         }
         function closeEditProf() { document.getElementById('edit-prof-modal').classList.remove('visible'); currentEditingIndex = -1; }
@@ -1560,7 +1578,7 @@
             const n = document.getElementById('edit-prof-name').value; 
             
             let img = appConfig.profissionais[currentEditingIndex].foto;
-            const uploadedUrl = await uploadImageToFirebase('edit-prof-img-file', 'profissionais/' + n);
+            const uploadedUrl = await uploadToImgBB('edit-prof-img-file');
             if(uploadedUrl) img = uploadedUrl;
 
             if(!n) {
@@ -1656,8 +1674,7 @@
                 return matchData && matchBarber;
             }).sort((a, b) => a.hora.localeCompare(b.hora));
 
-            // CALCULATE STATS (Based on ALL data to show overview, or just filtered? Usually dashboard stats show overview of the day/selection)
-            // Let's calculate stats based on the DATE filter, ignoring the status filter, so the admin sees the totals regardless of which tab (Agendados/Pagos) is active.
+            // CALCULATE STATS
             let statsList = agendamentos.filter(appt => {
                 if(appt.status === 'cancelado_auto') return false;
                 const d = appt.data.split('/'); const dIso = `${d[2]}-${d[1]}-${d[0]}`;

@@ -687,7 +687,7 @@
                     </div>
                     <button class="btn-confirm" onclick="fazerLogin()" style="margin-top: 10px;">Entrar</button>
                     <button class="btn-barber-login" onclick="toggleAdminModal(true)"><i class="fas fa-scissors"></i> Sou Barbeiro</button>
-                    <div class="watermark">Produzido por GSTDESIGN 2026</div>
+                    <div class="watermark">Produzido por BARBERLABEL 2026</div>
                 </div>
             </div>
 
@@ -1161,10 +1161,66 @@
                 });
             }
         }
+        
+        // --- PWA INSTALL PROMPT LOGIC ---
+        function initPWACheck() {
+            // 1. Verifica se já está instalado (Standalone)
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+            if (isStandalone) return; // Já instalado, não mostra nada
+            
+            // 2. Verifica se já fechou nesta sessão
+            if (sessionStorage.getItem('pwa_prompt_seen')) return;
+            
+            // 3. Detecta OS
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+            const isAndroid = /android/i.test(userAgent);
+            
+            const pwaModal = document.getElementById('pwa-tutorial-modal');
+            const stepsContainer = document.getElementById('pwa-steps-container');
+            const osText = document.getElementById('pwa-os-text');
+            
+            if (isIOS) {
+                // IPHONE LOGIC
+                osText.innerText = "IPHONE (iOS)";
+                stepsContainer.innerHTML = `
+                    <div class="pwa-step-row">
+                        <div class="pwa-step-line"></div>
+                        <div class="pwa-icon-box gold"><i class="fas fa-share-square"></i></div>
+                        <div class="pwa-step-text"><span class="pwa-step-label">Passo 1</span><div>Clique no botão <span class="pwa-highlight-gold">Compartilhar</span> na barra inferior do navegador.</div></div>
+                    </div>
+                    <div class="pwa-step-row">
+                        <div class="pwa-icon-box white"><i class="fas fa-plus-square"></i></div>
+                        <div class="pwa-step-text"><span class="pwa-step-label">Passo 2</span><div>Role para baixo e selecione <span class="pwa-highlight">Adicionar à Tela de Início</span>.</div></div>
+                    </div>
+                `;
+                setTimeout(() => pwaModal.classList.add('visible'), 2000);
+                sessionStorage.setItem('pwa_prompt_seen', 'true');
+                
+            } else if (isAndroid) {
+                // ANDROID LOGIC
+                osText.innerText = "ANDROID";
+                stepsContainer.innerHTML = `
+                    <div class="pwa-step-row">
+                        <div class="pwa-step-line"></div>
+                        <div class="pwa-icon-box gold"><i class="fas fa-ellipsis-v"></i></div>
+                        <div class="pwa-step-text"><span class="pwa-step-label">Passo 1</span><div>Clique nos <span class="pwa-highlight-gold">Três Pontinhos</span> no topo do navegador.</div></div>
+                    </div>
+                    <div class="pwa-step-row">
+                        <div class="pwa-icon-box white"><i class="fas fa-mobile-alt"></i></div>
+                        <div class="pwa-step-text"><span class="pwa-step-label">Passo 2</span><div>Selecione <span class="pwa-highlight">Instalar Aplicativo</span> ou <span class="pwa-highlight">Adicionar à Tela</span>.</div></div>
+                    </div>
+                `;
+                setTimeout(() => pwaModal.classList.add('visible'), 2000);
+                sessionStorage.setItem('pwa_prompt_seen', 'true');
+            }
+            // Se for Desktop ou outro, não mostra nada (como pedido, focar em mobile)
+        }
 
         // INICIALIZA O APP
         initApp();
         initNotificationSystem();
+        initPWACheck(); // Inicia verificação PWA
 
         async function initApp() {
             appConfig = defaultConfig;

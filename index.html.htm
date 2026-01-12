@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- TÍTULO E ÍCONES DINÂMICOS ADICIONADOS -->
     <title>App Agendamento</title>
+    <meta name="application-name" content="App Agendamento" id="meta-app-name">
+    <meta name="apple-mobile-web-app-title" content="App Agendamento" id="meta-apple-title">
+    <link rel="icon" type="image/png" href="" id="dynamic-favicon">
+    <link rel="apple-touch-icon" href="" id="dynamic-apple-icon">
+    <!-- FIM DAS ADIÇÕES NO HEAD -->
     
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -1387,6 +1394,25 @@
         function applyConfigToUI() {
             document.documentElement.style.setProperty('--accent-color', appConfig.themeColor);
             document.documentElement.style.setProperty('--accent-rgb', hexToRgb(appConfig.themeColor));
+
+            // --- LÓGICA DE ATUALIZAÇÃO DINÂMICA DO TÍTULO E FAVICON ---
+            // 1. Atualizar Título da Aba
+            document.title = appConfig.nomeBarbearia || "App Agendamento";
+
+            // 2. Atualizar Meta Tags de Nome do App
+            const metaAppName = document.getElementById('meta-app-name');
+            if(metaAppName) metaAppName.content = appConfig.nomeBarbearia || "App Agendamento";
+            
+            const metaAppleTitle = document.getElementById('meta-apple-title');
+            if(metaAppleTitle) metaAppleTitle.content = appConfig.nomeBarbearia || "App Agendamento";
+
+            // 3. Atualizar Favicon e Apple Icon
+            const favIcon = document.getElementById('dynamic-favicon');
+            if(favIcon && appConfig.logoUrl) favIcon.href = appConfig.logoUrl;
+
+            const appleIcon = document.getElementById('dynamic-apple-icon');
+            if(appleIcon && appConfig.logoUrl) appleIcon.href = appConfig.logoUrl;
+            // -------------------------------------------------------------
 
             document.getElementById('display-address').innerText = appConfig.endereco;
             document.getElementById('header-barber-name').innerText = appConfig.nomeBarbearia;

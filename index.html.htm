@@ -659,7 +659,7 @@
         <header id="public-header">
             <div class="header-top-bar">
                 <div class="icon-area-left">
-                    <div id="btn-voltar" class="icon-btn" onclick="voltarParaLogin()"><i class="fas fa-arrow-left"></i></div>
+                    <div id="btn-voltar" class="icon-btn" onclick="fazerLogout()"><i class="fas fa-sign-out-alt"></i></div>
                     <div id="btn-share" class="icon-btn" onclick="compartilharLink()"><i class="fas fa-share-alt"></i></div>
                 </div>
                 <h1 id="header-barber-name" class="header-brand-name">Barbearia</h1>
@@ -993,6 +993,7 @@
         window.validarInputsLogin = validarInputsLogin;
         window.mascaraTelefone = mascaraTelefone;
         window.fazerLogin = fazerLogin;
+        window.fazerLogout = fazerLogout; // NOVO: LOGOUT
         window.toggleAdminModal = toggleAdminModal;
         window.verificarSenhaAdmin = verificarSenhaAdmin;
         window.repetirUltimo = repetirUltimo;
@@ -1232,6 +1233,20 @@
         async function initApp() {
             appConfig = defaultConfig;
             applyConfigToUI();
+            
+            // --- VERIFICAÇÃO DE LOGIN PERSISTENTE ---
+            const savedUser = localStorage.getItem('barber_user');
+            if (savedUser) {
+                try {
+                    usuario = JSON.parse(savedUser);
+                    document.getElementById('user-name-display').innerText = usuario.nome;
+                    trocarTela('form-screen'); // Pula o login e vai direto pro agendamento
+                } catch(e) {
+                    console.error("Erro ao ler dados do usuário", e);
+                    localStorage.removeItem('barber_user');
+                }
+            }
+            // ----------------------------------------
 
             setTimeout(() => {
                 if(document.getElementById('display-address').innerText === 'Carregando...') {
@@ -1256,7 +1271,13 @@
                 onSnapshot(q, (snapshot) => {
                     agendamentos = snapshot.docs.map(d => ({ firebaseId: d.id, ...d.data() }));
                     
-                    if(usuario.nome) renderizarLista();
+                    if(usuario.nome) {
+                        renderizarLista();
+                        // Se estiver logado e dados carregarem, mostra botão repetir se necessário
+                        if(agendamentos.some(a => a.cliente === usuario.nome)) {
+                             document.getElementById('repeat-area').style.display = 'block';
+                        }
+                    }
                     if(document.getElementById('admin-screen').classList.contains('active')) renderizarPainel();
                     // SE O USUÁRIO ESTIVER NA TELA DE RELATÓRIOS, ATUALIZA EM TEMPO REAL
                     if(document.getElementById('reports-screen').classList.contains('active')) renderizarGraficos();
@@ -1476,6 +1497,9 @@
             }
             usuario.nome = nome; usuario.zap = zap.replace(/\D/g, "");
             
+            // --- SALVAR LOGIN NO LOCALSTORAGE (PERSISTENCIA) ---
+            localStorage.setItem('barber_user', JSON.stringify(usuario));
+            
             // --- SALVA O LEAD (QUEM ENTROU) ---
             try {
                 await addDoc(collection(db, "acessos"), {
@@ -1491,6 +1515,19 @@
             document.getElementById('user-name-display').innerText = nome;
             if(agendamentos.some(a => a.cliente === nome)) document.getElementById('repeat-area').style.display = 'block';
             trocarTela('form-screen'); atualizarHorarios();
+        }
+
+        function fazerLogout() {
+            abrirConfirmacao("Sair da conta?", "Você terá que fazer login novamente.", () => {
+                localStorage.removeItem('barber_user');
+                usuario = { nome: "", zap: "" };
+                // Limpar campos de login
+                document.getElementById('login-nome').value = "";
+                document.getElementById('login-zap').value = "";
+                document.getElementById('valid-nome').classList.remove('show');
+                document.getElementById('valid-zap').classList.remove('show');
+                trocarTela('login-screen');
+            });
         }
 
         function mascaraTelefone(input) {
@@ -1520,12 +1557,14 @@
                 btnVoltar.style.display = 'none';
                 btnShare.style.display = 'none';
             } else {
+                // Em telas como 'form-screen' ou 'success-screen', mostra o botão de sair (antigo voltar)
                 btnVoltar.style.display = 'flex';
                 btnShare.style.display = 'none';
             }
         }
 
         function voltarParaLogin() {
+            // Esta função foi substituída por fazerLogout no botão, mas mantida caso chamada programaticamente
             const telaAtual = document.querySelector('.screen.active').id;
             if (telaAtual === 'success-screen') trocarTela('form-screen'); else trocarTela('login-screen');
         }

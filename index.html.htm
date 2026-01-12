@@ -21,6 +21,7 @@
             /* Variáveis Dinâmicas */
             --accent-color: #d4af37; 
             --accent-rgb: 212, 175, 55; 
+            --text-on-accent: #000000; /* NOVA VARIÁVEL DE CONTRASTE */
             
             --bg-dark: #121212;
             --card-bg: #1e1e1e;
@@ -296,7 +297,10 @@
 
         .modal-actions { display: flex; gap: 10px; margin-top: 10px; }
         .btn-modal { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; font-size: 0.9rem; }
-        .btn-modal-confirm { background: var(--accent-color); color: #000; }
+        
+        /* USO DE VARIÁVEL DE CONTRASTE NO BOTÃO CONFIRMAR DO MODAL */
+        .btn-modal-confirm { background: var(--accent-color); color: var(--text-on-accent); }
+        
         .btn-modal-cancel { background: transparent; border: 1px solid #444; color: #ccc; }
 
         /* INFO POPUP */
@@ -346,12 +350,12 @@
         
         .filter-row { display: flex; gap: 8px; margin-bottom: 10px; background: #252525; padding: 5px; border-radius: 10px; overflow-x: auto; }
         .filter-btn { flex: 1; background: transparent; border: none; color: #888; padding: 8px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; font-weight: 600; transition: 0.2s; white-space: nowrap; }
-        .filter-btn.active { background: var(--accent-color); color: #000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .filter-btn.active { background: var(--accent-color); color: var(--text-on-accent); box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         
         /* Updated Status Buttons with Dynamic Color */
         .status-filter-btn.active { 
             background: var(--accent-color) !important; 
-            color: #000 !important; 
+            color: var(--text-on-accent) !important; /* COR AUTOMÁTICA */
             border-color: var(--accent-color) !important;
             font-weight: 700;
         }
@@ -384,7 +388,7 @@
         .btn-adm { flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 8px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; font-weight: 600; border: none; transition: 0.2s; }
         .btn-adm:hover { opacity: 0.8; }
         .btn-adm-zap { background: #25D366; color: white; }
-        .btn-adm-check { background: var(--accent-color); color: #000; }
+        .btn-adm-check { background: var(--accent-color); color: var(--text-on-accent); }
         .btn-adm-trash { background: transparent; color: #ff4d4d; border: 1px solid rgba(255,77,77,0.2); max-width: 40px; }
 
         /* SETTINGS & SERVICES */
@@ -423,7 +427,7 @@
         input[type="color"]::-webkit-color-swatch { border: none; border-radius: 6px; }
         .days-wrapper { display: flex; gap: 5px; margin-top: 5px; justify-content: space-between; width: 100%; }
         .day-btn { flex: 1; height: 35px; border-radius: 8px; background: #2a2a2a; border: 1px solid #444; color: #777; font-size: 0.7rem; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
-        .day-btn.active { background: var(--accent-color); color: #000; border-color: var(--accent-color); }
+        .day-btn.active { background: var(--accent-color); color: var(--text-on-accent); border-color: var(--accent-color); }
         .prof-list-item { background: #252525; border-bottom: 1px solid #333; padding: 12px 5px; display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .prof-info { display: flex; align-items: center; gap: 12px; }
         .prof-img-mini { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; background: #444; }
@@ -431,12 +435,31 @@
         .btn-icon-action:hover { opacity: 1; transform: scale(1.1); }
         .btn-edit-prof { color: var(--accent-color); }
         .btn-del-prof { color: #ff4d4d; }
+        
+        /* NOVOS ESTILOS PARA BOTÕES DE SERVIÇO E PROFISSIONAL (ADMIN) */
+        .admin-action-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        .admin-btn-edit { background: rgba(var(--accent-rgb), 0.15); color: var(--accent-color); border: 1px solid rgba(var(--accent-rgb), 0.3); }
+        .admin-btn-del { background: rgba(255, 77, 77, 0.15); color: #ff4d4d; border: 1px solid rgba(255, 77, 77, 0.3); }
+        .admin-action-btn:hover { transform: scale(1.05); opacity: 0.9; }
+
         .service-meta { font-size: 0.75rem; color: #888; }
         .service-price-tag { color: var(--success-color); font-weight: 600; margin-right: 5px; }
         .add-prof-card { background: rgba(255,255,255,0.03); border: 1px dashed #555; border-radius: 12px; padding: 15px; margin-top: 15px; display: flex; flex-direction: column; gap: 10px; width: 100%; }
         .add-prof-card input { background: #111; border: 1px solid #333; padding: 10px; border-radius: 8px; color: white; width: 100%; outline: none; }
         .add-prof-card input:focus { border-color: var(--accent-color); }
-        .btn-add-full { background: var(--accent-color); color: #000; font-weight: bold; border: none; padding: 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .btn-add-full { background: var(--accent-color); color: var(--text-on-accent); font-weight: bold; border: none; padding: 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; }
         .settings-footer { position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px 20px 20px; background: #1e1e1e; border-top: 1px solid #333; display: flex; gap: 10px; z-index: 20; }
         
         .password-wrapper { position: relative; width: 100%; }
@@ -451,6 +474,12 @@
 
         /* CONTENT */
         .main-content { flex: 1; display: flex; flex-direction: column; padding: 20px; gap: 15px; overflow-y: auto; scrollbar-width: none; }
+        
+        /* NOVO HEADER COM BOTÃO DE HISTÓRICO */
+        .app-header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
+        .btn-history { background: transparent; border: 1px solid #444; color: var(--text-muted); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
+        .btn-history:hover { color: var(--accent-color); border-color: var(--accent-color); }
+
         .label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; display: block; }
         .btn-repeat { display: none; width: 100%; background: rgba(var(--accent-rgb), 0.15); color: var(--accent-color); border: 1px dashed var(--accent-color); padding: 10px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; margin-bottom: 5px; text-align: center; transition: all 0.2s; }
         .btn-repeat:hover { background: rgba(var(--accent-rgb), 0.25); }
@@ -468,18 +497,27 @@
         .time-section { flex: 1; display: flex; flex-direction: column; min-height: 80px; }
         .time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding-right: 5px; overflow-y: auto; max-height: 100%; }
         .time-btn { height: 38px; display: flex; align-items: center; justify-content: center; background: var(--input-bg); border: 1px solid #333; border-radius: 8px; font-size: 0.8rem; cursor: pointer; position: relative; }
-        .time-btn.selected { background: var(--accent-color); color: #000; font-weight: 700; border-color: var(--accent-color); }
+        .time-btn.selected { background: var(--accent-color); color: var(--text-on-accent); font-weight: 700; border-color: var(--accent-color); }
         .promo-slot { border-color: var(--warning-color); color: var(--warning-color); }
         .promo-slot::after { content: 'PROMO'; position: absolute; top: -5px; right: -5px; background: var(--warning-color); color: #000; font-size: 0.5rem; padding: 2px 4px; border-radius: 4px; font-weight: 700; }
         
         .footer-form { flex-shrink: 0; padding: 5px 20px 20px; background: var(--card-bg); border-top: 1px solid #333; z-index: 10; }
         #msg-erro { color: var(--error-color); font-size: 0.75rem; text-align: center; margin-bottom: 10px; display: none; font-weight: 500; animation: fadeIn 0.3s; }
-        .btn-confirm { width: 100%; height: 52px; background: var(--accent-color); color: #000; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(var(--accent-rgb), 0.4); transition: all 0.3s ease; }
+        
+        .btn-confirm { width: 100%; height: 52px; background: var(--accent-color); color: var(--text-on-accent); border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(var(--accent-rgb), 0.4); transition: all 0.3s ease; }
+        
         .btn-confirm.inactive { background: #444; color: #888; box-shadow: none; cursor: default; }
         .address { margin-top: 15px; text-align: center; font-size: 0.75rem; color: var(--text-muted); text-decoration: none; display: block; transition: color 0.2s; }
         .address:hover { color: var(--accent-color); }
+
+        /* AÇÕES DE AGENDAMENTO MELHORADAS */
+        .appt-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .btn-action { width: 100%; padding: 12px; border-radius: 10px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid transparent; }
+        
         .btn-edit { background-color: rgba(var(--accent-rgb), 0.15); color: var(--accent-color); border-color: rgba(var(--accent-rgb), 0.3); }
         .btn-cancel { background-color: rgba(255, 77, 77, 0.15); color: var(--error-color); border-color: rgba(255, 77, 77, 0.3); }
+        .btn-done { background-color: rgba(46, 204, 113, 0.15); color: var(--success-color); border-color: rgba(46, 204, 113, 0.3); grid-column: span 2; font-weight: 700; }
+
         .btn-insta { width: 100%; height: 50px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .btn-outline { width: 100%; background: transparent; border: 2px solid var(--accent-color); color: var(--text-main); padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 0.9rem; margin-top: 5px;}
         .closed-msg { grid-column: span 4; text-align: center; color: #ff5555; padding: 10px; background: rgba(255, 85, 85, 0.1); border-radius: 8px; font-size: 0.8rem; }
@@ -494,7 +532,6 @@
         .appt-item { background: #252525; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; }
         .appt-details { font-size: 0.85rem; color: #fff; margin-bottom: 12px; line-height: 1.4; }
         .appt-details strong { color: var(--accent-color); display: block; font-size: 1rem; margin-bottom: 4px; }
-        .appt-actions { display: flex; gap: 10px; }
         
         /* CHART CONTAINER */
         .chart-container { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; padding: 15px; margin-bottom: 20px; }
@@ -533,8 +570,17 @@
         }
         .notification-bar.show { display: flex; }
         .notif-text { font-size: 0.8rem; color: #ddd; flex: 1; line-height: 1.3; }
-        .btn-allow-notif { background: var(--accent-color); color: #000; border: none; padding: 8px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.8rem; }
+        .btn-allow-notif { background: var(--accent-color); color: var(--text-on-accent); border: none; padding: 8px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.8rem; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        /* --- ESTRELAS DE AVALIAÇÃO --- */
+        .star-rating { display: flex; flex-direction: row-reverse; justify-content: center; gap: 5px; margin: 15px 0; }
+        .star-rating input { display: none; }
+        .star-rating label { font-size: 2rem; color: #444; cursor: pointer; transition: color 0.2s; }
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label { color: #f1c40f; }
+        
     </style>
 </head>
 <body>
@@ -577,6 +623,42 @@
                 </div>
 
             <button onclick="document.getElementById('pwa-tutorial-modal').classList.remove('visible')" style="width:100%; margin-top:25px; padding:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#888; border-radius:8px; font-size:0.75rem; font-weight:700; text-transform:uppercase; cursor:pointer;">Fechar Tutorial</button>
+        </div>
+    </div>
+
+    <!-- MODAL DE AVALIAÇÃO -->
+    <div id="rating-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 class="modal-title">Avalie seu Corte</h3>
+            <p class="modal-desc">O que achou do serviço?</p>
+            
+            <div class="star-rating">
+                <input type="radio" id="star5" name="rating" value="5" onclick="setRating(5)"><label for="star5" title="5 estrelas"><i class="fas fa-star"></i></label>
+                <input type="radio" id="star4" name="rating" value="4" onclick="setRating(4)"><label for="star4" title="4 estrelas"><i class="fas fa-star"></i></label>
+                <input type="radio" id="star3" name="rating" value="3" onclick="setRating(3)"><label for="star3" title="3 estrelas"><i class="fas fa-star"></i></label>
+                <input type="radio" id="star2" name="rating" value="2" onclick="setRating(2)"><label for="star2" title="2 estrelas"><i class="fas fa-star"></i></label>
+                <input type="radio" id="star1" name="rating" value="1" onclick="setRating(1)"><label for="star1" title="1 estrela"><i class="fas fa-star"></i></label>
+            </div>
+            
+            <textarea id="rating-comment" class="modal-input" placeholder="Deixe um comentário (opcional)" style="text-align:left; font-size:0.85rem; height:80px; resize:none;"></textarea>
+            
+            <div class="modal-actions">
+                <button class="btn-modal btn-modal-cancel" onclick="document.getElementById('rating-modal').classList.remove('visible')">Depois</button>
+                <button class="btn-modal btn-modal-confirm" onclick="submitRating()">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE AGENDAMENTOS RECENTES (HISTÓRICO) -->
+    <div id="history-modal" class="modal-overlay">
+        <div class="modal-card" style="max-height: 80vh; overflow:hidden; display:flex; flex-direction:column;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h3 class="modal-title" style="margin:0;">Seus Agendamentos</h3>
+                <i class="fas fa-times" style="color:#666; cursor:pointer; font-size:1.2rem;" onclick="document.getElementById('history-modal').classList.remove('visible')"></i>
+            </div>
+            <div id="history-list" style="overflow-y:auto; flex:1; text-align:left;">
+                <!-- Lista preenchida via JS -->
+            </div>
         </div>
     </div>
 
@@ -700,7 +782,12 @@
 
             <div id="form-screen" class="screen">
                 <div class="main-content">
-                    <p style="font-size: 0.9rem; color: #ccc; margin-bottom: 10px;">Olá, <strong id="user-name-display" style="color:white; font-size: 1.1rem;">...</strong></p>
+                    <!-- CABEÇALHO INTERNO COM BOTÃO DE HISTÓRICO ADICIONADO -->
+                    <div class="app-header-row">
+                        <p style="font-size: 0.9rem; color: #ccc;">Olá, <strong id="user-name-display" style="color:white; font-size: 1.1rem;">...</strong></p>
+                        <button class="btn-history" onclick="abrirHistorico()" title="Meus Agendamentos Recentes"><i class="fas fa-history"></i></button>
+                    </div>
+
                     <div id="repeat-area" class="btn-repeat" onclick="repetirUltimo()"><i class="fas fa-history"></i> Repetir último agendamento</div>
                     <div>
                         <span class="label">Profissional</span>
@@ -731,6 +818,11 @@
 
             <div id="success-screen" class="screen">
                 <div id="success-content">
+                    <div style="width: 100%; display: flex; justify-content: flex-start; margin-bottom: 20px;">
+                        <button onclick="trocarTela('form-screen')" style="background: transparent; border: none; color: var(--text-main); font-size: 1.5rem; cursor: pointer;">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                    </div>
                     <div style="text-align: center; margin-bottom: 20px;">
                         <i class="fas fa-check-circle" style="font-size: 4rem; color: var(--accent-color); margin-bottom: 15px;"></i>
                         <h2 style="font-family: 'Playfair Display'; font-size: 1.8rem; margin-bottom: 5px;">Tudo Certo!</h2>
@@ -907,7 +999,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, getDoc, setDoc, updateDoc, deleteDoc, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         
-        // --- CHAVE IMGBB (Mantenha a sua se tiver trocado) ---
+        // --- CHAVE IMGBB ---
         const IMG_BB_KEY = "fde585c6f206d65b90271edd2d43b65e"; 
         
         // --- CONFIGURAÇÃO DO FIREBASE ---
@@ -921,7 +1013,6 @@
             measurementId: "G-LE74FLQHHN"
         };
 
-        // Inicialização Segura
         let app, db;
         try {
             app = initializeApp(firebaseConfig);
@@ -942,17 +1033,19 @@
         let adminDataCustom = '';
         
         let tempOpenDays = [];
-        let tempHappyDays = []; // Variável para dias da promo
+        let tempHappyDays = [];
         let currentEditingIndex = -1;
         let currentEditingServiceIndex = -1;
         let storyTimer = null;
-        let chartInstances = {}; // Guardar gráficos para destruir antes de recriar
-        let precoFinalAtual = 0; // Guardar preço calculado com promo
+        let chartInstances = {}; 
+        let precoFinalAtual = 0;
+        let currentRating = 0; // Para avaliação
+        let currentRateId = null; // ID do agendamento sendo avaliado
 
         const dateInput = document.getElementById('data');
         if(dateInput) dateInput.valueAsDate = new Date();
 
-        // Configuração Padrão (Fallback imediato)
+        // Configuração Padrão
         const defaultConfig = {
             nomeBarbearia: "Barbearia",
             descricao: "Cortes modernos e clássicos.",
@@ -968,11 +1061,11 @@
             openTime: "08:00",
             closeTime: "20:00",
             breakStart: "", 
-            breakEnd: "",    
-            happyStart: "", // Happy Hour Start
-            happyEnd: "",   // Happy Hour End
-            happyDiscount: 0, // Valor desconto
-            happyDays: [], // Dias da promo
+            breakEnd: "",      
+            happyStart: "",
+            happyEnd: "",    
+            happyDiscount: 0,
+            happyDays: [],
             openDays: [1, 2, 3, 4, 5, 6], 
             profissionais: [
                 { id: 1, nome: "Profissional 1", foto: "https://placehold.co/150/444444/FFF?text=P1" },
@@ -985,7 +1078,6 @@
         };
 
         // --- EXPORTAR FUNÇÕES PARA O HTML (Window) ---
-        // Isso garante que o onclick="..." funcione
         window.toggleInfo = toggleInfo;
         window.openStory = openStory;
         window.closeStory = closeStory;
@@ -993,7 +1085,7 @@
         window.validarInputsLogin = validarInputsLogin;
         window.mascaraTelefone = mascaraTelefone;
         window.fazerLogin = fazerLogin;
-        window.fazerLogout = fazerLogout; // NOVO: LOGOUT
+        window.fazerLogout = fazerLogout;
         window.toggleAdminModal = toggleAdminModal;
         window.verificarSenhaAdmin = verificarSenhaAdmin;
         window.repetirUltimo = repetirUltimo;
@@ -1005,7 +1097,7 @@
         window.novoAgendamento = novoAgendamento;
         window.abrirMaps = abrirMaps;
         window.abrirServicos = abrirServicos;
-        window.abrirRelatorios = abrirRelatorios; // NOVO
+        window.abrirRelatorios = abrirRelatorios;
         window.abrirConfig = abrirConfig;
         window.filtrarAdmin = filtrarAdmin;
         window.filtrarStatus = filtrarStatus; 
@@ -1016,7 +1108,7 @@
         window.salvarConfig = salvarConfig;
         window.resetarConfiguracoes = resetarConfiguracoes;
         window.toggleDay = toggleDay;
-        window.toggleHappyDay = toggleHappyDay; // NOVO
+        window.toggleHappyDay = toggleHappyDay;
         window.addProfissional = addProfissional;
         window.removeProfissional = removeProfissional;
         window.openEditProf = openEditProf;
@@ -1034,8 +1126,12 @@
         window.executarAcaoConfirmacao = ejecutarAcaoConfirmacao;
         window.togglePasswordVisibility = togglePasswordVisibility;
         window.limparImagem = limparImagem;
-        window.adicionarAoCalendario = adicionarAoCalendario; // NOVO
-        window.requestPermission = requestPermission; // NOVO NOTIFICAÇÃO
+        window.adicionarAoCalendario = adicionarAoCalendario;
+        window.requestPermission = requestPermission;
+        window.confirmarCorteCliente = confirmarCorteCliente; // NOVO: Confirmar corte cliente
+        window.setRating = setRating; // NOVO: Avaliação
+        window.submitRating = submitRating; // NOVO: Enviar Avaliação
+        window.abrirHistorico = abrirHistorico; // NOVO: Abrir Histórico
 
         let funcaoConfirmacaoAtual = null;
 
@@ -1055,7 +1151,6 @@
             }
         }
 
-        // --- UPLOAD HELPER FUNCTION (IMGBB) ---
         async function uploadToImgBB(fileInputId) {
             const fileInput = document.getElementById(fileInputId);
             if (fileInput.files && fileInput.files[0]) {
@@ -1085,7 +1180,6 @@
             return null;
         }
 
-        // --- FUNÇÃO PARA LIMPAR IMAGEM (SIMULAR DELETE) ---
         function limparImagem(tipo) {
             abrirConfirmacao('Remover Imagem?', 'Isso limpará a imagem do aplicativo.', async () => {
                 if(tipo === 'logo') {
@@ -1101,7 +1195,6 @@
                     }
                 }
                 
-                // Se for logo/story, salva direto. Se for prof, precisa clicar em Salvar no modal depois
                 if(tipo !== 'prof') {
                     await setDoc(doc(db, "config", "loja"), appConfig);
                     showToast("Imagem removida.");
@@ -1111,27 +1204,18 @@
             });
         }
 
-        // --- SISTEMA DE NOTIFICAÇÃO PUSH (MANUAL/LOOP) ---
         function initNotificationSystem() {
-            if (!("Notification" in window)) {
-                console.log("Este navegador não suporta notificações de desktop.");
-                return;
-            }
-            
-            // Se ainda não foi concedido ou negado (default), mostra a barra
+            if (!("Notification" in window)) return;
             if (Notification.permission === "default") {
                 document.getElementById('notification-bar').classList.add('show');
             }
-            
-            // Inicia o loop de verificação
-            setInterval(checkReminders, 60000); // Checa a cada minuto
+            setInterval(checkReminders, 60000); 
         }
 
         function requestPermission() {
             document.getElementById('notification-bar').classList.remove('show');
             Notification.requestPermission().then(permission => {
                 if (permission === "granted") {
-                    
                     new Notification("Notificações Ativadas!", {
                         body: "Você será avisado 1 hora antes do seu horário.",
                         icon: appConfig.logoUrl
@@ -1142,17 +1226,14 @@
 
         function checkReminders() {
             if (Notification.permission !== "granted") return;
-            if (!usuario.nome) return; // Só checa se estiver logado
+            if (!usuario.nome) return; 
 
             const now = new Date();
-            // Adiciona 1 hora ao tempo atual para comparar
             const oneHourFromNow = new Date(now.getTime() + 60 * 60000); 
             
-            // Formata data e hora para comparar com o formato do banco (dd/mm/yyyy e HH:MM)
-            const checkDate = oneHourFromNow.toLocaleDateString('pt-BR'); // ex: 25/10/2025
-            const checkTime = oneHourFromNow.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'}); // ex: 14:30
+            const checkDate = oneHourFromNow.toLocaleDateString('pt-BR'); 
+            const checkTime = oneHourFromNow.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'}); 
 
-            // Procura agendamento do usuário que bate com essa data/hora
             const reminder = agendamentos.find(a => 
                 a.cliente === usuario.nome && 
                 a.status === 'pendente' && 
@@ -1170,16 +1251,11 @@
             }
         }
         
-        // --- PWA INSTALL PROMPT LOGIC ---
         function initPWACheck() {
-            // 1. Verifica se já está instalado (Standalone)
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-            if (isStandalone) return; // Já instalado, não mostra nada
-            
-            // 2. Verifica se já fechou nesta sessão
+            if (isStandalone) return; 
             if (sessionStorage.getItem('pwa_prompt_seen')) return;
             
-            // 3. Detecta OS
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
             const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
             const isAndroid = /android/i.test(userAgent);
@@ -1189,7 +1265,6 @@
             const osText = document.getElementById('pwa-os-text');
             
             if (isIOS) {
-                // IPHONE LOGIC
                 osText.innerText = "IPHONE (iOS)";
                 stepsContainer.innerHTML = `
                     <div class="pwa-step-row">
@@ -1204,9 +1279,7 @@
                 `;
                 setTimeout(() => pwaModal.classList.add('visible'), 2000);
                 sessionStorage.setItem('pwa_prompt_seen', 'true');
-                
             } else if (isAndroid) {
-                // ANDROID LOGIC
                 osText.innerText = "ANDROID";
                 stepsContainer.innerHTML = `
                     <div class="pwa-step-row">
@@ -1222,31 +1295,27 @@
                 setTimeout(() => pwaModal.classList.add('visible'), 2000);
                 sessionStorage.setItem('pwa_prompt_seen', 'true');
             }
-            // Se for Desktop ou outro, não mostra nada (como pedido, focar em mobile)
         }
 
-        // INICIALIZA O APP
         initApp();
         initNotificationSystem();
-        initPWACheck(); // Inicia verificação PWA
+        initPWACheck(); 
 
         async function initApp() {
             appConfig = defaultConfig;
             applyConfigToUI();
             
-            // --- VERIFICAÇÃO DE LOGIN PERSISTENTE ---
             const savedUser = localStorage.getItem('barber_user');
             if (savedUser) {
                 try {
                     usuario = JSON.parse(savedUser);
                     document.getElementById('user-name-display').innerText = usuario.nome;
-                    trocarTela('form-screen'); // Pula o login e vai direto pro agendamento
+                    trocarTela('form-screen'); 
                 } catch(e) {
                     console.error("Erro ao ler dados do usuário", e);
                     localStorage.removeItem('barber_user');
                 }
             }
-            // ----------------------------------------
 
             setTimeout(() => {
                 if(document.getElementById('display-address').innerText === 'Carregando...') {
@@ -1273,13 +1342,11 @@
                     
                     if(usuario.nome) {
                         renderizarLista();
-                        // Se estiver logado e dados carregarem, mostra botão repetir se necessário
                         if(agendamentos.some(a => a.cliente === usuario.nome)) {
                              document.getElementById('repeat-area').style.display = 'block';
                         }
                     }
                     if(document.getElementById('admin-screen').classList.contains('active')) renderizarPainel();
-                    // SE O USUÁRIO ESTIVER NA TELA DE RELATÓRIOS, ATUALIZA EM TEMPO REAL
                     if(document.getElementById('reports-screen').classList.contains('active')) renderizarGraficos();
 
                     atualizarHorarios();
@@ -1292,7 +1359,19 @@
             }
         }
 
-        // --- FUNÇÕES DE UI E LÓGICA ---
+        // --- CALCULO DE CONTRASTE AUTOMÁTICO ---
+        function getContrastColor(hexColor) {
+            // Remove o hash se existir
+            hexColor = hexColor.replace("#", "");
+            // Converte para RGB
+            var r = parseInt(hexColor.substr(0, 2), 16);
+            var g = parseInt(hexColor.substr(2, 2), 16);
+            var b = parseInt(hexColor.substr(4, 2), 16);
+            // Calcula luminância (fórmula YIQ)
+            var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+            // Retorna preto se claro, branco se escuro
+            return (yiq >= 128) ? 'black' : 'white';
+        }
 
         function toggleInfo(show) {
             const modal = document.getElementById('info-modal');
@@ -1314,6 +1393,7 @@
                 if (event.target.id === 'edit-prof-modal') closeEditProf();
                 if (event.target.id === 'edit-service-modal') closeEditService();
                 if (event.target.id === 'confirm-modal') fecharConfirmacao();
+                if (event.target.id === 'history-modal') document.getElementById('history-modal').classList.remove('visible');
             }
         }
 
@@ -1413,27 +1493,27 @@
         }
 
         function applyConfigToUI() {
+            // APLICA COR DO TEMA
             document.documentElement.style.setProperty('--accent-color', appConfig.themeColor);
             document.documentElement.style.setProperty('--accent-rgb', hexToRgb(appConfig.themeColor));
+            
+            // APLICA CONTRASTE AUTOMÁTICO
+            const contrastColor = getContrastColor(appConfig.themeColor);
+            document.documentElement.style.setProperty('--text-on-accent', contrastColor);
 
-            // --- LÓGICA DE ATUALIZAÇÃO DINÂMICA DO TÍTULO E FAVICON ---
-            // 1. Atualizar Título da Aba
             document.title = appConfig.nomeBarbearia || "App Agendamento";
 
-            // 2. Atualizar Meta Tags de Nome do App
             const metaAppName = document.getElementById('meta-app-name');
             if(metaAppName) metaAppName.content = appConfig.nomeBarbearia || "App Agendamento";
             
             const metaAppleTitle = document.getElementById('meta-apple-title');
             if(metaAppleTitle) metaAppleTitle.content = appConfig.nomeBarbearia || "App Agendamento";
 
-            // 3. Atualizar Favicon e Apple Icon
             const favIcon = document.getElementById('dynamic-favicon');
             if(favIcon && appConfig.logoUrl) favIcon.href = appConfig.logoUrl;
 
             const appleIcon = document.getElementById('dynamic-apple-icon');
             if(appleIcon && appConfig.logoUrl) appleIcon.href = appConfig.logoUrl;
-            // -------------------------------------------------------------
 
             document.getElementById('display-address').innerText = appConfig.endereco;
             document.getElementById('header-barber-name').innerText = appConfig.nomeBarbearia;
@@ -1473,7 +1553,7 @@
                 const opt = document.createElement('option');
                 opt.value = srv.nome; opt.innerText = `${srv.nome} (R$ ${srv.preco} • ${srv.tempo}min)`;
                 opt.dataset.tempo = srv.tempo; 
-                opt.dataset.preco = srv.preco; // Store base price
+                opt.dataset.preco = srv.preco; 
                 select.appendChild(opt);
             });
         }
@@ -1497,10 +1577,8 @@
             }
             usuario.nome = nome; usuario.zap = zap.replace(/\D/g, "");
             
-            // --- SALVAR LOGIN NO LOCALSTORAGE (PERSISTENCIA) ---
             localStorage.setItem('barber_user', JSON.stringify(usuario));
             
-            // --- SALVA O LEAD (QUEM ENTROU) ---
             try {
                 await addDoc(collection(db, "acessos"), {
                     nome: nome,
@@ -1510,7 +1588,6 @@
                     timestamp: Date.now()
                 });
             } catch (e) { console.error("Erro lead", e); }
-            // ----------------------------------------
 
             document.getElementById('user-name-display').innerText = nome;
             if(agendamentos.some(a => a.cliente === nome)) document.getElementById('repeat-area').style.display = 'block';
@@ -1521,7 +1598,6 @@
             abrirConfirmacao("Sair da conta?", "Você terá que fazer login novamente.", () => {
                 localStorage.removeItem('barber_user');
                 usuario = { nome: "", zap: "" };
-                // Limpar campos de login
                 document.getElementById('login-nome').value = "";
                 document.getElementById('login-zap').value = "";
                 document.getElementById('valid-nome').classList.remove('show');
@@ -1557,14 +1633,12 @@
                 btnVoltar.style.display = 'none';
                 btnShare.style.display = 'none';
             } else {
-                // Em telas como 'form-screen' ou 'success-screen', mostra o botão de sair (antigo voltar)
                 btnVoltar.style.display = 'flex';
                 btnShare.style.display = 'none';
             }
         }
 
         function voltarParaLogin() {
-            // Esta função foi substituída por fazerLogout no botão, mas mantida caso chamada programaticamente
             const telaAtual = document.querySelector('.screen.active').id;
             if (telaAtual === 'success-screen') trocarTela('form-screen'); else trocarTela('login-screen');
         }
@@ -1595,11 +1669,9 @@
             const d = document.getElementById('data').value; const h = document.getElementById('horaSelecionada').value; const s = document.getElementById('servico').value;
             const btn = document.getElementById('btn-agendar'); const msg = document.getElementById('msg-erro');
             
-            // Atualizar o texto do botão com o preço se selecionado
             if(d && h && s) { 
                 btn.classList.remove('inactive'); 
                 msg.style.display = 'none'; 
-                // Se tiver preço final calculado (promo ou normal)
                 if(precoFinalAtual > 0) {
                     btn.innerText = `CONFIRMAR (R$ ${precoFinalAtual})`;
                 } else {
@@ -1641,7 +1713,6 @@
             const [ch, cm] = appConfig.closeTime.split(':').map(Number);
             const start = oh*60 + om; const end = ch*60 + cm;
             
-            // Intervalo
             let breakStartVal = -1, breakEndVal = -1;
             if (appConfig.breakStart && appConfig.breakEnd) {
                 const [bsh, bsm] = appConfig.breakStart.split(':').map(Number);
@@ -1650,7 +1721,6 @@
                 breakEndVal = beh * 60 + bem;
             }
 
-            // Happy Hour Logic
             let happyStartVal = -1, happyEndVal = -1;
             let isHappyDay = appConfig.happyDays && appConfig.happyDays.includes(diaSem);
             if (isHappyDay && appConfig.happyStart && appConfig.happyEnd) {
@@ -1687,7 +1757,6 @@
                 count++;
                 const btn = document.createElement('div'); btn.className = 'time-btn'; btn.innerText = hStr;
                 
-                // Check Promo
                 let currentPrice = basePrice;
                 if (isHappyDay && t >= happyStartVal && t < happyEndVal) {
                     btn.classList.add('promo-slot');
@@ -1728,8 +1797,6 @@
             e.preventDefault();
             const h = document.getElementById('horaSelecionada').value; const sSel = document.getElementById('servico');
             
-            // --- FIX PREÇO 0 ---
-            // Se o preço estiver 0 e houver serviço selecionado, pegamos o preço base do dataset
             if (precoFinalAtual === 0 && sSel.value) {
                 const sOpt = sSel.options[sSel.selectedIndex];
                 if(sOpt.dataset.preco) precoFinalAtual = parseInt(sOpt.dataset.preco);
@@ -1740,12 +1807,10 @@
                 if(navigator.vibrate) navigator.vibrate([100,50,100]); setTimeout(()=>btn.classList.remove('shake-anim'), 500); return;
             }
             const sTxt = sSel.options[sSel.selectedIndex].text;
-            // Pega apenas o nome do serviço limpo para o banco
             const serviceNameClean = sTxt.split('(')[0].trim();
             const d = document.getElementById('data').value.split('-').reverse().join('/');
             const b = document.getElementById('barbeiroSelecionado').value;
             
-            // Salva com o preço calculado (promo ou normal)
             const serviceStringFinal = `${serviceNameClean} (R$ ${precoFinalAtual})`;
 
             await addDoc(collection(db, "agendamentos"), {
@@ -1771,7 +1836,6 @@
             }
         }
         
-        // CALENDAR FUNCTION
         function adicionarAoCalendario(type) {
             const appt = agendamentos.find(a => a.cliente === usuario.nome && a.status === 'pendente');
             if(!appt) return showToast("Nenhum agendamento encontrado.");
@@ -1780,7 +1844,7 @@
             const [hh, mm] = appt.hora.split(':');
             
             const startDate = new Date(y, m-1, d, hh, mm);
-            const endDate = new Date(startDate.getTime() + 30*60000); // Assume 30 min default
+            const endDate = new Date(startDate.getTime() + 30*60000); 
             
             const title = encodeURIComponent(`Corte na ${appConfig.nomeBarbearia}`);
             const details = encodeURIComponent(`Agendamento com ${appt.barbeiro} - ${appt.servico}`);
@@ -1792,7 +1856,6 @@
                 const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startISO}/${endISO}&details=${details}&location=${location}`;
                 window.open(url, '_blank');
             } else {
-                // Generate ICS for Apple/Outlook
                 const icsContent = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:${decodeURIComponent(title)}\nDTSTART:${startDate.toISOString().replace(/-|:|\.\d\d\d/g, "")}\nDTEND:${endDate.toISOString().replace(/-|:|\.\d\d\d/g, "")}\nDESCRIPTION:${decodeURIComponent(details)}\nLOCATION:${decodeURIComponent(location)}\nEND:VEVENT\nEND:VCALENDAR`;
                 const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
                 const link = document.createElement('a');
@@ -1807,15 +1870,102 @@
         function reabrirZap() { if(linkZap) window.open(linkZap, '_blank'); }
         document.getElementById('btn-insta-link').onclick = function() { window.open(appConfig.instagram, '_blank'); }
 
+        // --- HISTÓRICO RÁPIDO (COM BOTÕES EDITAR, JÁ CORTEI, CANCELAR) ---
+        function abrirHistorico() {
+            const list = document.getElementById('history-list');
+            list.innerHTML = '';
+            
+            const meusAgendamentos = agendamentos.filter(a => a.cliente === usuario.nome);
+            
+            if (meusAgendamentos.length === 0) {
+                list.innerHTML = '<p style="color:#777; text-align:center; padding:20px;">Nenhum agendamento.</p>';
+            } else {
+                meusAgendamentos.forEach(appt => {
+                     const div = document.createElement('div');
+                     div.style.cssText = "border-bottom:1px solid #333; padding:10px 0; font-size:0.85rem; color:#ccc;";
+
+                     // CRIAÇÃO DOS BOTÕES
+                     let botoesAcao = '';
+                     if(appt.status !== 'concluido') {
+                         botoesAcao = `
+                         <div style="display:flex; gap:5px; margin-top:8px;">
+                             <button onclick="document.getElementById('history-modal').classList.remove('visible'); editarAgendamento('${appt.firebaseId}')" style="flex:1; background:rgba(var(--accent-rgb), 0.15); color:var(--accent-color); border:1px solid rgba(var(--accent-rgb), 0.3); padding:6px; border-radius:5px; font-size:0.75rem; font-weight:600; cursor:pointer;"><i class="fas fa-pen"></i> Editar</button>
+                             <button onclick="document.getElementById('history-modal').classList.remove('visible'); confirmarCorteCliente('${appt.firebaseId}')" style="flex:1; background:rgba(46, 204, 113, 0.15); color:#2ecc71; border:1px solid rgba(46, 204, 113, 0.3); padding:6px; border-radius:5px; font-size:0.75rem; font-weight:600; cursor:pointer;"><i class="fas fa-check"></i> Já Cortei</button>
+                             <button onclick="document.getElementById('history-modal').classList.remove('visible'); cancelarAgendamento('${appt.firebaseId}')" style="flex:1; background:rgba(255, 77, 77, 0.15); color:#ff4d4d; border:1px solid rgba(255, 77, 77, 0.3); padding:6px; border-radius:5px; font-size:0.75rem; font-weight:600; cursor:pointer;"><i class="fas fa-times"></i> Cancelar</button>
+                         </div>`;
+                     }
+
+                     div.innerHTML = `<strong style="color:var(--accent-color)">${appt.data} - ${appt.hora}</strong><br>${appt.servico}<br><span style="font-size:0.75rem; color:#777;">${appt.barbeiro} • ${appt.status}</span>${botoesAcao}`;
+                     list.appendChild(div);
+                });
+            }
+            document.getElementById('history-modal').classList.add('visible');
+        }
+
         function renderizarLista() {
             const container = document.getElementById('lista-agendamentos'); container.innerHTML = "";
             const meusAgendamentos = agendamentos.filter(a => a.cliente === usuario.nome);
             if (meusAgendamentos.length === 0) { container.innerHTML = '<p style="color: #555; font-size: 0.8rem; text-align: center;">Nenhum agendamento recente.</p>'; return; }
             meusAgendamentos.forEach(appt => {
                 const item = document.createElement('div'); item.className = 'appt-item';
-                item.innerHTML = `<div class="appt-details"><strong>${appt.data} às ${appt.hora}</strong>${appt.servico} <br> <span style="color:#777">com ${appt.barbeiro}</span>${appt.status === 'concluido' ? '<br><span style="color:#2ecc71; font-size:0.7rem">Realizado</span>' : ''}</div>${appt.status !== 'concluido' ? `<div class="appt-actions"><button class="btn-action btn-edit" onclick="editarAgendamento('${appt.firebaseId}')"><i class="fas fa-edit"></i> Reagendar</button><button class="btn-action btn-cancel" onclick="cancelarAgendamento('${appt.firebaseId}')"><i class="fas fa-times"></i> Cancelar</button></div>` : ''}`;
+                
+                // Botões de Ação Dinâmicos
+                let actionsHTML = '';
+                if(appt.status !== 'concluido') {
+                    actionsHTML = `
+                        <div class="appt-actions">
+                            <button class="btn-action btn-edit" onclick="editarAgendamento('${appt.firebaseId}')"><i class="fas fa-edit"></i> Reagendar</button>
+                            <button class="btn-action btn-cancel" onclick="cancelarAgendamento('${appt.firebaseId}')"><i class="fas fa-times"></i> Cancelar</button>
+                            <button class="btn-action btn-done" onclick="confirmarCorteCliente('${appt.firebaseId}')"><i class="fas fa-check-double"></i> Já Cortei</button>
+                        </div>
+                    `;
+                }
+
+                item.innerHTML = `
+                    <div class="appt-details">
+                        <strong>${appt.data} às ${appt.hora}</strong>
+                        ${appt.servico} <br> 
+                        <span style="color:#777">com ${appt.barbeiro}</span>
+                        ${appt.status === 'concluido' ? '<br><span style="color:#2ecc71; font-size:0.7rem">Realizado</span>' : ''}
+                    </div>
+                    ${actionsHTML}
+                `;
                 container.appendChild(item);
             });
+        }
+        
+        // --- FUNÇÕES DE CONFIRMAÇÃO DO CLIENTE E AVALIAÇÃO ---
+        function confirmarCorteCliente(id) {
+            abrirConfirmacao("Confirmar Corte?", "Você confirma que já realizou este serviço?", () => {
+                // Atualiza status e abre modal de avaliação
+                updateDoc(doc(db, "agendamentos", id), { status: 'concluido' });
+                currentRateId = id;
+                document.getElementById('rating-modal').classList.add('visible');
+                // Resetar estrelas
+                document.querySelectorAll('.star-rating input').forEach(el => el.checked = false);
+                document.getElementById('rating-comment').value = '';
+                currentRating = 0;
+            });
+        }
+
+        function setRating(val) {
+            currentRating = val;
+        }
+
+        async function submitRating() {
+            if(!currentRateId) return;
+            const comment = document.getElementById('rating-comment').value;
+            
+            await updateDoc(doc(db, "agendamentos", currentRateId), { 
+                avaliacao: {
+                    estrelas: currentRating,
+                    comentario: comment,
+                    data: new Date().toISOString()
+                }
+            });
+            
+            document.getElementById('rating-modal').classList.remove('visible');
+            showToast("Obrigado pela avaliação!", "success");
         }
         
         function cancelarAgendamento(id) {
@@ -1890,9 +2040,6 @@
             document.getElementById('cfg-zap').value = appConfig.whatsapp;
             document.getElementById('cfg-insta').value = appConfig.instagram;
             
-            // Files don't need value set, just keep UI simple
-            // document.getElementById('cfg-logo').value = appConfig.logoUrl; 
-            
             document.getElementById('cfg-color').value = appConfig.themeColor;
             document.getElementById('cfg-pass').value = appConfig.adminPass;
             document.getElementById('cfg-open').value = appConfig.openTime;
@@ -1900,7 +2047,6 @@
             document.getElementById('cfg-break-start').value = appConfig.breakStart || "";
             document.getElementById('cfg-break-end').value = appConfig.breakEnd || "";
             
-            // Happy Hour
             document.getElementById('cfg-happy-start').value = appConfig.happyStart || "";
             document.getElementById('cfg-happy-end').value = appConfig.happyEnd || "";
             document.getElementById('cfg-happy-val').value = appConfig.happyDiscount || 0;
@@ -1915,7 +2061,6 @@
             const originalText = btn.innerText;
             btn.innerText = "Salvando..."; btn.disabled = true;
 
-            // Upload Files if selected
             let newLogoUrl = appConfig.logoUrl;
             let newStoryUrl = appConfig.storyUrl;
 
@@ -1971,12 +2116,10 @@
             const dias = [{i:0,t:'Dom'},{i:1,t:'Seg'},{i:2,t:'Ter'},{i:3,t:'Qua'},{i:4,t:'Qui'},{i:5,t:'Sex'},{i:6,t:'Sáb'}];
             
             dias.forEach(d => {
-                // Open Days
                 const btn = document.createElement('div');
                 btn.className = tempOpenDays.includes(d.i) ? 'day-btn active' : 'day-btn';
                 btn.innerText = d.t; btn.onclick = () => toggleDay(d.i); container.appendChild(btn);
                 
-                // Happy Days
                 const hBtn = document.createElement('div');
                 hBtn.className = tempHappyDays.includes(d.i) ? 'day-btn active' : 'day-btn';
                 hBtn.innerText = d.t; hBtn.onclick = () => toggleHappyDay(d.i); happyContainer.appendChild(hBtn);
@@ -1996,7 +2139,7 @@
             const list = document.getElementById('prof-list-container'); list.innerHTML = '';
             appConfig.profissionais.forEach((prof, idx) => {
                 const item = document.createElement('div'); item.className = 'prof-list-item';
-                item.innerHTML = `<div class="prof-info"><img src="${prof.foto}" class="prof-img-mini"><span style="font-size:0.85rem;">${prof.nome}</span></div><div><button class="btn-icon-action btn-edit-prof" onclick="openEditProf(${idx})"><i class="fas fa-pen"></i></button><button class="btn-icon-action btn-del-prof" onclick="removeProfissional(${idx})"><i class="fas fa-trash"></i></button></div>`;
+                item.innerHTML = `<div class="prof-info"><img src="${prof.foto}" class="prof-img-mini"><span style="font-size:0.85rem;">${prof.nome}</span></div><div><button class="admin-action-btn admin-btn-edit" onclick="openEditProf(${idx})"><i class="fas fa-pen"></i> Editar</button><button class="admin-action-btn admin-btn-del" onclick="removeProfissional(${idx})"><i class="fas fa-trash"></i> Apagar</button></div>`;
                 list.appendChild(item);
             });
         }
@@ -2008,7 +2151,6 @@
             const name = document.getElementById('new-prof-name').value; 
             let img = "https://placehold.co/150/444444/FFF?text=" + name.charAt(0);
             
-            // Upload Image ImgBB
             const uploadedUrl = await uploadToImgBB('new-prof-img-file');
             if(uploadedUrl) img = uploadedUrl;
 
@@ -2062,7 +2204,7 @@
             const list = document.getElementById('services-list-container'); list.innerHTML = '';
             appConfig.servicos.forEach((srv, idx) => {
                 const item = document.createElement('div'); item.className = 'prof-list-item';
-                item.innerHTML = `<div style="display:flex; flex-direction:column;"><span style="font-size:0.9rem; font-weight:600;">${srv.nome}</span><span class="service-meta"><span class="service-price-tag">R$ ${srv.preco}</span> • ${srv.tempo} min</span></div><div><button class="btn-icon-action btn-edit-prof" onclick="openEditService(${idx})"><i class="fas fa-pen"></i></button><button class="btn-icon-action btn-del-prof" onclick="removeService(${idx})"><i class="fas fa-trash"></i></button></div>`;
+                item.innerHTML = `<div style="display:flex; flex-direction:column;"><span style="font-size:0.9rem; font-weight:600;">${srv.nome}</span><span class="service-meta"><span class="service-price-tag">R$ ${srv.preco}</span> • ${srv.tempo} min</span></div><div><button class="admin-action-btn admin-btn-edit" onclick="openEditService(${idx})"><i class="fas fa-pen"></i> Editar</button><button class="admin-action-btn admin-btn-del" onclick="removeService(${idx})"><i class="fas fa-trash"></i> Apagar</button></div>`;
                 list.appendChild(item);
             });
         }
@@ -2097,15 +2239,12 @@
         }
 
         function renderizarGraficos() {
-            // Faturamento 7 dias
             const ctxRev = document.getElementById('chart-revenue').getContext('2d');
             const ctxServ = document.getElementById('chart-services').getContext('2d');
             
-            // Destroy old charts
             if(chartInstances.rev) chartInstances.rev.destroy();
             if(chartInstances.serv) chartInstances.serv.destroy();
 
-            // Prepare Data Revenue
             const labelsRev = []; const dataRev = [];
             const hoje = new Date();
             for(let i=6; i>=0; i--) {
@@ -2113,7 +2252,6 @@
                 const dStr = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
                 labelsRev.push(dStr);
                 
-                // Sum revenue for this day (only completed)
                 const rev = agendamentos.filter(a => a.status === 'concluido' && a.data.includes(dStr + '/' + d.getFullYear()))
                     .reduce((sum, a) => {
                         let precoMatch = a.servico.match(/R\$\s*(\d+)/); 
@@ -2138,7 +2276,6 @@
                 options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#333' } }, x: { grid: { display: false } } } }
             });
 
-            // Prepare Data Services
             const servCounts = {};
             agendamentos.forEach(a => {
                 if(a.status === 'concluido') {
@@ -2169,7 +2306,6 @@
             const label = document.getElementById('list-label');
             const newSuffix = status === 'pendente' ? ' (Agendados)' : ' (Concluídos)';
             
-            // Remove qualquer texto entre parenteses antigo e adiciona o novo
             label.innerText = label.innerText.replace(/\s*\(.*?\)/, "") + newSuffix;
             
             renderizarPainel();
@@ -2197,20 +2333,16 @@
             let listaFiltrada = agendamentos.filter(appt => {
                 if(appt.status === 'cancelado_auto') return false; 
                 
-                // FILTER 1: STATUS (NEW)
                 if (appt.status !== adminStatusFilter) return false;
 
-                // FILTER 2: DATE
                 const d = appt.data.split('/'); const dIso = `${d[2]}-${d[1]}-${d[0]}`;
                 let matchData = (adminFiltro === 'hoje' && dIso === hoje) || (adminFiltro === 'amanha' && dIso === amanha) || (adminFiltro === 'data' && dIso === adminDataCustom) || (adminFiltro === 'todos');
                 
-                // FILTER 3: BARBER
                 let matchBarber = (filtroBarbeiro === 'todos') || (appt.barbeiro === filtroBarbeiro);
                 
                 return matchData && matchBarber;
             }).sort((a, b) => a.hora.localeCompare(b.hora));
 
-            // CALCULATE STATS
             let statsList = agendamentos.filter(appt => {
                 if(appt.status === 'cancelado_auto') return false;
                 const d = appt.data.split('/'); const dIso = `${d[2]}-${d[1]}-${d[0]}`;

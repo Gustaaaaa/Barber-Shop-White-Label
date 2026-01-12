@@ -1317,6 +1317,37 @@
         }
 
         function fazerLogin() {
+            // Dentro do script do seu APP (index.html)
+async function fazerLogin() {
+    const nome = document.getElementById('login-nome').value.trim();
+    const zap = document.getElementById('login-zap').value.trim();
+    
+    if (nome.length <= 3 || zap.length < 10) { 
+        alert("Preencha nome e WhatsApp corretamente!"); return; 
+    }
+
+    usuario.nome = nome; 
+    usuario.zap = zap.replace(/\D/g, "");
+
+    // --- NOVO: SALVA O LEAD (QUEM ENTROU) ---
+    try {
+        // Certifique-se que 'db' e 'addDoc' e 'collection' estão importados no topo
+        await addDoc(collection(db, "acessos"), {
+            nome: nome,
+            zap: usuario.zap,
+            data: new Date().toLocaleDateString('pt-BR'),
+            hora: new Date().toLocaleTimeString('pt-BR'),
+            timestamp: Date.now()
+        });
+        console.log("Acesso registrado");
+    } catch (e) {
+        console.error("Erro ao registrar acesso", e);
+    }
+    // ----------------------------------------
+
+    document.getElementById('user-name-display').innerText = nome;
+    // ... resto do seu código ...
+}
             const nome = document.getElementById('login-nome').value.trim();
             const zap = document.getElementById('login-zap').value.trim();
             if (nome.length <= 3 || zap.length < 10) { 
@@ -1633,4 +1664,5 @@
     </script>
 </body>
 </html>
+
 

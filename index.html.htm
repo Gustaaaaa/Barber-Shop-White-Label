@@ -12,7 +12,8 @@
     <link rel="apple-touch-icon" href="" id="dynamic-apple-icon">
     <!-- FIM DAS ADIÇÕES NO HEAD -->
     
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- FONTE ATUALIZADA COM PESOS EXTRAS (900) -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -113,11 +114,13 @@
         .icon-btn:hover { color: var(--accent-color); }
         
         #btn-voltar { display: none; }
-        #btn-share { display: flex; } 
+        /* ALTERAÇÃO: Removido botão compartilhar conforme pedido */
+        #btn-share { display: none !important; } 
 
         .header-brand-name {
             font-family: 'Playfair Display', serif;
-            font-size: 1.2rem; 
+            font-size: 1.3rem; /* Levemente maior */
+            font-weight: 900; /* ALTERAÇÃO: Mais Bold */
             color: var(--accent-color);
             letter-spacing: 0.5px;
             text-shadow: 0 2px 10px rgba(0,0,0,0.5);
@@ -153,9 +156,15 @@
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             border-radius: 50%;
-            background: conic-gradient(from 0deg, transparent 0%, var(--accent-color) 100%);
+            
+            /* --- ALTERAÇÃO FEITA AQUI: CÍRCULO INTEIRO --- */
+            background: var(--accent-color); /* Cor sólida para ficar inteiro */
+            box-shadow: 0 0 15px var(--accent-color); /* Adicionado brilho */
+            /* --------------------------------------------- */
+
             z-index: 0;
-            animation: spin 2s linear infinite;
+            /* ALTERAÇÃO: Trocado de 'spin' para 'breathe' para ser mais sutil */
+            animation: breathe 3s ease-in-out infinite;
             padding: 3px; 
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
@@ -164,6 +173,7 @@
 
         .logo-container-login.seen .story-ring {
             background: #444; 
+            box-shadow: none;
             animation: none;
         }
         
@@ -175,15 +185,24 @@
             background-color: #000; 
             z-index: 1;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            animation: pulseGlow 3s infinite ease-in-out;
+            /* ALTERAÇÃO: Animação sutil ajustada */
+            animation: pulseGlow 4s infinite ease-in-out;
         }
 
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+        /* @keyframes spin { 100% { transform: rotate(360deg); } }  <-- REMOVIDO/SUBSTITUIDO POR BREATHE */
+        
+        /* NOVA ANIMAÇÃO DE RESPIRAÇÃO */
+        @keyframes breathe {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
 
+        /* ALTERAÇÃO: Animação mais sutil (menos brilho e expansão) */
         @keyframes pulseGlow {
-            0% { box-shadow: 0 0 5px rgba(var(--accent-rgb), 0.2), 0 0 2px var(--accent-color) inset; border-color: rgba(var(--accent-rgb), 0.5); }
-            50% { box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.5), 0 0 6px var(--accent-color) inset; border-color: var(--accent-color); }
-            100% { box-shadow: 0 0 5px rgba(var(--accent-rgb), 0.2), 0 0 2px var(--accent-color) inset; border-color: rgba(var(--accent-rgb), 0.5); }
+            0% { box-shadow: 0 0 5px rgba(var(--accent-rgb), 0.1), 0 0 2px var(--accent-color) inset; border-color: rgba(var(--accent-rgb), 0.3); }
+            50% { box-shadow: 0 0 15px rgba(var(--accent-rgb), 0.3), 0 0 4px var(--accent-color) inset; border-color: rgba(var(--accent-rgb), 0.6); }
+            100% { box-shadow: 0 0 5px rgba(var(--accent-rgb), 0.1), 0 0 2px var(--accent-color) inset; border-color: rgba(var(--accent-rgb), 0.3); }
         }
 
         /* --- STORY OVERLAY --- */
@@ -328,7 +347,10 @@
         }
         .login-wrapper { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 20px 40px 25px 40px; text-align: center; margin-top: 0; }
         .login-logo-area { margin-bottom: 25px; }
-        .login-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #fff; margin-bottom: 5px; }
+        
+        /* ALTERAÇÃO: Título mais BOLD */
+        .login-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: #fff; margin-bottom: 5px; }
+        
         .login-subtitle { font-size: 0.85rem; color: #ccc; font-weight: 300; }
         .input-validation-wrapper { position: relative; margin-bottom: 15px; }
         .login-input { width: 100%; background: var(--input-bg); border: 1px solid #333; color: white; transition: 0.3s; }
@@ -581,6 +603,114 @@
         .star-rating label:hover,
         .star-rating label:hover ~ label { color: #f1c40f; }
         
+        /* --- ESTILOS ADICIONADOS PARA PLANOS DE ASSINATURA --- */
+        .subscription-banner {
+            /* Base layout - Aumentado e com mais padding */
+            min-height: 100px;
+            padding: 20px 25px;
+            margin-bottom: 25px;
+            border-radius: 16px;
+            
+            /* Background Premium e Escuro */
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 1px solid rgba(var(--accent-rgb), 0.5);
+            
+            /* Sombra e Brilho Interno */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 
+                        0 0 15px rgba(var(--accent-rgb), 0.15) inset;
+            
+            /* Configurações Flex e Efeitos */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subscription-banner:hover { 
+            transform: scale(1.02); 
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 
+                        0 0 20px rgba(var(--accent-rgb), 0.25) inset;
+            border-color: var(--accent-color);
+        }
+
+        /* Efeito de Brilho que passa pelo banner */
+        .subscription-banner::before {
+            content: ''; 
+            position: absolute; 
+            top: 0; left: -100%; 
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: skewX(-20deg); 
+            pointer-events: none;
+            animation: shineBanner 6s infinite linear; /* Animação suave e constante */
+        }
+
+        .sub-banner-content { flex: 1; z-index: 1; }
+
+        .sub-title { 
+            font-family: 'Playfair Display'; 
+            /* Texto com gradiente dourado */
+            background: linear-gradient(to right, var(--accent-color), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.4rem; /* Maior */
+            font-weight: 900; 
+            margin-bottom: 5px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .sub-desc { 
+            font-size: 0.85rem; 
+            color: #ccc; 
+            font-weight: 300;
+            max-width: 90%;
+        }
+
+        .sub-icon { 
+            font-size: 2.5rem; /* Ícone bem maior */
+            color: var(--accent-color); 
+            margin-left: 15px; 
+            z-index: 1;
+            /* Efeito de brilho no ícone */
+            filter: drop-shadow(0 0 10px rgba(var(--accent-rgb), 0.6));
+            transform: rotate(-10deg);
+            transition: transform 0.3s;
+        }
+
+        .subscription-banner:hover .sub-icon {
+            transform: rotate(0deg) scale(1.1);
+        }
+
+        @keyframes shineBanner {
+            0% { left: -100%; }
+            20% { left: 200%; } /* Passa rápido */
+            100% { left: 200%; } /* Espera antes de passar de novo */
+        }
+
+        /* MODAL DE PLANOS (USER) */
+        .plans-list-container { max-height: 60vh; overflow-y: auto; text-align: left; padding: 5px; }
+        .plan-card-user {
+            background: #252525; border: 1px solid #333; border-radius: 12px; padding: 15px; margin-bottom: 15px;
+            display: flex; flex-direction: column; gap: 8px; transition: border-color 0.3s;
+        }
+        .plan-card-user:hover { border-color: var(--accent-color); }
+        .plan-name-user { color: white; font-weight: 700; font-size: 1rem; }
+        .plan-price-user { color: var(--accent-color); font-size: 1.2rem; font-weight: 900; }
+        .plan-desc-user { color: #999; font-size: 0.8rem; line-height: 1.4; margin-bottom: 5px; }
+        .btn-plan-zap {
+            background: #25D366; color: white; border: none; padding: 10px; border-radius: 8px;
+            font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 5px;
+        }
+        
+        /* ADMIN PLANOS */
+        .plan-admin-item { display: flex; justify-content: space-between; align-items: center; background: #252525; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333; }
+        .plan-admin-info { display: flex; flex-direction: column; }
+        
     </style>
 </head>
 <body>
@@ -662,6 +792,20 @@
         </div>
     </div>
 
+    <!-- NOVO MODAL DE PLANOS PARA O CLIENTE -->
+    <div id="plans-user-modal" class="modal-overlay">
+        <div class="modal-card" style="width: 95%; max-width: 380px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h3 class="modal-title" style="margin:0; font-size:1.2rem;">Nossas Assinaturas</h3>
+                <i class="fas fa-times" style="color:#666; cursor:pointer; font-size:1.2rem;" onclick="document.getElementById('plans-user-modal').classList.remove('visible')"></i>
+            </div>
+            <p style="font-size:0.8rem; color:#888; margin-bottom:15px;">Economize e mantenha o estilo em dia.</p>
+            <div id="plans-user-list" class="plans-list-container">
+                <!-- Planos renderizados via JS -->
+            </div>
+        </div>
+    </div>
+
     <div id="admin-modal" class="modal-overlay">
         <div class="modal-card">
             <h3 class="modal-title"><i class="fas fa-cut"></i> Acesso Restrito</h3>
@@ -683,9 +827,14 @@
                 <div class="info-row"><div class="info-icon-box"><i class="fas fa-clock"></i></div><span class="info-text" id="info-horario">...</span></div>
                 <div class="info-row"><div class="info-icon-box"><i class="fas fa-align-left"></i></div><span class="info-text" id="info-desc">Descrição da barbearia...</span></div>
             </div>
+            <!-- ALTERAÇÃO: Avaliações reais e dinâmicas -->
             <div class="google-rating">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width:18px;">
-                <span>4.9</span> <div style="display:flex; gap:2px;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <i class="fas fa-users" style="color:#fff; margin-right:5px;"></i>
+                <span id="dynamic-rating-value">--</span>
+                <div style="display:flex; gap:2px;" id="dynamic-rating-stars">
+                    <!-- Estrelas inseridas via JS -->
+                </div>
+                <span style="font-size: 0.7rem; color: #888; margin-left: 5px;" id="dynamic-rating-count"></span>
             </div>
             <div class="watermark-popup">Produzido por BARBERLABEL 2026</div>
         </div>
@@ -786,6 +935,15 @@
                     <div class="app-header-row">
                         <p style="font-size: 0.9rem; color: #ccc;">Olá, <strong id="user-name-display" style="color:white; font-size: 1.1rem;">...</strong></p>
                         <button class="btn-history" onclick="abrirHistorico()" title="Meus Agendamentos Recentes"><i class="fas fa-history"></i></button>
+                    </div>
+
+                    <!-- NOVO BANNER DE ASSINATURA -->
+                    <div id="subscription-banner" class="subscription-banner" style="display:none;" onclick="abrirPlanosUsuario()">
+                        <div class="sub-banner-content">
+                            <div class="sub-title">Assinaturas VIP</div>
+                            <div class="sub-desc">Cortes ilimitados e planos exclusivos.</div>
+                        </div>
+                        <i class="fas fa-crown sub-icon"></i>
                     </div>
 
                     <div id="repeat-area" class="btn-repeat" onclick="repetirUltimo()"><i class="fas fa-history"></i> Repetir último agendamento</div>
@@ -943,6 +1101,31 @@
                         <div style="margin-top: 10px;"><label class="form-label">Dias da Promoção</label><div class="days-wrapper" id="happy-days-selector"></div></div>
                     </div>
 
+                    <!-- NOVA SEÇÃO DE ASSINATURAS -->
+                    <div class="settings-section">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <p class="settings-title" style="margin:0;">Assinaturas / Planos</p>
+                            <div style="display:flex; align-items:center; gap:5px;">
+                                <span style="font-size:0.7rem; color:#888;">Ativar</span>
+                                <input type="checkbox" id="cfg-show-plans" style="accent-color:var(--accent-color); width:18px; height:18px;">
+                            </div>
+                        </div>
+                        <p style="font-size:0.7rem; color:#666; margin-top:5px; margin-bottom:15px;">Exiba planos no agendamento.</p>
+                        
+                        <div id="settings-plans-list"></div>
+                        
+                        <div class="add-prof-card">
+                            <p style="font-size:0.75rem; color:#888; font-weight:600;">NOVO PLANO</p>
+                            <input type="text" id="new-plan-name" placeholder="Nome (Ex: Assinatura Barba)">
+                            <div style="display:flex; gap:10px;">
+                                <input type="number" id="new-plan-price" placeholder="Valor (R$)">
+                            </div>
+                            <input type="text" id="new-plan-desc" placeholder="Descrição (Ex: Barba ilimitada por mês)" style="margin-top:0;">
+                            <input type="text" id="new-plan-msg" placeholder="Msg WhatsApp (Opcional)" style="margin-top:0;">
+                            <button class="btn-add-full" onclick="addPlan()"><i class="fas fa-plus-circle"></i> Adicionar Plano</button>
+                        </div>
+                    </div>
+
                     <div class="settings-section">
                         <p class="settings-title">Dados da Barbearia</p>
                         <div class="form-row"><label class="form-label">Nome da Barbearia</label><input type="text" id="cfg-nome" class="settings-input"></div>
@@ -1074,6 +1257,13 @@
             servicos: [
                 { id: 1, nome: "Corte de Cabelo", preco: 40, tempo: 30 },
                 { id: 2, nome: "Barba", preco: 30, tempo: 30 }
+            ],
+            // NOVAS CONFIGURAÇÕES DE PLANOS
+            showPlans: false,
+            subscriptions: [
+                { id: 1, name: "Assinatura Corte", price: 80, desc: "Cortes ilimitados no mês.", msg: "Olá, tenho interesse na Assinatura de Corte!" },
+                { id: 2, name: "Assinatura Barba", price: 60, desc: "Barba sempre feita.", msg: "Olá, quero assinar o plano de Barba." },
+                { id: 3, name: "Assinatura Completa", price: 120, desc: "Cabelo e barba ilimitados.", msg: "Tenho interesse no plano Completo!" }
             ]
         };
 
@@ -1128,10 +1318,15 @@
         window.limparImagem = limparImagem;
         window.adicionarAoCalendario = adicionarAoCalendario;
         window.requestPermission = requestPermission;
-        window.confirmarCorteCliente = confirmarCorteCliente; // NOVO: Confirmar corte cliente
-        window.setRating = setRating; // NOVO: Avaliação
-        window.submitRating = submitRating; // NOVO: Enviar Avaliação
-        window.abrirHistorico = abrirHistorico; // NOVO: Abrir Histórico
+        window.confirmarCorteCliente = confirmarCorteCliente; 
+        window.setRating = setRating; 
+        window.submitRating = submitRating; 
+        window.abrirHistorico = abrirHistorico;
+        // NOVAS FUNÇÕES PARA PLANOS
+        window.abrirPlanosUsuario = abrirPlanosUsuario;
+        window.chamarZapPlano = chamarZapPlano;
+        window.addPlan = addPlan;
+        window.removePlan = removePlan;
 
         let funcaoConfirmacaoAtual = null;
 
@@ -1373,6 +1568,21 @@
             return (yiq >= 128) ? 'black' : 'white';
         }
 
+        // ALTERAÇÃO: Função para calcular a média de avaliações reais
+        function calcularMediaAvaliacoes() {
+            const agendamentosAvaliados = agendamentos.filter(a => a.status === 'concluido' && a.avaliacao && a.avaliacao.estrelas);
+            const count = agendamentosAvaliados.length;
+            
+            if (count === 0) {
+                return { media: 5.0, count: 0 }; // Default inicial bonito
+            }
+            
+            const soma = agendamentosAvaliados.reduce((acc, curr) => acc + parseInt(curr.avaliacao.estrelas), 0);
+            const media = (soma / count).toFixed(1);
+            
+            return { media, count };
+        }
+
         function toggleInfo(show) {
             const modal = document.getElementById('info-modal');
             if(show) {
@@ -1380,6 +1590,22 @@
                 document.getElementById('info-endereco').innerText = appConfig.endereco;
                 document.getElementById('info-horario').innerText = `${appConfig.openTime} às ${appConfig.closeTime}`;
                 document.getElementById('info-desc').innerText = appConfig.descricao;
+                
+                // ALTERAÇÃO: Calcular e exibir avaliações reais
+                const dadosAvaliacao = calcularMediaAvaliacoes();
+                document.getElementById('dynamic-rating-value').innerText = dadosAvaliacao.media;
+                document.getElementById('dynamic-rating-count').innerText = `(${dadosAvaliacao.count} avaliações)`;
+                
+                const starsContainer = document.getElementById('dynamic-rating-stars');
+                starsContainer.innerHTML = '';
+                const mediaArredondada = Math.round(dadosAvaliacao.media);
+                for(let i=0; i<5; i++) {
+                    const star = document.createElement('i');
+                    star.className = 'fas fa-star';
+                    star.style.color = (i < mediaArredondada) ? '#f1c40f' : '#444';
+                    starsContainer.appendChild(star);
+                }
+
                 modal.classList.add('visible');
             } else {
                 modal.classList.remove('visible');
@@ -1394,6 +1620,7 @@
                 if (event.target.id === 'edit-service-modal') closeEditService();
                 if (event.target.id === 'confirm-modal') fecharConfirmacao();
                 if (event.target.id === 'history-modal') document.getElementById('history-modal').classList.remove('visible');
+                if (event.target.id === 'plans-user-modal') document.getElementById('plans-user-modal').classList.remove('visible');
             }
         }
 
@@ -1542,6 +1769,13 @@
                     document.getElementById('barbeiroSelecionado').value = appConfig.profissionais[0].nome;
                 }
             }
+            
+            // TOGGLE BANNER DE ASSINATURAS
+            const subBanner = document.getElementById('subscription-banner');
+            if(subBanner) {
+                subBanner.style.display = appConfig.showPlans ? 'flex' : 'none';
+            }
+
             renderBookingServices();
             checkStoryStatus();
         }
@@ -1628,7 +1862,7 @@
 
             if (idTela === 'login-screen') {
                 btnVoltar.style.display = 'none';
-                btnShare.style.display = 'flex';
+                btnShare.style.display = 'none'; // Alterado para none conforme pedido
             } else if (idTela === 'admin-screen' || idTela === 'settings-screen' || idTela === 'services-screen' || idTela === 'reports-screen') {
                 btnVoltar.style.display = 'none';
                 btnShare.style.display = 'none';
@@ -1934,6 +2168,100 @@
             });
         }
         
+        // --- FUNÇÕES DE PLANOS DE ASSINATURA ---
+        function abrirPlanosUsuario() {
+            const list = document.getElementById('plans-user-list');
+            list.innerHTML = "";
+            
+            if(!appConfig.subscriptions || appConfig.subscriptions.length === 0) {
+                 list.innerHTML = '<p style="text-align:center; color:#666; padding:20px;">Nenhum plano disponível no momento.</p>';
+            } else {
+                 appConfig.subscriptions.forEach(plan => {
+                     const div = document.createElement('div');
+                     div.className = 'plan-card-user';
+                     div.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span class="plan-name-user">${plan.name}</span>
+                            <span class="plan-price-user">R$ ${plan.price}</span>
+                        </div>
+                        <p class="plan-desc-user">${plan.desc || 'Sem descrição.'}</p>
+                        <button class="btn-plan-zap" onclick="chamarZapPlano('${plan.name}', ${plan.price}, '${plan.msg || ''}')"><i class="fab fa-whatsapp"></i> Assinar Agora</button>
+                     `;
+                     list.appendChild(div);
+                 });
+            }
+            
+            document.getElementById('plans-user-modal').classList.add('visible');
+        }
+
+        function chamarZapPlano(nomePlano, preco, msgPersonalizada) {
+            let msg = msgPersonalizada;
+            if(!msg) {
+                msg = `Olá, sou ${usuario.nome}. Gostaria de contratar a assinatura: *${nomePlano}* no valor de R$ ${preco}.`;
+            } else {
+                // Adicionar o nome do cliente se não houver na mensagem customizada
+                msg = `Olá, sou ${usuario.nome}. ${msg}`;
+            }
+            
+            const link = `https://wa.me/${appConfig.whatsapp}?text=${encodeURIComponent(msg)}`;
+            window.open(link, '_blank');
+        }
+
+        // --- FUNÇÕES DE GERENCIAMENTO DE PLANOS (ADMIN) ---
+        function renderSettingsPlans() {
+            const list = document.getElementById('settings-plans-list');
+            list.innerHTML = '';
+            
+            if(!appConfig.subscriptions) appConfig.subscriptions = [];
+            
+            appConfig.subscriptions.forEach((plan, idx) => {
+                const item = document.createElement('div'); 
+                item.className = 'plan-admin-item';
+                item.innerHTML = `
+                    <div class="plan-admin-info">
+                        <span style="font-weight:700; color:white; font-size:0.9rem;">${plan.name}</span>
+                        <span style="font-size:0.8rem; color:#aaa;">R$ ${plan.price}</span>
+                        <span style="font-size:0.7rem; color:#666;">${plan.desc || ''}</span>
+                    </div>
+                    <button class="admin-action-btn admin-btn-del" onclick="removePlan(${idx})"><i class="fas fa-trash"></i></button>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function addPlan() {
+            const name = document.getElementById('new-plan-name').value;
+            const price = document.getElementById('new-plan-price').value;
+            const desc = document.getElementById('new-plan-desc').value;
+            const msg = document.getElementById('new-plan-msg').value;
+            
+            if(!name || !price) return showToast("Nome e Valor são obrigatórios!", "error");
+            
+            if(!appConfig.subscriptions) appConfig.subscriptions = [];
+            
+            appConfig.subscriptions.push({
+                id: Date.now(),
+                name: name,
+                price: parseFloat(price),
+                desc: desc,
+                msg: msg
+            });
+            
+            document.getElementById('new-plan-name').value = '';
+            document.getElementById('new-plan-price').value = '';
+            document.getElementById('new-plan-desc').value = '';
+            document.getElementById('new-plan-msg').value = '';
+            
+            renderSettingsPlans();
+        }
+
+        function removePlan(idx) {
+            abrirConfirmacao("Remover Plano?", "O plano será excluído da lista.", () => {
+                appConfig.subscriptions.splice(idx, 1);
+                renderSettingsPlans();
+            });
+        }
+
         // --- FUNÇÕES DE CONFIRMAÇÃO DO CLIENTE E AVALIAÇÃO ---
         function confirmarCorteCliente(id) {
             abrirConfirmacao("Confirmar Corte?", "Você confirma que já realizou este serviço?", () => {
@@ -2051,9 +2379,13 @@
             document.getElementById('cfg-happy-end').value = appConfig.happyEnd || "";
             document.getElementById('cfg-happy-val').value = appConfig.happyDiscount || 0;
             
+            // Carregar config de planos
+            document.getElementById('cfg-show-plans').checked = appConfig.showPlans || false;
+            
             tempOpenDays = [...(appConfig.openDays || [])];
             tempHappyDays = [...(appConfig.happyDays || [])];
-            renderDaysSelector(); renderSettingsProfList(); trocarTela('settings-screen');
+            renderDaysSelector(); renderSettingsProfList(); renderSettingsPlans(); 
+            trocarTela('settings-screen');
         }
 
         async function salvarConfig() {
@@ -2094,6 +2426,10 @@
             
             appConfig.openDays = tempOpenDays;
             appConfig.happyDays = tempHappyDays;
+            
+            // Salvar Configurações de Planos
+            appConfig.showPlans = document.getElementById('cfg-show-plans').checked;
+            // appConfig.subscriptions já está atualizado via addPlan/removePlan na memória
 
             await setDoc(doc(db, "config", "loja"), appConfig);
             showToast("Salvo com sucesso!", "success");
